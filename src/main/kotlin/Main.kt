@@ -1,4 +1,5 @@
 import me.snitchon.router.RouterContext
+import kotlin.reflect.KProperty
 
 context(Paths.id)
 fun exampleHandler() {
@@ -7,18 +8,35 @@ fun exampleHandler() {
 
 
 object Paths {
-    object id : PathParameter("foo") {
+    object id : PathParameter() {
         val id by ParDelegate()
     }
 }
 
-fun main() {
-    println("foo")
-    with (RouterContext) {
-        GET("foo" / Paths.id)
-            .isHandledBy {
-                exampleHandler()
-            }
+object Bar: Goo()
+
+abstract class Goo {
+    val name by lazy {
+        println("memoized?")
+        this.javaClass.simpleName}
+}
+
+class Noo {
+    operator fun getValue(id: Any, property: KProperty<*>): String {
+        println("memoized?")
+        return id.javaClass.simpleName
     }
+}
+
+fun main() {
+    println(Bar.name)
+    println(Bar.name)
+    println(Bar.name)
+//    with (RouterContext) {
+//        GET("foo" / Paths.id)
+//            .isHandledBy {
+//                exampleHandler()
+//            }
+//    }
 }
 
