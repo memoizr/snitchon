@@ -1,17 +1,19 @@
+import me.snitchon.http.RequestWrapper
 import me.snitchon.router.RouterContext
 import kotlin.reflect.KProperty
 
-context(Paths.id)
+//context(Paths.id)
 fun exampleHandler() {
-    println("accessing the parameter called ${id.name}, described as ${id.description}")
+//    println("accessing the parameter called ${id.name}, described as ${id.description}")
 }
 
 
-object Paths {
-    object id : PathParameter() {
-        val id by ParDelegate()
-    }
-}
+//object Paths {
+//    context(RequestWrapper)
+//    object id : PathParameter() {
+//        val id by yo()
+//    }
+//}
 
 object Bar: Goo()
 

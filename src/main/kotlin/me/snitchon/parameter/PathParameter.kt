@@ -1,3 +1,4 @@
+import me.snitchon.http.RequestWrapper
 import kotlin.reflect.KProperty
 
 interface Parameter {
@@ -11,13 +12,18 @@ abstract class PathParameter(
     override inline val description: String = "description"
 ): Parameter {
     override val name: String by lazy { _name ?: this.javaClass.simpleName}
+    context(RequestWrapper)
+    fun yo() = params(name)
+    context(RequestWrapper)
+    operator fun invoke() = params(name)
 }
 
-class ParDelegate {
-    operator fun getValue(parameter: Parameter, property: KProperty<*>): PathParameter {
-        return object: PathParameter(parameter.name, parameter.description) {}
-    }
-}
+//class ParDelegate<T> {
+//    context(RequestWrapper)
+//    operator fun getValue(parameter: Parameter, property: KProperty<*>): String? {
+//        return
+//    }
+//}
 
 abstract class QueryParameter(
     inline val _name: String? = null,

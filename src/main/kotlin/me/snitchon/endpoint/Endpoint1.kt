@@ -12,23 +12,25 @@ interface Endpoint<BODY, R> {
     val url: String
 }
 
-data class EndpointBundle<BODY, R>(val endpoint: Endpoint<BODY, R>, val func: (RequestWrapper) -> R)
+sealed interface Bundle
+data class EndpointBundle<BODY, R>(val endpoint: Endpoint<BODY, R>, val func: (RequestWrapper) -> R): Bundle
+data class EndpointBundle1<A: Parameter, BODY, R>(val endpoint: Endpoint1<A, BODY, R>, val func: context(A) (RequestWrapper) -> R): Bundle
 
 data class Endpoint0<BODY, R>(
     override val httpMethod: HTTPMethod,
     override val url: String,
 ): Endpoint<BODY, R>
 
-data class Endpoint1<A: PathParameter, BODY>(
-    val httpMethod: HTTPMethod,
-    val url: String,
+data class Endpoint1<A: Parameter, BODY, R>(
+    override val httpMethod: HTTPMethod,
+    override val url: String,
     inline val a: A,
-) {
-    fun isHandledBy(block: A.(RequestWrapper) -> Unit) {
-        val callback = { request: RequestWrapper ->
-            block(a,request)
-        }
-    }
+): Endpoint<BODY, R> {
+//    fun isHandledBy(block: A.(RequestWrapper) -> Unit) {
+//        val callback = { request: RequestWrapper ->
+//            block(a,request)
+//        }
+//    }
 }
 
 data class Endpoint2<
