@@ -2,12 +2,10 @@ package me.snitchon.service
 
 import me.snitchon.config.Config
 import me.snitchon.endpoint.Bundle
-import me.snitchon.endpoint.Endpoint
 import me.snitchon.endpoint.EndpointBundle
 import me.snitchon.endpoint.EndpointBundle1
 import me.snitchon.router.Router
 import me.snitchon.router.RouterContext
-import java.io.File
 
 interface SnitchService {
     val config: Config get() = Config()
@@ -23,8 +21,8 @@ data class RoutedService(val service: SnitchService, val router: Router) {
         router.endpoints.forEach {
             with(RouterContext) {
                 when (it) {
-                    is EndpointBundle<*,*> -> service.registerMethod(it, it.endpoint.url.leadingSlash)
-                    is EndpointBundle1<*,*,*> -> service.registerMethod(it, it.endpoint.url.leadingSlash)
+                    is EndpointBundle<*> -> service.registerMethod(it, it.endpoint.url.ensureLeadingSlash())
+                    is EndpointBundle1<*,*> -> service.registerMethod(it, it.endpoint.url.ensureLeadingSlash())
                 }
             }
         }

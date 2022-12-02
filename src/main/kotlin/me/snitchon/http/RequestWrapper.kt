@@ -9,6 +9,13 @@ interface RequestWrapper {
 
     fun method() : HTTPMethod
 
-
     fun getParam(param: Parameter): String?
 }
+
+interface ResponseWrapper {
+}
+
+data class EndpointCall(
+    val request: RequestWrapper,
+    val response: ResponseWrapper
+)

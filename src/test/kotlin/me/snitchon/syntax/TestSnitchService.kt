@@ -19,20 +19,18 @@ class TestSnitchService : SnitchService {
             Router()
         }
         routerConfiguration(RouterContext, this, router)
-        val routedService = RoutedService(this, router)
-
-        return routedService
+        return RoutedService(this, router)
     }
 
     override fun registerMethod(bundle: Bundle, path: String) {
         when (bundle) {
-            is EndpointBundle<*, *> -> service.add(
+            is EndpointBundle<*> -> service.add(
                 TestRequest(bundle.endpoint.httpMethod, bundle.endpoint.url) to bundle.func
             )
-            is EndpointBundle1<*, *, *> -> service.add(TestRequest(bundle.endpoint.httpMethod, bundle.endpoint.url) to {
-                bundle as EndpointBundle1<Parameter, Any, Any>
-                bundle.func(bundle.endpoint.a, it)
-            })
+            is EndpointBundle1<*, *> -> {
+                bundle as EndpointBundle1<Parameter, Any>
+                service.add(TestRequest(bundle.endpoint.httpMethod, bundle.endpoint.url) to bundle.func(bundle.endpoint.p1)
+            )}
         }
     }
 
@@ -43,7 +41,11 @@ class TestSnitchService : SnitchService {
         println(service)
         return func?.invoke(TestRequestWrapper(request, requestFunction1Pair.first.path))
     }
+
+    operator fun <A, B, R> ((A,B)->R).invoke(a: A) = { b: B -> this(a, b) }
+    operator fun <A, B, C, R> ((A,B,C)->R).invoke(a: A, b: B) = { c: C -> this(a, b, c) }
 }
+
 
 class TestRequestWrapper(val testRequest: TestRequest,
                          val path:  String) : RequestWrapper {
