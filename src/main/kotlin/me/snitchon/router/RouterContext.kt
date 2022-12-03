@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
 
 internal typealias PP<T> = PathParameter<T>
 
-data class Body<T : Any>(val klass: KClass<T>): Bodied<T, Body<T>> {
+data class Body<T : Any>(val klass: KClass<T>) : Bodied<T, Body<T>> {
     //, val customGson: Klaxon = klaxon)
     override val name: String
         get() = "Body"
@@ -21,17 +21,19 @@ data class Body<T : Any>(val klass: KClass<T>): Bodied<T, Body<T>> {
         get() = "Body of the request"
 
 }
-object HasBody: Parameter {
+
+object HasBody : Parameter {
     override val name: String
         get() = TODO("Not yet implemented")
     override val description: String
         get() = TODO("Not yet implemented")
 }
 
-interface Bodied<T: Any, A: Body<T>>: Parameter {
+interface Bodied<T : Any, A : Body<T>> : Parameter {
     context (EndpointCall, A, HasBody)
             @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    val body get() = request.body<T>()
+    val body
+        get() = request.body<T>()
 }
 
 
@@ -67,119 +69,98 @@ object RouterContext {
     fun String.ensureLeadingSlash() = if (!startsWith("/")) "/$this" else this
 
     context(Router)
-    fun <Ret> Endpoint0<Any>.isHandledBy(block: context (EndpointCall) ()-> Ret): Endpoint0<Ret> {
-        val end = Endpoint0<Ret>(httpMethod, url)
-        endpoints.add(EndpointBundle(end, block))
+    fun <Ret> Endpoint0<Any>.isHandledBy(block: context (EndpointCall) () -> Ret): Endpoint0<Ret> {
+        val end = Endpoint0(httpMethod, url, block)
+        endpointss.add(end)
         return end
     }
 
     context(Router)
     fun <A : Parameter, Ret> Endpoint1<A, Nothing>.isHandledBy(block: context(A, EndpointCall) () -> Ret): Endpoint1<A, Ret> {
-        val end = Endpoint1<A, Ret>(httpMethod, url, p1)
-        endpoints.add(EndpointBundle1(end, block))
+        return Endpoint1(httpMethod, url, p1, block)
+            .also {
+                endpointss.add(it)
+            }
+    }
+
+    context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+    fun <A : Parameter, B : Parameter, Ret>
+            Endpoint2<A, B, Nothing>.isHandledBy(block: context(A, B, EndpointCall) () -> Ret): Endpoint2<A, B, Ret> {
+        val end = Endpoint2(httpMethod, url, p1, p2, block)
+        endpointss.add(end)
         return end
     }
 
-    context(Router)
-            @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Parameter, B: Parameter, Ret> Endpoint2<A, B, Nothing>.isHandledBy(block: context(A, B, EndpointCall) () -> Ret): Endpoint2<A, B, Ret> {
-        val end = Endpoint2<A, B, Ret>(httpMethod, url, p1, p2)
-        endpoints.add(EndpointBundle2(end, block))
+    context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+    fun <A : Parameter, B : Parameter, C : Parameter, Ret>
+            Endpoint3<A, B, C, Nothing>.isHandledBy(block: context(A, B, C, EndpointCall) () -> Ret): Endpoint3<A, B, C, Ret> {
+        val end = Endpoint3(httpMethod, url, p1, p2, p3, block)
+        endpointss.add(end)
         return end
     }
 
-    context(Router)
-    @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Parameter, B: Parameter, C: Parameter, Ret> Endpoint3<A, B, C, Nothing>.isHandledBy(block: context(A, B, C, EndpointCall) () -> Ret): Endpoint3<A, B, C, Ret> {
-        val end = Endpoint3<A, B, C, Ret>(httpMethod, url, p1, p2, p3)
-        endpoints.add(EndpointBundle3(end, block))
+    context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+    fun <A : Parameter, B : Parameter, C : Parameter, D : Parameter, Ret>
+            Endpoint4<A, B, C, D, Nothing>.isHandledBy(block: context(A, B, C, D, EndpointCall) () -> Ret): Endpoint4<A, B, C, D, Ret> {
+        val end = Endpoint4(httpMethod, url, p1, p2, p3, p4, block)
+        endpointss.add(end)
         return end
     }
 
-    context(Router)
-            @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Parameter, B: Parameter, C: Parameter, D: Parameter, Ret> Endpoint4<A, B, C, D, Nothing>.isHandledBy(block: context(A, B, C, D, EndpointCall) () -> Ret): Endpoint4<A, B, C, D, Ret> {
-        val end = Endpoint4<A, B, C, D, Ret>(httpMethod, url, p1, p2, p3, p4)
-        endpoints.add(EndpointBundle4(end, block))
+    context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+    fun <A : Parameter, B : Parameter, C : Parameter, D : Parameter, E : Parameter, Ret> Endpoint5<A, B, C, D, E, Nothing>.isHandledBy(
+        block: context(A, B, C, D, E, EndpointCall) () -> Ret
+    ): Endpoint5<A, B, C, D, E, Ret> {
+        val end = Endpoint5(httpMethod, url, p1, p2, p3, p4, p5, block)
+        endpointss.add(end)
         return end
     }
 
-    context(Router)
-            @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Parameter, B: Parameter, C: Parameter, D: Parameter, E: Parameter, Ret> Endpoint5<A, B, C, D, E, Nothing>.isHandledBy(block: context(A, B, C, D, E, EndpointCall) () -> Ret): Endpoint5<A, B, C, D, E, Ret> {
-        val end = Endpoint5<A, B, C, D, E, Ret>(httpMethod, url, p1, p2, p3, p4, p5)
-        endpoints.add(EndpointBundle5(end, block))
+    context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+    fun <A : Parameter, B : Parameter, C : Parameter, D : Parameter, E : Parameter, F : Parameter, Ret> Endpoint6<A, B, C, D, E, F, Nothing>.isHandledBy(
+        block: context(A, B, C, D, E, F, EndpointCall) () -> Ret
+    ): Endpoint6<A, B, C, D, E, F, Ret> {
+        val end = Endpoint6(httpMethod, url, p1, p2, p3, p4, p5, p6, block)
+        endpointss.add(end)
         return end
     }
 
-    context(Router)
-            @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Parameter, B: Parameter, C: Parameter, D: Parameter, E: Parameter, F: Parameter, Ret> Endpoint6<A, B, C, D, E, F, Nothing>.isHandledBy(block: context(A, B, C, D, E, F, EndpointCall) () -> Ret): Endpoint6<A, B, C, D, E, F, Ret> {
-        val end = Endpoint6<A, B, C, D, E, F, Ret>(httpMethod, url, p1, p2, p3, p4, p5, p6)
-        endpoints.add(EndpointBundle6(end, block))
-        return end
-    }
-
-//    context(Router)
-//    fun <A : Parameter, BODY: Any, Ret> Endpoint1Bodied<A, BODY, Nothing>.isHandledBy(block: context(A, EmbodiedEndpointCall<BODY>) () -> Ret): Endpoint1<A, Ret> {
-//        val end = Endpoint1<A, BODY, Ret>(httpMethod, url, p1, body)
-//        endpoints.add(EndpointBundle1Bodied(end, block))
-//        return end
-//    }
-//
-//    context(Router)
-//            @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-//    fun <A : Parameter, B: Parameter, BODY: Any, Ret> Endpoint2Bodied<A, B, BODY, Nothing>.isHandledBy(block: context(A, B, EmbodiedEndpointCall<BODY>) () -> Ret): Endpoint2Bodied<A, B, BODY, Ret> {
-//        val end = Endpoint2Bodied<A, B, BODY, Ret>(httpMethod, url, p1, p2, body)
-//        endpoints.add(EndpointBundle2Bodied(end, block))
-//        return end
-//    }
-
-//    context(Router)
-//    fun <A : Parameter, BODY: Any, Ret> Endpoint1<A, Nothing, Ret>.with(body: Body<BODY>): Endpoint1<A, BODY, Ret> {
-//        return Endpoint1(httpMethod, url, p1, body)
-//    }
-
-//    context(Router)
-//    fun <A : Parameter, B: Parameter, BODY: Any, Ret> Endpoint2<A, B, Ret>.with(body: Body<BODY>): Endpoint1Bodied<A, BODY, Ret> {
-//        return Endpoint1Bodied(httpMethod, url, p1, body)
-//    }
-
-//    context(Router)
-
-    fun <A : Parameter, B, C: Body<B>, Ret> Endpoint1<A, Ret>.with(body: C): Endpoint3<A, C, HasBody, Ret> {
+    fun <A : Parameter, B, C : Body<B>, Ret>
+            Endpoint1<A, Ret>.with(body: C): Endpoint3<A, C, HasBody, Ret> {
         return Endpoint3(httpMethod, url, p1, body, HasBody)
     }
 
-    fun <A : Parameter, B: Parameter, C, D: Body<C>, Ret> Endpoint2<A, B, Ret>.with(body: D): Endpoint4<A, B, D, HasBody, Ret> {
+    fun <A : Parameter, B : Parameter, C, D : Body<C>, Ret>
+            Endpoint2<A, B, Ret>.with(body: D): Endpoint4<A, B, D, HasBody, Ret> {
         return Endpoint4(httpMethod, url, p1, p2, body, HasBody)
     }
 
-    fun <A : Parameter, B: Parameter, C: Parameter, D, E: Body<D>, Ret> Endpoint3<A, B, C, Ret>.with(body: E): Endpoint5<A, B, C, E, HasBody, Ret> {
+    fun <A : Parameter, B : Parameter, C : Parameter, D, E : Body<D>, Ret>
+            Endpoint3<A, B, C, Ret>.with(body: E): Endpoint5<A, B, C, E, HasBody, Ret> {
         return Endpoint5(httpMethod, url, p1, p2, p3, body, HasBody)
     }
 
-    fun <A : Parameter, B: Parameter, C: Parameter, D: Parameter, E, F: Body<E>, Ret> Endpoint4<A, B, C, D, Ret>.with(body: F): Endpoint6<A, B, C, D, F, HasBody, Ret> {
-        return Endpoint6(httpMethod, url, p1, p2, p3, p4, body, HasBody)
-    }
+    fun <A : Parameter, B : Parameter, C : Parameter, D : Parameter, E, F : Body<E>, Ret>
+            Endpoint4<A, B, C, D, Ret>.with(body: F): Endpoint6<A, B, C, D, F, HasBody, Ret> =
+        Endpoint6(httpMethod, url, p1, p2, p3, p4, body, HasBody)
 
-    fun <A : Parameter, B: Parameter, Ret> Endpoint1<A, Ret>.with(p: B): Endpoint2<A, B, Ret> {
-        return Endpoint2(httpMethod, url, p1, p)
-    }
+    fun <A : Parameter, B : Parameter, Ret>
+            Endpoint1<A, Ret>.with(p: B): Endpoint2<A, B, Ret> =
+        Endpoint2(httpMethod, url, p1, p)
 
-    fun <A : Parameter, B: Parameter, D: Body<B>, Ret> Endpoint1<A, Ret>.with(p2: D): Endpoint2<A, D, Ret> {
-        return Endpoint2(httpMethod, url, p1, p2)
-    }
+    fun <A : Parameter, B : Parameter, D : Body<B>, Ret>
+            Endpoint1<A, Ret>.with(p2: D): Endpoint2<A, D, Ret> =
+        Endpoint2(httpMethod, url, p1, p2)
 
-    fun <A : Parameter, B: Parameter, C: Parameter, Ret> Endpoint2<A, B, Ret>.with(p3: C): Endpoint3<A, B, C, Ret> {
-        return Endpoint3(httpMethod, url, p1, p2, p3)
-    }
+    fun <A : Parameter, B : Parameter, C : Parameter, Ret>
+            Endpoint2<A, B, Ret>.with(p3: C): Endpoint3<A, B, C, Ret> =
+        Endpoint3(httpMethod, url, p1, p2, p3)
 
-    fun <A : Parameter, B: Parameter, C: Parameter, D: Parameter, Ret> Endpoint3<A, B, C, Ret>.with(p4:D): Endpoint4<A, B, C, D, Ret> {
-        return Endpoint4(httpMethod, url, p1, p2, p3, p4)
-    }
+    fun <A : Parameter, B : Parameter, C : Parameter, D : Parameter, Ret>
+            Endpoint3<A, B, C, Ret>.with(p4: D): Endpoint4<A, B, C, D, Ret> =
+        Endpoint4(httpMethod, url, p1, p2, p3, p4)
 
-    fun <A : Parameter, B: Parameter, C: Parameter, D: Parameter, E: Parameter, Ret> Endpoint4<A, B, C, D, Ret>.with(p5:E): Endpoint5<A, B, C, D, E, Ret> {
-        return Endpoint5(httpMethod, url, p1, p2, p3, p4, p5)
-    }
+    fun <A : Parameter, B : Parameter, C : Parameter, D : Parameter, E : Parameter, Ret>
+            Endpoint4<A, B, C, D, Ret>.with(p5: E): Endpoint5<A, B, C, D, E, Ret> =
+        Endpoint5(httpMethod, url, p1, p2, p3, p4, p5)
 }

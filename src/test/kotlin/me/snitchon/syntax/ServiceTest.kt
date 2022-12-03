@@ -58,7 +58,7 @@ class ServiceTest {
             GET("foo" / userId)
                 .with(body<MyBody>())
                 .isHandledBy {
-//                    "param value: ${userId()}, body: ${body.myChoice}"
+                    "param value: ${userId()}, body: ${body.myChoice}"
                 }
         }.startListening()
 
@@ -74,7 +74,6 @@ class ServiceTest {
                 .with(TokenHeader)
                 .with(body<MyBody>())
                 .isHandledBy {
-//                    TimeHeader.parse()
                     "param value: ${userId.parse()}, body: ${body.myChoice}, header: ${TokenHeader.parse()}"
                 }
 

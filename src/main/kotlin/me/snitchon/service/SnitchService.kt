@@ -7,47 +7,17 @@ import me.snitchon.router.RouterContext
 
 interface SnitchService {
     val config: Config get() = Config()
-    fun registerMethod(bundle: Bundle, path: String)
+    fun registerMethod(bundle: Endpoint<*>, path: String)
 
     fun withRoutes(routerConfiguration: Router.() -> Unit) {
-
     }
 }
 
 data class RoutedService(val service: SnitchService, val router: Router) {
     fun startListening(): RoutedService {
-        router.endpoints.forEach {
+        router.endpointss.forEach {
             with(RouterContext) {
-                when (it) {
-                    is EndpointBundle<*> -> service.registerMethod(it, it.endpoint.url.ensureLeadingSlash())
-                    is EndpointBundle1<*, *> -> service.registerMethod(it, it.endpoint.url.ensureLeadingSlash())
-                    is EndpointBundle2<*, *, *> -> service.registerMethod(it, it.endpoint.url.ensureLeadingSlash())
-                    is EndpointBundle3<*, *, *, *> -> service.registerMethod(it, it.endpoint.url.ensureLeadingSlash())
-                    is EndpointBundle4<*, *, *, *, *> -> service.registerMethod(
-                        it,
-                        it.endpoint.url.ensureLeadingSlash()
-                    )
-
-                    is EndpointBundle5<*, *, *, *, *, *> -> service.registerMethod(
-                        it,
-                        it.endpoint.url.ensureLeadingSlash()
-                    )
-
-                    is EndpointBundle6<*, *, *, *, *, *, *> -> service.registerMethod(
-                        it,
-                        it.endpoint.url.ensureLeadingSlash()
-                    )
-
-                    is EndpointBundle1Bodied<*, *, *> -> service.registerMethod(
-                        it,
-                        it.endpoint.url.ensureLeadingSlash()
-                    )
-
-                    is EndpointBundle2Bodied<*, *, *, *> -> service.registerMethod(
-                        it,
-                        it.endpoint.url.ensureLeadingSlash()
-                    )
-                }
+                service.registerMethod(it, it.url.ensureLeadingSlash())
             }
         }
         return this
