@@ -1,39 +1,45 @@
-import me.snitchon.http.RequestWrapper
+import me.snitchon.http.EndpointCall
 import kotlin.reflect.KProperty
 
 interface Parameter {
     val name: String
     val description: String
-
 }
 
-abstract class PathParameter(
-    inline val _name: String? = null,
+abstract class PathParameter<T>(
+    override inline val name: String,
     override inline val description: String = "description"
-): Parameter {
-    override val name: String by lazy { _name ?: this.javaClass.simpleName}
-    context(RequestWrapper)
-    fun yo() = params(name)
-    context(RequestWrapper)
-    operator fun invoke() = params(name)
+) : Parameter {
+
+    context(EndpointCall, T)
+            @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+            operator fun invoke() = parse()
+
+    context(EndpointCall, T)
+            @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+            fun parse() = request.params(name)
 }
 
-//class ParDelegate<T> {
-//    context(RequestWrapper)
-//    operator fun getValue(parameter: Parameter, property: KProperty<*>): String? {
-//        return
-//    }
-//}
+abstract class HeaderParameter<T>(
+    override inline val name: String,
+    override inline val description: String = "description"
+) : Parameter {
+    context(EndpointCall, T)
+            @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+            operator fun invoke() = parse()
+
+    context(EndpointCall, T)
+            @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+    fun parse() = request.headers(name)
+}
 
 abstract class QueryParameter(
-    inline val _name: String? = null,
+    override inline val name: String,
     override inline val description: String = "description"
-): Parameter {
-    override val name: String by lazy { _name ?: this.javaClass.simpleName}
-}
+) : Parameter
 
 class QueryDelegate {
     operator fun getValue(id: Parameter, property: KProperty<*>): QueryParameter {
-        return object: QueryParameter(property.name, id.description) {}
+        return object : QueryParameter(property.name, id.description) {}
     }
 }

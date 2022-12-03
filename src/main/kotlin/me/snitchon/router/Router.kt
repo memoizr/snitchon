@@ -9,4 +9,6 @@ import me.snitchon.service.SnitchService
 context (RouterContext)
 class Router() {
     val endpoints = mutableListOf<Bundle>()
+
+    inline fun <reified T : Any> body() = Body(T::class)
 }

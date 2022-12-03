@@ -1,5 +1,3 @@
-import me.snitchon.http.RequestWrapper
-import me.snitchon.router.RouterContext
 import kotlin.reflect.KProperty
 
 //context(Paths.id)
@@ -29,6 +27,7 @@ class Noo {
         return id.javaClass.simpleName
     }
 }
+
 
 fun main() {
     println(Bar.name)

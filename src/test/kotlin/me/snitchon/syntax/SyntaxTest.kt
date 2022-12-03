@@ -15,13 +15,13 @@ fun exampleHandler() {
 
 //context(RequestWrapper)
 object Paths {
-    object id : PathParameter("id") {
+//    object id : PathParameter("id") {
 //        val id by yo()
-    }
+//    }
 
-    object user: PathParameter("user") {
+//    object user: PathParameter("user") {
 //        val user by yo()
-    }
+//    }
 }
 
 object Queries {

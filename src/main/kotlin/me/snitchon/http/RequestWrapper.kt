@@ -1,9 +1,10 @@
 package me.snitchon.http
 
 import Parameter
+import me.snitchon.router.Body
 
 interface RequestWrapper {
-    val body: String
+    fun <T> body(): T
     fun params(name: String): String?
     fun headers(name: String): String?
 
@@ -15,7 +16,21 @@ interface RequestWrapper {
 interface ResponseWrapper {
 }
 
-data class EndpointCall(
-    val request: RequestWrapper,
+interface EndpointCall {
+    val request: RequestWrapper
     val response: ResponseWrapper
-)
+}
+
+data class DisembodiedEndpointCall(
+    override inline val request: RequestWrapper,
+    override inline val response: ResponseWrapper,
+): EndpointCall
+
+data class EmbodiedEndpointCall<T>(
+    override inline val request: RequestWrapper,
+    override inline val response: ResponseWrapper,
+    inline val body: T
+): EndpointCall
+
+
+data class Embodied<T: Any>(val body: Body<T>)
