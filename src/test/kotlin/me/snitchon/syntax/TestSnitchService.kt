@@ -49,10 +49,21 @@ class TestSnitchService : SnitchService {
         { g: G -> this(a, b, c, d, e, f, g) }
 }
 
+fun String.parseQuery(): Map<String, String> {
+    also { println(it) }
+    val map = this.dropWhile { it != '?'}
+        .drop(1)
+        .split('&')
+        .map { val (name, value) = it.split('=')
+            name to value
+        }.toMap()
+    return map
+}
+
 
 fun String.parse(url: String): Map<String, String> {
     val map = this.split('/').filter { it.isNotBlank() }
-        .zip(url.split('/').filter { it.isNotBlank() })
+        .zip(url.takeWhile { it != '?'}.split('/').filter { it.isNotBlank() })
         .filter { it.first.startsWith(':') }
         .map { it.copy(first = it.first.drop(1)) }
         .toMap()

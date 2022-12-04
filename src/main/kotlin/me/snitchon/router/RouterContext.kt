@@ -72,8 +72,9 @@ object RouterContext {
         Endpoint0(httpMethod, url, handler)
             .also { endpointss.add(it) }
 
-    context(Router)
-    fun <A : Par, RETURN> Endpoint1<A, Nothing>.isHandledBy(
+    context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+    fun <A : Par, RETURN>
+            Endpoint1<A, Nothing>.isHandledBy(
         handler: context(A, EndpointCall) () -> RETURN
     ) =
         Endpoint1(httpMethod, url, a, handler)
@@ -112,56 +113,59 @@ object RouterContext {
             .also { endpointss.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, RETURN>
+    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F: Par, RETURN>
             Endpoint6<A, B, C, D, E, F, Nothing>.isHandledBy(
         handler: context(A, B, C, D, E, F, EndpointCall) () -> RETURN
     ) =
         Endpoint6(httpMethod, url, a, b, c, d, e, f, handler)
             .also { endpointss.add(it) }
 
-    fun <A : Par, B : Par, RETURN>
-            Endpoint1<A, RETURN>.with(parameter: B): Endpoint2<A, B, RETURN> =
-        Endpoint2(httpMethod, url, a, parameter)
+    context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, G : Par, RETURN>
+            Endpoint7<A, B, C, D, E, F, G, Nothing>.isHandledBy(
+        handler: context(A, B, C, D, E, F, G, EndpointCall) () -> RETURN
+    ) =
+        Endpoint7(httpMethod, url, a, b, c, d, e, f, g, handler)
+            .also { endpointss.add(it) }
 
-    fun <A : Par, B : Par, C : Par, RETURN>
-            Endpoint2<A, B, RETURN>.with(parameter: C): Endpoint3<A, B, C, RETURN> =
-        Endpoint3(httpMethod, url, a, b, parameter)
+    context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, G : Par, H : Par, RETURN>
+            Endpoint8<A, B, C, D, E, F, G, H, Nothing>.isHandledBy(
+        handler: context(A, B, C, D, E, F, G, H, EndpointCall) () -> RETURN
+    ) =
+        Endpoint8(httpMethod, url, a, b, c, d, e, f, g, h, handler)
+            .also { endpointss.add(it) }
 
-    fun <A : Par, B : Par, C : Par, D : Par, RETURN>
-            Endpoint3<A, B, C, RETURN>.with(parameter: D): Endpoint4<A, B, C, D, RETURN> =
-        Endpoint4(httpMethod, url, a, b, c, parameter)
+//    context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+//    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, RETURN>
 
-    fun <A : Par, B : Par, C : Par, D : Par, E : Par, RETURN>
-            Endpoint4<A, B, C, D, RETURN>.with(parameter: E): Endpoint5<A, B, C, D, E, RETURN> =
-        Endpoint5(httpMethod, url, a, b, c, d, parameter)
-
-    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F: Par, RETURN>
-            Endpoint5<A, B, C, D, E, RETURN>.with(parameter: F): Endpoint6<A, B, C, D, E, F, RETURN> =
-        Endpoint6(httpMethod, url, a, b, c, d, e, parameter)
-
-    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F: Par, G: Par, RETURN>
-            Endpoint6<A, B, C, D, E, F, RETURN>.with(parameter: G): Endpoint7<A, B, C, D, E, F, G, RETURN> =
-        Endpoint7(httpMethod, url, a, b, c, d, e, f, parameter)
-
-    // BODY
-
-    fun <A : Par, B, BODY : Body<B>, RETURN>
-            Endpoint1<A, RETURN>.with(body: BODY): Endpoint3<A, BODY, HasBody, RETURN> =
-        Endpoint3(httpMethod, url, a, body, HasBody)
-
-    fun <A : Par, B : Par, C, BODY : Body<C>, RETURN>
-            Endpoint2<A, B, RETURN>.with(body: BODY): Endpoint4<A, B, BODY, HasBody, RETURN> =
-        Endpoint4(httpMethod, url, a, b, body, HasBody)
-
-    fun <A : Par, B : Par, C : Par, D, BODY : Body<D>, RETURN>
-            Endpoint3<A, B, C, RETURN>.with(body: BODY): Endpoint5<A, B, C, BODY, HasBody, RETURN> =
-        Endpoint5(httpMethod, url, a, b, c, body, HasBody)
-
-    fun <A : Par, B : Par, C : Par, D : Par, E, BODY : Body<E>, RETURN>
-            Endpoint4<A, B, C, D, RETURN>.with(body: BODY): Endpoint6<A, B, C, D, BODY, HasBody, RETURN> =
-        Endpoint6(httpMethod, url, a, b, c, d, body, HasBody)
-
-    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F, BODY : Body<F>, RETURN>
-            Endpoint5<A, B, C, D, E, RETURN>.with(body: BODY): Endpoint7<A, B, C, D, E, BODY, HasBody, RETURN> =
-        Endpoint7(httpMethod, url, a, b, c, d, e, body, HasBody)
+//    fun <A : Par, B : Par, C : Par, D : Par, RETURN>
+//            Endpoint3<A, B, C, RETURN>.with(parameter: D): Endpoint4<A, B, C, D, RETURN> =
+//        Endpoint4(httpMethod, url, a, b, c, parameter)
+//
+//    fun <A : Par, B : Par, C : Par, D : Par, E : Par, RETURN>
+//            Endpoint4<A, B, C, D, RETURN>.with(parameter: E): Endpoint5<A, B, C, D, E, RETURN> =
+//        Endpoint5(httpMethod, url, a, b, c, d, parameter)
+//
+//    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F: Par, RETURN>
+//            Endpoint5<A, B, C, D, E, RETURN>.with(parameter: F): Endpoint6<A, B, C, D, E, F, RETURN> =
+//        Endpoint6(httpMethod, url, a, b, c, d, e, parameter)
+//
+//    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F: Par, G: Par, RETURN>
+//            Endpoint6<A, B, C, D, E, F, RETURN>.with(parameter: G): Endpoint7<A, B, C, D, E, F, G, RETURN> =
+//        Endpoint7(httpMethod, url, a, b, c, d, e, f, parameter)
+//
+//    // BODY
+//
+//    fun <A : Par, B : Par, C : Par, D, BODY : Body<D>, RETURN>
+//            Endpoint3<A, B, C, RETURN>.with(body: BODY): Endpoint5<A, B, C, BODY, HasBody, RETURN> =
+//        Endpoint5(httpMethod, url, a, b, c, body, HasBody)
+//
+//    fun <A : Par, B : Par, C : Par, D : Par, E, BODY : Body<E>, RETURN>
+//            Endpoint4<A, B, C, D, RETURN>.with(body: BODY): Endpoint6<A, B, C, D, BODY, HasBody, RETURN> =
+//        Endpoint6(httpMethod, url, a, b, c, d, body, HasBody)
+//
+//    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F, BODY : Body<F>, RETURN>
+//            Endpoint5<A, B, C, D, E, RETURN>.with(body: BODY): Endpoint7<A, B, C, D, E, BODY, HasBody, RETURN> =
+//        Endpoint7(httpMethod, url, a, b, c, d, e, body, HasBody)
 }

@@ -1,7 +1,6 @@
 package me.snitchon.syntax
 
 import PathParameter
-import QueryDelegate
 import QueryParameter
 import me.snitchon.http.RequestWrapper
 import me.snitchon.router.RouterContext
@@ -24,11 +23,11 @@ object Paths {
 //    }
 }
 
-object Queries {
-    class Page : QueryParameter("user") {
-        val page by QueryDelegate()
-    }
-}
+//object Queries {
+//    class Page : QueryParameter("user") {
+//        val page by QueryDelegate()
+//    }
+//}
 
 class SyntaxTest {
     @Test

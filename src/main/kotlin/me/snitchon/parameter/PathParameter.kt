@@ -33,13 +33,26 @@ abstract class HeaderParameter<T>(
     fun parse() = request.headers(name)
 }
 
-abstract class QueryParameter(
+abstract class QueryParameter<T>(
     override inline val name: String,
     override inline val description: String = "description"
-) : Parameter
+) : Parameter {
+    context(EndpointCall, T)
+            @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+            operator fun invoke() = parse()
 
-class QueryDelegate {
-    operator fun getValue(id: Parameter, property: KProperty<*>): QueryParameter {
-        return object : QueryParameter(property.name, id.description) {}
-    }
+    context(EndpointCall, T)
+            @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+    fun parse() = request.getParam(this)
 }
+
+//abstract class QueryParameter(
+//    override inline val name: String,
+//    override inline val description: String = "description"
+//) : Parameter
+//
+//class QueryDelegate {
+//    operator fun getValue(id: Parameter, property: KProperty<*>): QueryParameter {
+//        return object : QueryParameter(property.name, id.description) {}
+//    }
+//}

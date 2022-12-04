@@ -2,6 +2,11 @@ package me.snitchon.syntax
 
 import HeaderParameter
 import PathParameter
+import QueryParameter
+import me.snitchon.endpoint.Endpoint
+import me.snitchon.endpoint.headers
+import me.snitchon.endpoint.plus
+import me.snitchon.endpoint.queries
 import me.snitchon.http.EndpointCall
 import me.snitchon.http.HTTPMethod
 import me.snitchon.router.Body
@@ -16,9 +21,14 @@ class ServiceTest {
 
     //    context(RequestWrapper)
     object userId : PathParameter<userId>("userId")
+    object videoId : PathParameter<videoId>("videoId")
 
     object TokenHeader : HeaderParameter<TokenHeader>("token")
     object TimeHeader : HeaderParameter<TimeHeader>("time")
+    object HeaderOne : HeaderParameter<HeaderOne>("one")
+    object QueryOne : QueryParameter<QueryOne>("one")
+    object QueryTwo : QueryParameter<QueryTwo>("two")
+    object QueryThree : QueryParameter<QueryThree>("two")
 
     @Test
     fun `supports 0 path parameters`() {
@@ -36,11 +46,17 @@ class ServiceTest {
         assertEquals("bar response", barResponse)
     }
 
+//    fun <X : Endpoint<R>, Y : Endpoint<R>, R> X.hooo(): Y = headers { (TimeHeader + TokenHeader + HeaderOne) } as Y
+
     @Test
     fun `supports 1 path parameter`() {
         service.setRoutes {
-            GET("foo" / userId)
+            val x = GET("foo" / userId)
+                .headers { TimeHeader + HeaderOne + TokenHeader }
+                .queries { QueryOne + QueryTwo }
                 .isHandledBy {
+                    TimeHeader()
+                    TokenHeader()
                     "param value: ${userId()}"
                 }
             GET("foo" / userId / "bar").isHandledBy { "param value is also: ${userId()}" }
@@ -78,7 +94,6 @@ class ServiceTest {
                     "param value: ${userId.parse()}, body: ${body.myChoice}, header: ${TokenHeader.parse()}"
                 }
 
-
         }.startListening()
 
         val response1 = service.makeRequest(
@@ -91,6 +106,31 @@ class ServiceTest {
         )
 
         assertEquals("param value: good, body: it depends, header: head", response1)
+    }
+
+    @Test
+    fun `supports 1 path parameter 1 header 2 query and body`() {
+        service.setRoutes {
+            GET("foo" / userId)
+                .with(TokenHeader)
+                .queries {QueryOne + QueryTwo }
+                .with(body<MyBody>())
+                .isHandledBy {
+                    "param value: ${userId.parse()}, body: ${body.myChoice}, header: ${TokenHeader.parse()}, query: ${QueryOne()}, two: ${QueryTwo()}"
+                }
+
+        }.startListening()
+
+        val response1 = service.makeRequest(
+            TestRequest(
+                HTTPMethod.GET,
+                "/foo/good?one=great&two=greater",
+                MyBody("it depends"),
+                headers = mapOf("token" to "head")
+            )
+        )
+
+        assertEquals("param value: good, body: it depends, header: head, query: great, two: greater", response1)
     }
 }
 
