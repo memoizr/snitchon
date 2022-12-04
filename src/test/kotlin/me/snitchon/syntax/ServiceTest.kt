@@ -14,10 +14,10 @@ class ServiceTest {
 
     val service = TestSnitchService()
 
-//    context(RequestWrapper)
+    //    context(RequestWrapper)
     object userId : PathParameter<userId>("userId")
 
-   object TokenHeader : HeaderParameter<TokenHeader>("token")
+    object TokenHeader : HeaderParameter<TokenHeader>("token")
     object TimeHeader : HeaderParameter<TimeHeader>("time")
 
     @Test
@@ -25,7 +25,7 @@ class ServiceTest {
 
         service.setRoutes {
             GET("foo")
-            .isHandledBy { "foo response" }
+                .isHandledBy { "foo response" }
             GET("foo" / "bar").isHandledBy { "bar response" }
         }.startListening()
 
@@ -37,11 +37,12 @@ class ServiceTest {
     }
 
     @Test
-    fun `supports 1 path parameter` () {
+    fun `supports 1 path parameter`() {
         service.setRoutes {
             GET("foo" / userId)
                 .isHandledBy {
-                    "param value: ${userId()}" }
+                    "param value: ${userId()}"
+                }
             GET("foo" / userId / "bar").isHandledBy { "param value is also: ${userId()}" }
         }.startListening()
 
@@ -53,7 +54,7 @@ class ServiceTest {
     }
 
     @Test
-    fun `supports 1 path parameter and body` () {
+    fun `supports 1 path parameter and body`() {
         service.setRoutes {
             GET("foo" / userId)
                 .with(body<MyBody>())
@@ -68,7 +69,7 @@ class ServiceTest {
     }
 
     @Test
-    fun `supports 1 path parameter 1 header and body` () {
+    fun `supports 1 path parameter 1 header and body`() {
         service.setRoutes {
             GET("foo" / userId)
                 .with(TokenHeader)
@@ -78,19 +79,26 @@ class ServiceTest {
                 }
 
 
-
         }.startListening()
 
-        val response1 = service.makeRequest(TestRequest(
-            HTTPMethod.GET,
-            "/foo/good",
-            MyBody("it depends"),
-            headers = mapOf("token" to "head")
-        ))
+        val response1 = service.makeRequest(
+            TestRequest(
+                HTTPMethod.GET,
+                "/foo/good",
+                MyBody("it depends"),
+                headers = mapOf("token" to "head")
+            )
+        )
 
         assertEquals("param value: good, body: it depends, header: head", response1)
     }
 }
 
 
-
+@Suppress(
+    "BOUNDS_NOT_ALLOWED_IF_BOUNDED_BY_TYPE_PARAMETER",
+    "SUBTYPING_BETWEEN_CONTEXT_RECEIVERS"
+)
+fun <A, B, C> with(a: A, b: B, x: context(A, B) () -> Unit) where C : A, C : B {
+    x(a, b)
+}
