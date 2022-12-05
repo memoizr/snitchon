@@ -19,32 +19,28 @@ import kotlin.reflect.full.starProjectedType
 
 val <T> Endpoint<T>.headerParams
     get() = this::class
-        .declaredMembers
-        .filter { it.returnType.isSubtypeOf(HeaderParameter::class.starProjectedType) }
-        .map { it.call(this) as HeaderParameter<*, *> }
+        .memberProperties
+        .map { it.call(this) as? HeaderParameter<*, *> }
+        .filterNotNull()
 
 val <T> Endpoint<T>.pathParams
     get() = this::class
-        .declaredMembers
-        .filter { it.returnType.isSubtypeOf(PathParameter::class.starProjectedType) }
-        .map { it.call(this) as PathParameter<*, *> }
+        .memberProperties
+        .map { it.call(this) as? PathParameter<*, *> }
+        .filterNotNull()
 
 val <T> Endpoint<T>.queryParams
     get() = this::class
-        .members
-//        .also {println(it)}
-        .filter { it.returnType.isSubtypeOf(QueryParameter::class.starProjectedType) }
-        .map { it.call(this) as QueryParameter<*, *> }
-        .also {
-//            println("=============== query params ====================")
-//            println(it)
-        }
+        .memberProperties
+        .map { it.call(this) as? QueryParameter<*, *> }
+        .filterNotNull()
 
 val <T> Endpoint<T>.bodyParam
     get() = this::class
-        .declaredMembers
-        .firstOrNull { it.returnType.isSubtypeOf(Body::class.starProjectedType) }
-        .let { it?.call(this) as? Body<*> }
+        .memberProperties
+        .map { it.call(this) as? Body<*> }
+        .filterNotNull()
+        .firstOrNull()
         .let { it ?: Body(Nothing::class) }
 
 context(Parser)

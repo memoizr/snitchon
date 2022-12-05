@@ -12,6 +12,7 @@ import me.snitchon.parameter.Header
 import me.snitchon.parameter.HeaderParameter
 import me.snitchon.parameter.PathParameter
 import me.snitchon.parameter.QueryParameter
+import me.snitchon.router.Body
 import org.junit.jupiter.api.Test
 import kotlin.reflect.KProperty
 import kotlin.test.assertEquals
@@ -77,6 +78,7 @@ class ServiceTest {
             QueryOne,
             QueryTwo,
             QueryThree,
+            Body<MyBody>,
             EndpointCall)
                 () -> String =
                 {
@@ -92,14 +94,15 @@ class ServiceTest {
                 GET("foo" / userId)
                     .headers { `Content-Type` + HeaderOne + TokenHeader }
                     .queries { QueryOne + QueryTwo + QueryThree }
+                    .with(body<MyBody>())
                     .isHandledBy(handler)
                 GET("foo" / userId / "bar").isHandledBy { "param value is also: ${userId()}" }
             }.startListening()
                 .generateDocs().also {
 //                    println("docss")
-//                    println(it.jsonString)
                 }
                 .writeDocsToStaticFolder()
+
         }
 
 
