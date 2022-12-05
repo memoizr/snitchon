@@ -30,9 +30,12 @@ class Noo {
 
 
 fun main() {
-    println(Bar.name)
-    println(Bar.name)
-    println(Bar.name)
+
+    val x = object : Any() {}
+
+    println(x)
+
+
 //    with (RouterContext) {
 //        GET("foo" / Paths.id)
 //            .isHandledBy {

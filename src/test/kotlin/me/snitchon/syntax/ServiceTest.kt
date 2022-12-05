@@ -1,16 +1,19 @@
 package me.snitchon.syntax
 
-import HeaderParameter
-import PathParameter
-import QueryParameter
-import me.snitchon.endpoint.Endpoint
+import com.snitch.NonEmptyString
+import com.snitch.Validator
+import me.snitchon.documentation.generateDocs
 import me.snitchon.endpoint.headers
 import me.snitchon.endpoint.plus
 import me.snitchon.endpoint.queries
 import me.snitchon.http.EndpointCall
 import me.snitchon.http.HTTPMethod
-import me.snitchon.router.Body
+import me.snitchon.parameter.Header
+import me.snitchon.parameter.HeaderParameter
+import me.snitchon.parameter.PathParameter
+import me.snitchon.parameter.QueryParameter
 import org.junit.jupiter.api.Test
+import kotlin.reflect.KProperty
 import kotlin.test.assertEquals
 
 class ServiceTest {
@@ -20,15 +23,30 @@ class ServiceTest {
     val service = TestSnitchService()
 
     //    context(RequestWrapper)
-    object userId : PathParameter<userId>("userId")
-    object videoId : PathParameter<videoId>("videoId")
 
-    object TokenHeader : HeaderParameter<TokenHeader>("token")
-    object TimeHeader : HeaderParameter<TimeHeader>("time")
-    object HeaderOne : HeaderParameter<HeaderOne>("one")
-    object QueryOne : QueryParameter<QueryOne>("one")
-    object QueryTwo : QueryParameter<QueryTwo>("two")
-    object QueryThree : QueryParameter<QueryThree>("two")
+
+    object userId : PathParameter<userId, String>("userId", pattern = NonEmptyString)
+    object videoId : PathParameter<videoId, String>("videoId", pattern = NonEmptyString)
+    object TokenHeader : HeaderParameter<TokenHeader, String>("token", pattern = NonEmptyString)
+
+    object TimeHeader : HeaderParameter<TimeHeader, String>("time", pattern = NonEmptyString)
+//    val contentType by ParamDelegate()
+
+    object `Content-Type` : Header<`Content-Type`>()
+    object HeaderOne : HeaderParameter<HeaderOne, String>("one", pattern = NonEmptyString)
+    object QueryOne : QueryParameter<QueryOne, String>("one", pattern = NonEmptyString)
+    object QueryTwo : QueryParameter<QueryTwo, String>("two", pattern = NonEmptyString)
+    object QueryThree : QueryParameter<QueryThree, String>("two", pattern = NonEmptyString)
+
+    class ParamDelegate {
+//        operator fun getValue(any: Any, property: KProperty<*>) =
+//            object : HeaderParameter<String, String>(property.name, pattern = NonEmptyString) {}
+
+//        operator fun getValue(any: Any, property: KProperty<*>): String? =
+//            object : HeaderParameter<String, String>(property.name, pattern = NonEmptyString) {}
+    }
+
+    object Routing
 
     @Test
     fun `supports 0 path parameters`() {
@@ -50,19 +68,52 @@ class ServiceTest {
 
     @Test
     fun `supports 1 path parameter`() {
-        service.setRoutes {
-            val x = GET("foo" / userId)
-                .headers { TimeHeader + HeaderOne + TokenHeader }
-                .queries { QueryOne + QueryTwo }
-                .isHandledBy {
-                    TimeHeader()
+        with(GsonJsonParser) {
+            val handler: context(
+            userId,
+            `Content-Type`,
+            HeaderOne,
+            TokenHeader,
+            QueryOne,
+            QueryTwo,
+            QueryThree,
+            EndpointCall)
+                () -> String =
+                {
+                    println("******************time*****************")
+//                        println(contentType())
+//                        TimeHeader.parse()
+//                        println(TimeHeader())
+                    println(`Content-Type`())
                     TokenHeader()
                     "param value: ${userId()}"
                 }
-            GET("foo" / userId / "bar").isHandledBy { "param value is also: ${userId()}" }
-        }.startListening()
+            service.setRoutes {
+                GET("foo" / userId)
+                    .headers { `Content-Type` + HeaderOne + TokenHeader }
+                    .queries { QueryOne + QueryTwo + QueryThree }
+                    .isHandledBy(handler)
+                GET("foo" / userId / "bar").isHandledBy { "param value is also: ${userId()}" }
+            }.startListening()
+                .generateDocs().also {
+//                    println("docss")
+//                    println(it.jsonString)
+                }
+                .writeDocsToStaticFolder()
+        }
 
-        val response1 = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo/good"))
+
+        val response1 =
+            service.makeRequest(
+                TestRequest(
+                    HTTPMethod.GET, "/foo/good", headers = mapOf(
+                        "time" to "midnight",
+                        "Content-Type" to "the content",
+                        "marissa" to "the nickname"
+
+                    )
+                )
+            )
         val response2 = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo/good/bar"))
 
         assertEquals("param value: good", response1)
@@ -113,7 +164,7 @@ class ServiceTest {
         service.setRoutes {
             GET("foo" / userId)
                 .with(TokenHeader)
-                .queries {QueryOne + QueryTwo }
+                .queries { QueryOne + QueryTwo }
                 .with(body<MyBody>())
                 .isHandledBy {
                     "param value: ${userId.parse()}, body: ${body.myChoice}, header: ${TokenHeader.parse()}, query: ${QueryOne()}, two: ${QueryTwo()}"

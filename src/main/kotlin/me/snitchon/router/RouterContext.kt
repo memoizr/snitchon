@@ -1,34 +1,57 @@
 package me.snitchon.router
 
-import Parameter
-import PathParameter
+import com.snitch.NonEmptyString
+import com.snitch.Validator
+import me.snitchon.documentation.Visibility
 import me.snitchon.endpoint.*
 import me.snitchon.http.EndpointCall
 import me.snitchon.http.HTTPMethod
+import me.snitchon.parameter.Parameter
 import me.snitchon.parameter.ParametrizedPath1
 import me.snitchon.parameter.ParametrizedPath2
+import me.snitchon.parameter.PathParameter
 import kotlin.reflect.KClass
 
-internal typealias PP<T> = PathParameter<T>
-internal typealias Par = Parameter
+internal typealias PP<T> = PathParameter<T, String>
+internal typealias Par = Parameter<*, *>
 
 data class Body<T : Any>(val klass: KClass<T>) : Bodied<T, Body<T>> {
+    override val type: Class<*>
+        get() = klass.java
+
     //, val customGson: Klaxon = klaxon)
     override val name: String
         get() = "Body"
+    override val pattern: Validator<Any, T>
+        get() = TODO()
     override val description: String
-        get() = "Body of the request"
-
+        get() = "body of the request"
+    override val required: Boolean
+        get() = TODO()
+    override val emptyAsMissing: Boolean
+        get() = TODO()
+    override val invalidAsMissing: Boolean
+        get() = TODO()
 }
 
-object HasBody : Parameter {
+object HasBody : Parameter<Nothing, Nothing> {
+    override val type: Class<*>
+        get() = TODO("Not yet implemented")
     override val name: String
         get() = TODO("Not yet implemented")
     override val description: String
         get() = TODO("Not yet implemented")
+    override val pattern: Validator<Nothing, Nothing>
+        get() = TODO()
+    override val required: Boolean
+        get() = TODO()
+    override val emptyAsMissing: Boolean
+        get() = TODO()
+    override val invalidAsMissing: Boolean
+        get() = TODO()
 }
 
-interface Bodied<T : Any, A : Body<T>> : Parameter {
+interface Bodied<T : Any, A : Body<T>> : Parameter<Any, T> {
     context (EndpointCall, A, HasBody)
             @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     val body
@@ -36,15 +59,36 @@ interface Bodied<T : Any, A : Body<T>> : Parameter {
 }
 
 object RouterContext {
-    fun GET(path: String) = Endpoint0<Nothing>(HTTPMethod.GET, path.ensureLeadingSlash())
+    fun GET( path: String, ) = Endpoint0<Nothing>(
+        HTTPMethod.GET,
+        path.ensureLeadingSlash(),
+        "",
+        description = null,
+        visibility = Visibility.PUBLIC,
+    )
 
     fun <P1 : PP<P1>>
             GET(path: ParametrizedPath1<P1>) =
-        Endpoint1<P1, Nothing>(HTTPMethod.GET, path.path, path.a)
+        Endpoint1<P1, Nothing>(
+            HTTPMethod.GET,
+            path.path,
+            null,
+            null,
+            Visibility.PUBLIC,
+            {},
+            {_,res -> res},
+            path.a
+        )
 
     fun <A : PP<A>, B : PP<B>>
             GET(path: ParametrizedPath2<A, B>) =
-        Endpoint2<A, B, Nothing>(HTTPMethod.GET, path.path, path.a, path.b)
+        Endpoint2<A, B, Nothing>(HTTPMethod.GET, path.path,
+            null,
+            null,
+            Visibility.PUBLIC,
+            {},
+            {_,res -> res},
+            path.a, path.b)
 
 
     operator fun String.div(path: String): String {
@@ -69,72 +113,74 @@ object RouterContext {
     fun <RETURN> Endpoint0<Nothing>.isHandledBy(
         handler: context (EndpointCall) () -> RETURN
     ) =
-        Endpoint0(httpMethod, url, handler)
-            .also { endpointss.add(it) }
+        Endpoint0(httpMethod, url, summary, description, visibility, before, after, handler)
+            .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     fun <A : Par, RETURN>
             Endpoint1<A, Nothing>.isHandledBy(
         handler: context(A, EndpointCall) () -> RETURN
     ) =
-        Endpoint1(httpMethod, url, a, handler)
-            .also { endpointss.add(it) }
+        Endpoint1(httpMethod, url, summary, description, visibility, before, after, a, handler)
+            .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Par, B : Par, RETURN>
+    fun <A : Par,
+            B : Par, RETURN>
             Endpoint2<A, B, Nothing>.isHandledBy(
         handler: context(A, B, EndpointCall) () -> RETURN
     ) =
-        Endpoint2(httpMethod, url, a, b, handler)
-            .also { endpointss.add(it) }
+        Endpoint2(httpMethod, url, summary, description, visibility, before, after, a, b, handler)
+            .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     fun <A : Par, B : Par, C : Par, R>
             Endpoint3<A, B, C, Nothing>.isHandledBy(
         handler: context(A, B, C, EndpointCall) () -> R
     ) =
-        Endpoint3(httpMethod, url, a, b, c, handler)
-            .also(endpointss::add)
+        Endpoint3(httpMethod, url, summary, description, visibility, before, after, a, b, c, handler)
+            .also(endpoints::add)
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     fun <A : Par, B : Par, C : Par, D : Par, RETURN>
             Endpoint4<A, B, C, D, Nothing>.isHandledBy(
         handler: context(A, B, C, D, EndpointCall) () -> RETURN
     ) =
-        Endpoint4(httpMethod, url, a, b, c, d, handler)
-            .also { endpointss.add(it) }
+        Endpoint4(httpMethod, url, summary, description, visibility, before, after, a, b, c, d, handler)
+            .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     fun <A : Par, B : Par, C : Par, D : Par, E : Par, RETURN>
             Endpoint5<A, B, C, D, E, Nothing>.isHandledBy(
         handler: context(A, B, C, D, E, EndpointCall) () -> RETURN
     ) =
-        Endpoint5(httpMethod, url, a, b, c, d, e, handler)
-            .also { endpointss.add(it) }
+        Endpoint5(httpMethod, url, summary, description, visibility, before, after, a, b, c, d, e, handler)
+            .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F: Par, RETURN>
+    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, RETURN>
             Endpoint6<A, B, C, D, E, F, Nothing>.isHandledBy(
-        handler: context(A, B, C, D, E, F, EndpointCall) () -> RETURN
+        handler: context(A, B, C, D, E, F,
+        EndpointCall) () -> RETURN
     ) =
-        Endpoint6(httpMethod, url, a, b, c, d, e, f, handler)
-            .also { endpointss.add(it) }
+        Endpoint6(httpMethod, url, summary, description, visibility, before, after, a, b, c, d, e, f, handler)
+            .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, G : Par, RETURN>
             Endpoint7<A, B, C, D, E, F, G, Nothing>.isHandledBy(
         handler: context(A, B, C, D, E, F, G, EndpointCall) () -> RETURN
     ) =
-        Endpoint7(httpMethod, url, a, b, c, d, e, f, g, handler)
-            .also { endpointss.add(it) }
+        Endpoint7(httpMethod, url, summary, description, visibility, before, after, a, b, c, d, e, f, g, handler)
+            .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, G : Par, H : Par, RETURN>
             Endpoint8<A, B, C, D, E, F, G, H, Nothing>.isHandledBy(
         handler: context(A, B, C, D, E, F, G, H, EndpointCall) () -> RETURN
     ) =
-        Endpoint8(httpMethod, url, a, b, c, d, e, f, g, h, handler)
-            .also { endpointss.add(it) }
+        Endpoint8(httpMethod, url, summary, description, visibility, before, after, a, b, c, d, e, f, g, h, handler)
+            .also { endpoints.add(it) }
 
 //    context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 //    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, RETURN>

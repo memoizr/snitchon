@@ -1,6 +1,5 @@
 package me.snitchon.syntax
 
-import Parameter
 import me.snitchon.endpoint.*
 import me.snitchon.http.*
 import me.snitchon.router.Router
@@ -29,7 +28,6 @@ class TestSnitchService : SnitchService {
             service.find { it.first.path.match(request.path) && it.first.method == request.method }
 
         val func = requestFunction1Pair?.second
-        println(service)
         val testRequestWrapper = TestRequestWrapper(request, requestFunction1Pair?.first?.path.orEmpty())
         val response = object : ResponseWrapper {}
         return func?.invoke(request.body?.let { EmbodiedEndpointCall(testRequestWrapper, response, it) }
@@ -50,7 +48,6 @@ class TestSnitchService : SnitchService {
 }
 
 fun String.parseQuery(): Map<String, String> {
-    also { println(it) }
     val map = this.dropWhile { it != '?'}
         .drop(1)
         .split('&')

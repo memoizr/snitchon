@@ -1,8 +1,8 @@
 package me.snitchon.syntax
 
-import Parameter
 import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
+import me.snitchon.parameter.Parameter
 
 data class TestRequestWrapper(
     val testRequest: TestRequest,
@@ -16,7 +16,7 @@ data class TestRequestWrapper(
 
     override fun headers(name: String): String? = testRequest.headers[name]
 
-    override fun getParam(param: Parameter): String? {
+    override fun getParam(param: Parameter<*,*>): String? {
         return testRequest.path.parseQuery()[param.name]
     }
 }

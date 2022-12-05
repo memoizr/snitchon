@@ -1,6 +1,6 @@
 package me.snitchon.http
 
-import Parameter
+import me.snitchon.parameter.Parameter
 import me.snitchon.router.Body
 
 interface RequestWrapper {
@@ -10,7 +10,7 @@ interface RequestWrapper {
 
     fun method() : HTTPMethod
 
-    fun getParam(param: Parameter): String?
+    fun getParam(param: Parameter<*,*>): String?
 }
 
 interface ResponseWrapper {
