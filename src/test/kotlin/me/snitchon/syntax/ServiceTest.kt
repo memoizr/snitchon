@@ -4,6 +4,9 @@ import com.snitch.HttpResponse
 import com.snitch.NonEmptyString
 import com.snitch.ok
 import me.snitchon.documentation.generateDocs
+import me.snitchon.documentation.headerParams
+import me.snitchon.endpoint.headers
+import me.snitchon.endpoint.plus
 import me.snitchon.http.Handler
 import me.snitchon.http.HTTPMethod
 import me.snitchon.parameter.Header
@@ -59,7 +62,10 @@ class ServiceTest {
                 GET("foo")
                     .isHandledBy(handler)
                 GET("foo" / "bar")
-                    .isHandledBy { MyResponse("hello world", 33, listOf("one", "two", "three")).ok }
+                    .headers { HeaderOne + TimeHeader }
+                    .isHandledBy {
+                        HeaderOne()
+                        MyResponse("hello world", 33, listOf("one", "two", "three")).ok }
             }.startListening()
                 .generateDocs()
                 .writeDocsToStaticFolder()

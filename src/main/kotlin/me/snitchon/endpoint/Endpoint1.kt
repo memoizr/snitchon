@@ -38,6 +38,12 @@ interface Endpoint<R : Any> {
 object OnlyHeader
 object OnlyQuery
 
+context(Endpoint0<RETURN>)
+infix operator fun <
+        ONE : HP,
+        TWO : HP,
+        RETURN : Any> ONE.plus(parameter: TWO) = with(this).with(parameter)
+
 context(Endpoint1<A, RETURN>)
 infix operator fun <
         A : Par,
