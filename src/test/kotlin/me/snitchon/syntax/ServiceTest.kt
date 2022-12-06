@@ -38,14 +38,6 @@ class ServiceTest {
     object QueryTwo : QueryParameter<QueryTwo, String>("two", pattern = NonEmptyString)
     object QueryThree : QueryParameter<QueryThree, String>("two", pattern = NonEmptyString)
 
-    class ParamDelegate {
-//        operator fun getValue(any: Any, property: KProperty<*>) =
-//            object : HeaderParameter<String, String>(property.name, pattern = NonEmptyString) {}
-
-//        operator fun getValue(any: Any, property: KProperty<*>): String? =
-//            object : HeaderParameter<String, String>(property.name, pattern = NonEmptyString) {}
-    }
-
     object Routing
 
     data class MyResponse(val greeting: String, val counter: Int, val options: List<String>)
@@ -128,20 +120,20 @@ class ServiceTest {
 //        assertEquals("param value is also: good", response2)
 //    }
 
-//    @Test
-//    fun `supports 1 path parameter and body`() {
-//        service.setRoutes {
-//            GET("foo" / userId)
-//                .with(body<MyBody>())
-//                .isHandledBy {
-//                    "param value: ${userId()}, body: ${body.myChoice}"
-//                }
-//        }.startListening()
-//
-//        val response1 = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo/good", MyBody("it depends")))
-//
-//        assertEquals("param value: good, body: it depends", response1)
-//    }
+    @Test
+    fun `supports 1 path parameter and body`() {
+        service.setRoutes {
+            GET("foo" / userId)
+                .with(body<MyBody>())
+                .isHandledBy {
+                    "param value: ${userId()}, body: ${body.myChoice}".ok
+                }
+        }.startListening()
+
+        val response1 = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo/good", MyBody("it depends")))
+
+        assertEquals("param value: good, body: it depends", response1)
+    }
 //
 //    @Test
 //    fun `supports 1 path parameter 1 header and body`() {

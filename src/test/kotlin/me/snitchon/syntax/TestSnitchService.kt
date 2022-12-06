@@ -33,18 +33,6 @@ class TestSnitchService : SnitchService {
         return func?.invoke(request.body?.let { EmbodiedEndpointCall(testRequestWrapper, response, it) }
             ?: DisembodiedEndpointCall(testRequestWrapper, response))
     }
-
-    operator fun <A, B, R> ((A, B) -> R).invoke(a: A) = { b: B -> this(a, b) }
-    operator fun <A, B, C, R> ((A, B, C) -> R).invoke(a: A, b: B) = { c: C -> this(a, b, c) }
-    operator fun <A, B, C, D, R> ((A, B, C, D) -> R).invoke(a: A, b: B, c: C) = { d: D -> this(a, b, c, d) }
-    operator fun <A, B, C, D, E, R> ((A, B, C, D, E) -> R).invoke(a: A, b: B, c: C, d: D) =
-        { e: E -> this(a, b, c, d, e) }
-
-    operator fun <A, B, C, D, E, F, R> ((A, B, C, D, E, F) -> R).invoke(a: A, b: B, c: C, d: D, e: E) =
-        { f: F -> this(a, b, c, d, e, f) }
-
-    operator fun <A, B, C, D, E, F, G, R> ((A, B, C, D, E, F, G) -> R).invoke(a: A, b: B, c: C, d: D, e: E, f: F) =
-        { g: G -> this(a, b, c, d, e, f, g) }
 }
 
 fun String.parseQuery(): Map<String, String> {

@@ -17,6 +17,7 @@ data class RoutedService(val service: SnitchService, val router: Router) {
     fun startListening(): RoutedService {
         router.endpoints.forEach {
             with(RouterContext) {
+                println(it)
                 service.registerMethod(it, it.url.ensureLeadingSlash())
             }
         }

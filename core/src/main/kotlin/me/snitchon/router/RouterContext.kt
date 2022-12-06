@@ -54,8 +54,8 @@ object HasBody : Parameter<Nothing, Nothing> {
 interface Bodied<T : Any, A : Body<T>> : Parameter<Any, T> {
     context (Handler, A, HasBody)
             @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    val body
-        get() = request.body<T>()
+    val body: T
+        get() = request.body(type) as T
 }
 
 object RouterContext {
@@ -68,10 +68,33 @@ object RouterContext {
         response = Nothing::class
     )
 
+    fun PUT( path: String, ) = Endpoint0(
+        HTTPMethod.PUT,
+        path.ensureLeadingSlash(),
+        "",
+        description = null,
+        visibility = Visibility.PUBLIC,
+        response = Nothing::class
+    )
+
     fun <P1 : PP<P1>>
             GET(path: ParametrizedPath1<P1>) =
         Endpoint1<P1, Nothing>(
             HTTPMethod.GET,
+            path.path,
+            null,
+            null,
+            Visibility.PUBLIC,
+            {},
+            {_,res -> res},
+            Nothing::class,
+            path.a
+        )
+
+    fun <P1 : PP<P1>>
+            PUT(path: ParametrizedPath1<P1>) =
+        Endpoint1<P1, Nothing>(
+            HTTPMethod.PUT,
             path.path,
             null,
             null,

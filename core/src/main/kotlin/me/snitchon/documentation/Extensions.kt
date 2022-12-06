@@ -21,16 +21,22 @@ internal fun Operation.withParameter(parameter: Parameters.Parameter) =
         copy(parameters = (parameters ?: emptyList()) + parameter)
 
 internal fun Operation.withRequestBody(
-        contentType: ContentType,
-        body: KClass<*>) =
-        copy(requestBody = RequestBodies.RequestBody(content =
-        mapOf(contentType.value to MediaType(toSchema(body.starProjectedType)))))
+    contentType: ContentType,
+    body: KClass<*>) =
+        copy(requestBody = RequestBodies.RequestBody(
+            content =
+            mapOf(contentType.value to MediaType(toSchema(body.starProjectedType)))
+        )
+        )
 
 internal fun Operation.withResponse(
-        contentType: ContentType,
-        body: KClass<*>,
-        code: String = "200"
+    contentType: ContentType,
+    body: KClass<*>,
+    code: String = "200"
 ) = copy(responses = responses + (code to Responses.Response(
-        content = mapOf(contentType.value to MediaType(
-                toSchema(body.starProjectedType)
-        )))))
+    content = mapOf(
+        contentType.value to MediaType(
+            toSchema(body.starProjectedType)
+        )
+    )
+)))

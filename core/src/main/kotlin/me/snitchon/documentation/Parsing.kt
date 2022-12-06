@@ -34,63 +34,69 @@ internal fun toSchema(type: KType): Schemas {
 private fun objectSchema(klass: KClass<*>): Schemas.ObjectSchema {
     val parameters = klass.primaryConstructor!!.parameters
     return Schemas.ObjectSchema(
-            properties = parameters.map { param ->
-                param.name!! to (toSchema(param.type)
-                        .let { schema ->
-                            val desc = param.annotations.find { it is Description }?.let { (it as Description) }
-                            when (schema) {
-                                is Schemas.ArraySchema -> schema.apply {
-                                    description = desc?.description
-                                    example = when {
-                                        desc?.exEmptyList != null && desc.exEmptyList -> listOf<Any>()
-                                        else -> null
-                                    }
-                                    pattern = desc?.pattern
-                                    visibility = desc?.visibility
-                                }
-                                is Schemas.StringSchema -> schema.apply {
-                                    description = desc?.description
-                                    example = desc?.exString?.nullIfEmpty()
-                                    pattern = desc?.pattern
-                                    visibility = desc?.visibility
-                                }
-                                is Schemas.FloatSchema -> schema.apply {
-                                    description = desc?.description
-                                    example = desc?.exFloat?.nullIfZero()
-                                    pattern = desc?.pattern
-                                    visibility = desc?.visibility
-                                }
-                                is Schemas.DoubleSchema -> schema.apply {
-                                    description = desc?.description
-                                    example = desc?.exDouble?.nullIfZero()
-                                    pattern = desc?.pattern
-                                    visibility = desc?.visibility
-                                }
-                                is Schemas.IntSchema -> schema.apply {
-                                    description = desc?.description
-                                    example = desc?.exInt?.nullIfZero()
-                                    pattern = desc?.pattern
-                                    visibility = desc?.visibility
-                                }
-                                is Schemas.LongSchema -> schema.apply {
-                                    description = desc?.description
-                                    example = desc?.exLong?.nullIfZero()
-                                    pattern = desc?.pattern
-                                    visibility = desc?.visibility
-                                }
-                                is Schemas.BaseSchema<*> -> schema.apply {
-                                    description = desc?.description
-                                    pattern = desc?.pattern
-                                    visibility = desc?.visibility
-                                }
-                                else -> schema
+        properties = parameters.map { param ->
+            param.name!! to (toSchema(param.type)
+                .let { schema ->
+                    val desc = param.annotations.find { it is Description }?.let { (it as Description) }
+                    when (schema) {
+                        is Schemas.ArraySchema -> schema.apply {
+                            description = desc?.description
+                            example = when {
+                                desc?.exEmptyList != null && desc.exEmptyList -> listOf<Any>()
+                                else -> null
                             }
+                            pattern = desc?.pattern
+                            visibility = desc?.visibility
                         }
-                        )
-            }
-                    .toMap()
-            ,
-            required = parameters.filter { !it.type.isMarkedNullable }.map { it.name!! }
+
+                        is Schemas.StringSchema -> schema.apply {
+                            description = desc?.description
+                            example = desc?.exString?.nullIfEmpty()
+                            pattern = desc?.pattern
+                            visibility = desc?.visibility
+                        }
+
+                        is Schemas.FloatSchema -> schema.apply {
+                            description = desc?.description
+                            example = desc?.exFloat?.nullIfZero()
+                            pattern = desc?.pattern
+                            visibility = desc?.visibility
+                        }
+
+                        is Schemas.DoubleSchema -> schema.apply {
+                            description = desc?.description
+                            example = desc?.exDouble?.nullIfZero()
+                            pattern = desc?.pattern
+                            visibility = desc?.visibility
+                        }
+
+                        is Schemas.IntSchema -> schema.apply {
+                            description = desc?.description
+                            example = desc?.exInt?.nullIfZero()
+                            pattern = desc?.pattern
+                            visibility = desc?.visibility
+                        }
+
+                        is Schemas.LongSchema -> schema.apply {
+                            description = desc?.description
+                            example = desc?.exLong?.nullIfZero()
+                            pattern = desc?.pattern
+                            visibility = desc?.visibility
+                        }
+
+                        is Schemas.BaseSchema<*> -> schema.apply {
+                            description = desc?.description
+                            pattern = desc?.pattern
+                            visibility = desc?.visibility
+                        }
+
+                        else -> schema
+                    }
+                }
+                    )
+        }
+            .toMap(),
+        required = parameters.filter { !it.type.isMarkedNullable }.map { it.name!! }
     )
 }
 
@@ -100,11 +106,13 @@ private fun sealedSchema(klass: KClass<*>, type: KType): Schemas.ObjectSchema {
         toSchema(o).let {
             when (it) {
                 is Schemas.ObjectSchema -> {
-                    it.copy(properties = mapOf(Sealed::type.name to Schemas.StringSchema(description = o.jvmErasure.simpleName)) + (it.properties
+                    it.copy(
+                        properties = mapOf(Sealed::type.name to Schemas.StringSchema(description = o.jvmErasure.simpleName)) + (it.properties
                             ?: emptyMap()),
-                            required = listOf(Sealed::type.name) + (it.required ?: emptyList())
+                        required = listOf(Sealed::type.name) + (it.required ?: emptyList())
                     )
                 }
+
                 else -> it
             }
         }

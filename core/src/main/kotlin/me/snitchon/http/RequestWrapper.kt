@@ -4,7 +4,7 @@ import me.snitchon.parameter.Parameter
 import me.snitchon.router.Body
 
 interface RequestWrapper {
-    fun <T> body(): T
+    fun <T: Any> body(c: Class<T>): T
     fun params(name: String): String?
     fun headers(name: String): String?
 

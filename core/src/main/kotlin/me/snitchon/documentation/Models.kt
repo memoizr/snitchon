@@ -3,25 +3,25 @@ package me.snitchon.documentation
 import java.util.*
 
 data class OpenApi(
-        val openapi: String = "3.0.0",
-        val info: Info,
-        val paths: Map<String, Path> = emptyMap(),
-        val servers: List<Server>? = null,
-        val components: Components? = null,
-        val security: Map<String, List<String>>? = null,
-        val tags: List<Tag>? = null,
-        val externalDocs: ExternalDocumentation? = null
+    val openapi: String = "3.0.0",
+    val info: Info,
+    val paths: Map<String, Path> = emptyMap(),
+    val servers: List<Server>? = null,
+    val components: Components? = null,
+    val security: Map<String, List<String>>? = null,
+    val tags: List<Tag>? = null,
+    val externalDocs: ExternalDocumentation? = null
 )
 
 data class Components(
-        val schemas: Map<String, Schemas>,
-        val responses: Map<String, Responses>,
-        val parameters: Map<String, Parameters>,
-        val examples: Map<String, Examples>,
-        val requestBodies: Map<String, RequestBodies>,
-        val headers: Map<String, Headers>,
-        val securitySchemes: Map<String, SecuritySchemes>,
-        val links: Map<String, Links>
+    val schemas: Map<String, Schemas>,
+    val responses: Map<String, Responses>,
+    val parameters: Map<String, Parameters>,
+    val examples: Map<String, Examples>,
+    val requestBodies: Map<String, RequestBodies>,
+    val headers: Map<String, Headers>,
+    val securitySchemes: Map<String, SecuritySchemes>,
+    val links: Map<String, Links>
 )
 
 interface Ref {
@@ -44,23 +44,23 @@ sealed class Schemas {
     }
 
     abstract class BaseSchema<T : Any>(
-            open val type: DataType,
-            open val format: Format? = null,
-            var pattern: String? = null,
-            var nullable: Boolean? = null,
-            var visibility: Visibility? = Visibility.PUBLIC
+        open val type: DataType,
+        open val format: Format? = null,
+        var pattern: String? = null,
+        var nullable: Boolean? = null,
+        var visibility: Visibility? = Visibility.PUBLIC
     ) : Schemas() {
         abstract var description: String?
     }
 
     data class ArraySchema(
-            val items: Schemas,
-            val maxItems: Int? = null,
-            val minItems: Int? = null,
-            val uniqueItems: Boolean? = null,
-            var example: Any? = null,
-            val default: List<*>? = null,
-            override var description: String? = null
+        val items: Schemas,
+        val maxItems: Int? = null,
+        val minItems: Int? = null,
+        val uniqueItems: Boolean? = null,
+        var example: Any? = null,
+        val default: List<*>? = null,
+        override var description: String? = null
     ) : BaseSchema<List<*>>(type = DataType.array)
 
     data class StringSchema(
@@ -133,17 +133,17 @@ sealed class Schemas {
     ) : BaseSchema<String>(type = DataType.string, format = Format.password)
 
     data class ObjectSchema(
-            val allOf: List<Schemas>? = null,
-            val oneOf: List<Schemas>? = null,
-            val anyOf: List<Schemas>? = null,
-            val not: List<Schemas>? = null,
-            val items: Schemas? = null,
-            val properties: Map<String, Schemas>? = null,
-            val additionalProperties: Schemas? = null,
-            override var description: String? = null,
-            val default: Any? = null,
-            var example: Any? = null,
-            val required: List<String>? = null
+        val allOf: List<Schemas>? = null,
+        val oneOf: List<Schemas>? = null,
+        val anyOf: List<Schemas>? = null,
+        val not: List<Schemas>? = null,
+        val items: Schemas? = null,
+        val properties: Map<String, Schemas>? = null,
+        val additionalProperties: Schemas? = null,
+        override var description: String? = null,
+        val default: Any? = null,
+        var example: Any? = null,
+        val required: List<String>? = null
     ) : BaseSchema<Any>(type = DataType.`object`)
 
 //    data class Reference(override val `$ref`: String) : Schemas(), Ref
@@ -155,26 +155,26 @@ enum class DataType { integer, number, string, boolean, array, `object` }
 sealed class Responses {
 //    data class Reference(override val `$ref`: String) : Responses(), Ref
     data class Response(
-            val description: String = "A response",
-            val headers: Map<String, Headers>? = null,
-            val content: Map<String, MediaType>? = null,
-            val links: Map<String, Links>? = null
+    val description: String = "A response",
+    val headers: Map<String, Headers>? = null,
+    val content: Map<String, MediaType>? = null,
+    val links: Map<String, Links>? = null
     ) : Responses()
 }
 
 data class MediaType(
-        val schema: Schemas? = null,
-        val example: Any? = null,
-        val examples: Map<String, Examples>? = null,
-        val encoding: Map<String, Encoding>? = null
+    val schema: Schemas? = null,
+    val example: Any? = null,
+    val examples: Map<String, Examples>? = null,
+    val encoding: Map<String, Encoding>? = null
 )
 
 data class Encoding(
-        val contentType: String? = null,
-        val headers: Map<String, Headers>? = null,
-        val style: String? = null,
-        val explode: Boolean? = null,
-        val allowReserved: Boolean? = null
+    val contentType: String? = null,
+    val headers: Map<String, Headers>? = null,
+    val style: String? = null,
+    val explode: Boolean? = null,
+    val allowReserved: Boolean? = null
 )
 
 sealed class Headers {
@@ -205,44 +205,44 @@ sealed class Parameters {
     abstract class Parameter() : Parameters()
 
     data class QueryParameter(
-            val name: String,
-            val required: Boolean,
-            val schema: Schemas,
-            val description: String? = null,
-            val deprecated: Boolean? = false,
-            val allowEmptyValue: Boolean? = false,
-            val visibility: Visibility? = Visibility.PUBLIC
+        val name: String,
+        val required: Boolean,
+        val schema: Schemas,
+        val description: String? = null,
+        val deprecated: Boolean? = false,
+        val allowEmptyValue: Boolean? = false,
+        val visibility: Visibility? = Visibility.PUBLIC
     ) : Parameter() {
         val `in`: ParameterType = ParameterType.query
     }
 
     data class HeaderParameter(
-            val name: String,
-            val required: Boolean,
-            val schema: Schemas,
-            val description: String? = null,
-            val deprecated: Boolean? = false,
-            val visibility: Visibility? = Visibility.PUBLIC
+        val name: String,
+        val required: Boolean,
+        val schema: Schemas,
+        val description: String? = null,
+        val deprecated: Boolean? = false,
+        val visibility: Visibility? = Visibility.PUBLIC
     ) : Parameter() {
         val `in`: ParameterType = ParameterType.header
     }
 
     data class PathParameter(
-            val name: String,
-            val schema: Schemas,
-            val description: String? = null,
-            val deprecated: Boolean? = false
+        val name: String,
+        val schema: Schemas,
+        val description: String? = null,
+        val deprecated: Boolean? = false
     ) : Parameter() {
         val `in`: ParameterType = ParameterType.path
         val required = true
     }
 
     data class CookieParameter(
-            val name: String,
-            val required: Boolean,
-            val schema: Schemas,
-            val description: String? = null,
-            val deprecated: Boolean? = false
+        val name: String,
+        val required: Boolean,
+        val schema: Schemas,
+        val description: String? = null,
+        val deprecated: Boolean? = false
     ) : Parameter() {
         val `in`: ParameterType = ParameterType.cookie
     }
@@ -261,42 +261,42 @@ sealed class Examples {
 sealed class RequestBodies {
 //    data class Reference(override val `$ref`: String) : RequestBodies(), Ref
     data class RequestBody(
-            val description: String? = null,
-            val content: Map<String, MediaType>,
-            val required: Boolean? = null
+    val description: String? = null,
+    val content: Map<String, MediaType>,
+    val required: Boolean? = null
     ) : RequestBodies()
 }
 
 data class Path(
-        val `$ref`: String? = null,
-        val summary: String? = null,
-        val description: String? = null,
-        val get: Operation? = null,
-        val put: Operation? = null,
-        val post: Operation? = null,
-        val delete: Operation? = null,
-        val options: Operation? = null,
-        val head: Operation? = null,
-        val patch: Operation? = null,
-        val trace: Operation? = null,
-        val servers: List<Server>? = null,
-        val parameters: Parameters? = null
+    val `$ref`: String? = null,
+    val summary: String? = null,
+    val description: String? = null,
+    val get: Operation? = null,
+    val put: Operation? = null,
+    val post: Operation? = null,
+    val delete: Operation? = null,
+    val options: Operation? = null,
+    val head: Operation? = null,
+    val patch: Operation? = null,
+    val trace: Operation? = null,
+    val servers: List<Server>? = null,
+    val parameters: Parameters? = null
 )
 
 
 data class Operation(
-        val responses: Map<String, Responses>,
-        val tags: List<String>? = null,
-        val summary: String? = null,
-        val description: String? = null,
-        val externalDocs: ExternalDocumentation? = null,
-        val operationId: String? = null,
-        val parameters: List<Parameters>? = null,
-        val requestBody: RequestBodies? = null,
-        val deprecated: Boolean? = null,
-        val security: Map<String, List<String>>? = null,
-        val servers: List<Server>? = null,
-        val visibility: Visibility?
+    val responses: Map<String, Responses>,
+    val tags: List<String>? = null,
+    val summary: String? = null,
+    val description: String? = null,
+    val externalDocs: ExternalDocumentation? = null,
+    val operationId: String? = null,
+    val parameters: List<Parameters>? = null,
+    val requestBody: RequestBodies? = null,
+    val deprecated: Boolean? = null,
+    val security: Map<String, List<String>>? = null,
+    val servers: List<Server>? = null,
+    val visibility: Visibility?
 )
 
 data class Contact(val name: String? = null, val url: String? = null, val email: String? = null)
@@ -307,10 +307,10 @@ data class Tag(val name: String, val description: String? = null, val externalDo
 data class ExternalDocumentation(val url: String, val description: String? = null)
 
 data class OAuthFlows(
-        val implicit: OAuthFlow? = null,
-        val password: OAuthFlow? = null,
-        val clientCredentials: OAuthFlow? = null,
-        val authorizationCode: OAuthFlow? = null
+    val implicit: OAuthFlow? = null,
+    val password: OAuthFlow? = null,
+    val clientCredentials: OAuthFlow? = null,
+    val authorizationCode: OAuthFlow? = null
 )
 
 data class OAuthFlow(
@@ -326,24 +326,24 @@ sealed class SecuritySchemes {
 
     data class Reference(override val `$ref`: String) : SecuritySchemes(), Ref
     data class SecurityScheme(
-            val type: Type,
-            val description: String? = null,
-            val name: String,
-            val `in`: In,
-            val scheme: String,
-            val bearerFormat: String?,
-            val flows: OAuthFlows,
-            val openIdConnectUrl: String
+        val type: Type,
+        val description: String? = null,
+        val name: String,
+        val `in`: In,
+        val scheme: String,
+        val bearerFormat: String?,
+        val flows: OAuthFlows,
+        val openIdConnectUrl: String
     )
 }
 
 data class Info(
-        val title: String,
-        val version: String,
-        val description: String? = null,
-        val termsOfService: String? = null,
-        val contact: Contact? = null,
-        val license: License? = null
+    val title: String,
+    val version: String,
+    val description: String? = null,
+    val termsOfService: String? = null,
+    val contact: Contact? = null,
+    val license: License? = null
 )
 
 @Target(AnnotationTarget.VALUE_PARAMETER)
@@ -357,7 +357,8 @@ annotation class Description(val description: String = "",
                              val exDouble: Double = 0.0,
                              val exEmptyList: Boolean = false,
                              val pattern: String = "",
-                             val visibility: Visibility = Visibility.PUBLIC)
+                             val visibility: Visibility = Visibility.PUBLIC
+)
 
 
 enum class Visibility {
