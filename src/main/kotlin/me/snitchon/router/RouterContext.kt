@@ -182,6 +182,14 @@ object RouterContext {
         Endpoint8(httpMethod, url, summary, description, visibility, before, after, a, b, c, d, e, f, g, h, handler)
             .also { endpoints.add(it) }
 
+    context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, G : Par, H : Par, I: Par, RETURN>
+            Endpoint9<A, B, C, D, E, F, G, H, I, Nothing>.isHandledBy(
+        handler: context(A, B, C, D, E, F, G, H, I, EndpointCall) () -> RETURN
+    ) =
+        Endpoint9(httpMethod, url, summary, description, visibility, before, after, a, b, c, d, e, f, g, h, i, handler)
+            .also { endpoints.add(it) }
+
 //    context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 //    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, RETURN>
 

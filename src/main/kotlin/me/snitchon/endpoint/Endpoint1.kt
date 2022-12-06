@@ -446,6 +446,26 @@ data class Endpoint7<A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, G : P
             parameter
         )
 
+    fun <G, BODY : Body<G>> with(body: BODY) =
+        Endpoint9<_, _, _, _, _, _, _, BODY, HasBody, RETURN>(
+            httpMethod,
+            url,
+            summary,
+            description,
+            visibility,
+            before,
+            after,
+            a,
+            b,
+            c,
+            d,
+            e,
+            f,
+            g,
+            body,
+            HasBody
+        )
+
     context(OnlyHeader)
             override infix operator fun <T : HP> plus(t: T) = with(t)
 

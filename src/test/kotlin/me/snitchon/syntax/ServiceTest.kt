@@ -13,6 +13,7 @@ import me.snitchon.parameter.HeaderParameter
 import me.snitchon.parameter.PathParameter
 import me.snitchon.parameter.QueryParameter
 import me.snitchon.router.Body
+import me.snitchon.router.HasBody
 import org.junit.jupiter.api.Test
 import kotlin.reflect.KProperty
 import kotlin.test.assertEquals
@@ -70,16 +71,7 @@ class ServiceTest {
     @Test
     fun `supports 1 path parameter`() {
         with(GsonJsonParser) {
-            val handler: context(
-            userId,
-            `Content-Type`,
-            HeaderOne,
-            TokenHeader,
-            QueryOne,
-            QueryTwo,
-            QueryThree,
-            Body<MyBody>,
-            EndpointCall)
+            val handler: context(userId, `Content-Type`, HeaderOne, TokenHeader, QueryOne, QueryTwo, QueryThree, Body<MyBody>, HasBody, EndpointCall)
                 () -> String =
                 {
                     println("******************time*****************")
@@ -96,7 +88,8 @@ class ServiceTest {
                     .queries { QueryOne + QueryTwo + QueryThree }
                     .with(body<MyBody>())
                     .isHandledBy(handler)
-                GET("foo" / userId / "bar").isHandledBy { "param value is also: ${userId()}" }
+                GET("foo" / userId / "bar")
+                    .isHandledBy { "param value is also: ${userId()}" }
             }.startListening()
                 .generateDocs().also {
 //                    println("docss")
@@ -112,9 +105,8 @@ class ServiceTest {
                     HTTPMethod.GET, "/foo/good", headers = mapOf(
                         "time" to "midnight",
                         "Content-Type" to "the content",
-                        "marissa" to "the nickname"
 
-                    )
+                        )
                 )
             )
         val response2 = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo/good/bar"))
