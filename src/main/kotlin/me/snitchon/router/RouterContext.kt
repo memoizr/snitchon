@@ -1,10 +1,10 @@
 package me.snitchon.router
 
-import com.snitch.NonEmptyString
+import com.snitch.HttpResponse
 import com.snitch.Validator
 import me.snitchon.documentation.Visibility
 import me.snitchon.endpoint.*
-import me.snitchon.http.EndpointCall
+import me.snitchon.http.Handler
 import me.snitchon.http.HTTPMethod
 import me.snitchon.parameter.Parameter
 import me.snitchon.parameter.ParametrizedPath1
@@ -52,19 +52,20 @@ object HasBody : Parameter<Nothing, Nothing> {
 }
 
 interface Bodied<T : Any, A : Body<T>> : Parameter<Any, T> {
-    context (EndpointCall, A, HasBody)
+    context (Handler, A, HasBody)
             @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     val body
         get() = request.body<T>()
 }
 
 object RouterContext {
-    fun GET( path: String, ) = Endpoint0<Nothing>(
+    fun GET( path: String, ) = Endpoint0(
         HTTPMethod.GET,
         path.ensureLeadingSlash(),
         "",
         description = null,
         visibility = Visibility.PUBLIC,
+        response = Nothing::class
     )
 
     fun <P1 : PP<P1>>
@@ -77,6 +78,7 @@ object RouterContext {
             Visibility.PUBLIC,
             {},
             {_,res -> res},
+            Nothing::class,
             path.a
         )
 
@@ -88,6 +90,7 @@ object RouterContext {
             Visibility.PUBLIC,
             {},
             {_,res -> res},
+            Nothing::class,
             path.a, path.b)
 
 
@@ -110,84 +113,83 @@ object RouterContext {
     fun String.ensureLeadingSlash() = if (!startsWith("/")) "/$this" else this
 
     context(Router)
-    fun <RETURN> Endpoint0<Nothing>.isHandledBy(
-        handler: context (EndpointCall) () -> RETURN
+    fun <RETURN: Any> Endpoint0<Nothing>.isHandledBy(
+        handler: context (Handler) () -> HttpResponse<RETURN>
     ) =
-        Endpoint0(httpMethod, url, summary, description, visibility, before, after, handler)
-            .also { endpoints.add(it) }
+        Endpoint0(httpMethod, url, summary, description, visibility, before, after, response as KClass<RETURN>, handler)
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Par, RETURN>
+    inline fun <A : Par, reified RETURN: Any>
             Endpoint1<A, Nothing>.isHandledBy(
-        handler: context(A, EndpointCall) () -> RETURN
+        noinline handler: context(A, Handler) () -> HttpResponse<RETURN>
     ) =
-        Endpoint1(httpMethod, url, summary, description, visibility, before, after, a, handler)
+        Endpoint1(httpMethod, url, summary, description, visibility, before, after, RETURN::class, a, handler)
             .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Par,
-            B : Par, RETURN>
+    inline fun <A : Par,
+            B : Par, reified RETURN: Any>
             Endpoint2<A, B, Nothing>.isHandledBy(
-        handler: context(A, B, EndpointCall) () -> RETURN
+        noinline handler: context(A, B, Handler) () -> HttpResponse<RETURN>
     ) =
-        Endpoint2(httpMethod, url, summary, description, visibility, before, after, a, b, handler)
+        Endpoint2(httpMethod, url, summary, description, visibility, before, after, RETURN::class, a, b, handler)
             .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Par, B : Par, C : Par, R>
+    inline fun <A : Par, B : Par, C : Par, reified RETURN: Any>
             Endpoint3<A, B, C, Nothing>.isHandledBy(
-        handler: context(A, B, C, EndpointCall) () -> R
+        noinline handler: context(A, B, C, Handler) () -> HttpResponse<RETURN>
     ) =
-        Endpoint3(httpMethod, url, summary, description, visibility, before, after, a, b, c, handler)
+        Endpoint3(httpMethod, url, summary, description, visibility, before, after, RETURN::class, a, b, c, handler)
             .also(endpoints::add)
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Par, B : Par, C : Par, D : Par, RETURN>
+    inline fun <A : Par, B : Par, C : Par, D : Par, reified RETURN: Any>
             Endpoint4<A, B, C, D, Nothing>.isHandledBy(
-        handler: context(A, B, C, D, EndpointCall) () -> RETURN
+        noinline handler: context(A, B, C, D, Handler) () -> HttpResponse<RETURN>
     ) =
-        Endpoint4(httpMethod, url, summary, description, visibility, before, after, a, b, c, d, handler)
+        Endpoint4(httpMethod, url, summary, description, visibility, before, after, RETURN::class, a, b, c, d, handler)
             .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Par, B : Par, C : Par, D : Par, E : Par, RETURN>
+    inline fun <A : Par, B : Par, C : Par, D : Par, E : Par, reified RETURN: Any>
             Endpoint5<A, B, C, D, E, Nothing>.isHandledBy(
-        handler: context(A, B, C, D, E, EndpointCall) () -> RETURN
+        noinline handler: context(A, B, C, D, E, Handler) () -> HttpResponse<RETURN>
     ) =
-        Endpoint5(httpMethod, url, summary, description, visibility, before, after, a, b, c, d, e, handler)
+        Endpoint5(httpMethod, url, summary, description, visibility, before, after, RETURN::class, a, b, c, d, e, handler)
             .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, RETURN>
+    inline fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, reified RETURN: Any>
             Endpoint6<A, B, C, D, E, F, Nothing>.isHandledBy(
-        handler: context(A, B, C, D, E, F,
-        EndpointCall) () -> RETURN
+        noinline handler: context(A, B, C, D, E, F,
+        Handler) () -> HttpResponse<RETURN>
     ) =
-        Endpoint6(httpMethod, url, summary, description, visibility, before, after, a, b, c, d, e, f, handler)
+        Endpoint6(httpMethod, url, summary, description, visibility, before, after, RETURN::class, a, b, c, d, e, f, handler)
             .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, G : Par, RETURN>
+    inline fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, G : Par, reified RETURN: Any>
             Endpoint7<A, B, C, D, E, F, G, Nothing>.isHandledBy(
-        handler: context(A, B, C, D, E, F, G, EndpointCall) () -> RETURN
+        noinline handler: context(A, B, C, D, E, F, G, Handler) () -> HttpResponse<RETURN>
     ) =
-        Endpoint7(httpMethod, url, summary, description, visibility, before, after, a, b, c, d, e, f, g, handler)
+        Endpoint7(httpMethod, url, summary, description, visibility, before, after, RETURN::class, a, b, c, d, e, f, g, handler)
             .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, G : Par, H : Par, RETURN>
+    inline fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, G : Par, H : Par, reified RETURN: Any>
             Endpoint8<A, B, C, D, E, F, G, H, Nothing>.isHandledBy(
-        handler: context(A, B, C, D, E, F, G, H, EndpointCall) () -> RETURN
+        noinline handler: context(A, B, C, D, E, F, G, H, Handler) () -> HttpResponse<RETURN>
     ) =
-        Endpoint8(httpMethod, url, summary, description, visibility, before, after, a, b, c, d, e, f, g, h, handler)
+        Endpoint8(httpMethod, url, summary, description, visibility, before, after, RETURN::class, a, b, c, d, e, f, g, h, handler)
             .also { endpoints.add(it) }
 
     context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, G : Par, H : Par, I: Par, RETURN>
+    inline fun <A : Par, B : Par, C : Par, D : Par, E : Par, F : Par, G : Par, H : Par, I: Par, reified RETURN: Any>
             Endpoint9<A, B, C, D, E, F, G, H, I, Nothing>.isHandledBy(
-        handler: context(A, B, C, D, E, F, G, H, I, EndpointCall) () -> RETURN
+        noinline handler: context(A, B, C, D, E, F, G, H, I, Handler) () -> HttpResponse<RETURN>
     ) =
-        Endpoint9(httpMethod, url, summary, description, visibility, before, after, a, b, c, d, e, f, g, h, i, handler)
+        Endpoint9(httpMethod, url, summary, description, visibility, before, after, RETURN::class, a, b, c, d, e, f, g, h, i, handler)
             .also { endpoints.add(it) }
 
 //    context(Router) @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")

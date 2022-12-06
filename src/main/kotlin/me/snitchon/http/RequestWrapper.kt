@@ -16,7 +16,7 @@ interface RequestWrapper {
 interface ResponseWrapper {
 }
 
-interface EndpointCall {
+interface Handler {
     val request: RequestWrapper
     val response: ResponseWrapper
 }
@@ -24,13 +24,13 @@ interface EndpointCall {
 data class DisembodiedEndpointCall(
     override inline val request: RequestWrapper,
     override inline val response: ResponseWrapper,
-): EndpointCall
+): Handler
 
 data class EmbodiedEndpointCall<T>(
     override inline val request: RequestWrapper,
     override inline val response: ResponseWrapper,
     inline val body: T
-): EndpointCall
+): Handler
 
 
 data class Embodied<T: Any>(val body: Body<T>)

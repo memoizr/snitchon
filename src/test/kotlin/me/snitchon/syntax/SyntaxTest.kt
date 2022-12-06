@@ -3,14 +3,9 @@ package me.snitchon.syntax
 import com.dslplatform.json.DslJson
 import com.dslplatform.json.runtime.Settings
 import com.google.gson.Gson
-import me.snitchon.documentation.Info
-import me.snitchon.documentation.OpenApi
-import me.snitchon.documentation.Server
 import me.snitchon.parsing.Parser
-import me.snitchon.syntax.DslJsonParser.parseJson
 import org.junit.jupiter.api.Test
 import java.io.ByteArrayOutputStream
-
 
 
 class SyntaxTest {

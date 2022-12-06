@@ -9,7 +9,7 @@ import me.snitchon.service.SnitchService
 
 @Suppress("UNCHECKED_CAST")
 class TestSnitchService : SnitchService {
-    val service = mutableSetOf<Pair<TestRequest, context (EndpointCall) () -> Any?>>()
+    val service = mutableSetOf<Pair<TestRequest, context (Handler) () -> Any?>>()
 
     fun setRoutes(routerConfiguration: context(RouterContext, SnitchService) Router.() -> Unit): RoutedService {
         val router = with(RouterContext) {

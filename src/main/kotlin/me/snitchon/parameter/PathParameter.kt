@@ -3,7 +3,7 @@ package me.snitchon.parameter
 import com.snitch.AnyString
 import com.snitch.Validator
 import me.snitchon.documentation.Visibility
-import me.snitchon.http.EndpointCall
+import me.snitchon.http.Handler
 
 interface Parameter<RAW, PARSED> {
     val type: Class<*>
@@ -28,11 +28,11 @@ abstract class PathParameter<T, PARSED>(
     override val type: Class<*>
         get() = String::class.java
 
-    context(EndpointCall, T)
+    context(Handler, T)
             @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
             operator fun invoke() = parse()
 
-    context(EndpointCall, T)
+    context(Handler, T)
             @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     fun parse() = request.params(name)
 }
@@ -65,14 +65,14 @@ abstract class HeaderParameter<T, PARSED>(
 ) : Parameter<String, PARSED> {
     override val name: String get() = _name ?: javaClass.simpleName
 
-    context(EndpointCall,T)
+    context(Handler,T)
             @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
             operator fun invoke() = parse()
 
     override val type: Class<*>
         get() = String::class.java
 
-    context(EndpointCall, T)
+    context(Handler, T)
             @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     fun parse() = request.headers(name)
 }
@@ -86,14 +86,14 @@ abstract class QueryParameter<T, PARSED>(
     override val invalidAsMissing: Boolean = false,
     open val visibility: Visibility = Visibility.PUBLIC
 ) : Parameter<String, PARSED> {
-    context(EndpointCall, T)
+    context(Handler, T)
             @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
             operator fun invoke() = parse()
 
     override val type: Class<*>
         get() = String::class.java
 
-    context(EndpointCall, T)
+    context(Handler, T)
             @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     fun parse() = request.getParam(this)
 }

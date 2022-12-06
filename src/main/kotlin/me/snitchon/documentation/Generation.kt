@@ -15,25 +15,25 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.starProjectedType
 
 
-val <T> Endpoint<T>.headerParams
+val <T: Any> Endpoint<T>.headerParams
     get() = this::class
         .memberProperties
         .map { it.call(this) as? HeaderParameter<*, *> }
         .filterNotNull()
 
-val <T> Endpoint<T>.pathParams
+val <T: Any> Endpoint<T>.pathParams
     get() = this::class
         .memberProperties
         .map { it.call(this) as? PathParameter<*, *> }
         .filterNotNull()
 
-val <T> Endpoint<T>.queryParams
+val <T: Any> Endpoint<T>.queryParams
     get() = this::class
         .memberProperties
         .map { it.call(this) as? QueryParameter<*, *> }
         .filterNotNull()
 
-val <T> Endpoint<T>.bodyParam
+val <T: Any> Endpoint<T>.bodyParam
     get() = this::class
         .memberProperties
         .map { it.call(this) as? Body<*> }
@@ -57,7 +57,7 @@ fun RoutedService.generateDocs(): Spec {
                         responses = emptyMap(),
                         visibility = bundle.visibility
                     )
-//                        .withResponse(ContentType.APPLICATION_JSON, bundle.response, "200")
+                        .withResponse(ContentType.APPLICATION_JSON, bundle.response, "200")
                         .let {
                             if (bundle.bodyParam.klass != Nothing::class) {
                                 it.withRequestBody(ContentType.APPLICATION_JSON, bundle.bodyParam.klass)
