@@ -12,11 +12,12 @@ data class TestRequestWrapper(
 
     override fun method(): HTTPMethod = HTTPMethod.fromString("PUT")
 
-    override fun params(name: String): String? = path.parse(testRequest.path)[name].also { println(it) }
+//    override fun params(name: String): T = path.parse(testRequest.path)[name].also { println(it) }
+//
+//    override fun headers(name: String): String? = testRequest.headers[name]
 
-    override fun headers(name: String): String? = testRequest.headers[name]
-
-    override fun getParam(param: Parameter<*,*>): String? {
+    override fun <PARSED> getParam(param: Parameter<*,PARSED>): PARSED {
         return testRequest.path.parseQuery()[param.name]
+            .let { param.pattern.parse(GsonJsonParser, it as Nothing)}
     }
 }

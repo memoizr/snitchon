@@ -4,42 +4,72 @@ import com.snitch.*
 import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
-import me.snitchon.parameter.HeaderParameter
-import me.snitchon.parameter.Parameter
-import me.snitchon.parameter.PathParameter
-import me.snitchon.parameter.QueryParameter
+import me.snitchon.parameter.*
+import me.snitchon.syntax.GsonJsonParser
 import me.snitchon.syntax.GsonJsonParser.parseJson
 import spark.Request
 import spark.Response
 
 class SparkRequestWrapper(val request: Request) : RequestWrapper {
 
-    override fun <T: Any> body(body: Class<T>): T {
+    override fun <T : Any> body(body: Class<T>): T {
         val body1 = request.body()
         return body1.parseJson(body)
     }
 
     override fun method(): HTTPMethod = HTTPMethod.fromString(request.requestMethod())
 
-    override fun params(name: String): String? = request.params(name)
-
-    override fun headers(name: String): String? = request.headers(name)
-
-    override fun getParam(param: Parameter<*, *>): String? {
+    override fun <PARSED: Any?> getParam(param: Parameter<*, PARSED>): PARSED {
+        println("parsing")
         return when (param) {
-            is PathParameter<*,*> ->
+            is PathParameter<*, PARSED> ->
                 request.params(param.name)
                     .let { if (it != null && param.emptyAsMissing && it.isEmpty()) null else it }
-            is QueryParameter<*, *> ->
+                    .let { param.pattern.parse(GsonJsonParser, it!!) }
+
+            is QueryParameter<*, PARSED> ->
                 request.queryParams(param.name)//.filterValid(param)
-            is HeaderParameter<*,*> ->
+                    .let { if (it != null && param.emptyAsMissing && it.isEmpty()) null else it }
+                    .let {
+                        if (it == null)
+                            param.default?.let { param.pattern.parse(GsonJsonParser, it.invoke())}!!
+                        else
+                            param.pattern.parse(GsonJsonParser, it)
+                    }
+            is OptionalQueryParameter<*, *> ->
+                request.queryParams(param.name)//.filterValid(param)
+                    .let { if (it != null && param.emptyAsMissing && it.isEmpty()) null else it }
+                    .let {
+                        if (it == null)
+                            param.default?.let { param.pattern.parse(GsonJsonParser, it.invoke())}
+                        else
+                            param.pattern.parse(GsonJsonParser, it)
+                    } as PARSED
+
+            is HeaderParameter<*, PARSED> ->
                 request.headers(param.name)//.filterValid(param)
+                    .let { if (it != null && param.emptyAsMissing && it.isEmpty()) null else it }
+                    .let {
+                        if (it == null)
+                        param.default?.let { param.pattern.parse(GsonJsonParser, it.invoke())}!!
+                        else
+                        param.pattern.parse(GsonJsonParser, it) }
+
+            is OptionalHeaderParameter<*, *> ->
+                request.headers(param.name)//.filterValid(param)
+                    .let { if (it != null && param.emptyAsMissing && it.isEmpty()) null else it }
+                    .let {
+                        if (it == null)
+                            param.default?.let { param.pattern.parse(GsonJsonParser, it.invoke())}
+                        else
+                            param.pattern.parse(GsonJsonParser, it) } as PARSED
+
             else -> TODO()
         }
     }
 }
 
-class SparkResponseWrapper(val response: Response): ResponseWrapper {
+class SparkResponseWrapper(val response: Response) : ResponseWrapper {
 //    override fun setStatus(code: Int) = response.status(code)
 //    override fun setType(type: Format) = response.type(type.type)
 }

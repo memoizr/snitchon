@@ -5,12 +5,12 @@ import me.snitchon.router.Body
 
 interface RequestWrapper {
     fun <T: Any> body(c: Class<T>): T
-    fun params(name: String): String?
-    fun headers(name: String): String?
+//    fun <T> params(name: String): T
+//    fun <T> headers(name: String): T
 
     fun method() : HTTPMethod
 
-    fun getParam(param: Parameter<*,*>): String?
+    fun <T> getParam(param: Parameter<*,T>): T
 }
 
 interface ResponseWrapper {

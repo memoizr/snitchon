@@ -51,14 +51,25 @@ class SparkService(override val config: Config) : SnitchService {
                             SparkResponseWrapper(response),
                             bundle.response
                         )
-                        bundle.invoke(call)
+                        (bundle.invoke(call) as? HttpResponse.SuccessfulHttpResponse<*>)?.body?.jsonString.also {println(it)}
                     }
                 }
-//            HTTPMethod.POST -> http.post(sparkPath, it.func)
                 HTTPMethod.PUT ->
 //                println("getting - port: ${http.port()}")
                 {
                     http.put(sparkPath) { request, response ->
+                        val call = EmbodiedEndpointCall(
+                            SparkRequestWrapper(request),
+                            SparkResponseWrapper(response),
+                            bundle.response
+                        )
+                        (bundle.invoke(call) as? HttpResponse.SuccessfulHttpResponse<*>)?.body?.jsonString.also {println(it)}
+                    }
+                }
+                HTTPMethod.POST ->
+//                println("getting - port: ${http.port()}")
+                {
+                    http.post(sparkPath) { request, response ->
                         val call = EmbodiedEndpointCall(
                             SparkRequestWrapper(request),
                             SparkResponseWrapper(response),

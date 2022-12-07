@@ -21,11 +21,11 @@ abstract class SparkTest {
         return Expectation(port, HttpMethod.GET, endpoint)
     }
 
-    infix fun POST(endpoint: String): Expectation {
+    infix fun Post(endpoint: String): Expectation {
         return Expectation(port, HttpMethod.POST, endpoint)
     }
 
-    infix fun DELETE(endpoint: String): Expectation {
+    infix fun Delete(endpoint: String): Expectation {
         return Expectation(port, HttpMethod.DELETE, endpoint)
     }
 

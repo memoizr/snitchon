@@ -12,7 +12,7 @@ import me.snitchon.parameter.ParametrizedPath2
 import me.snitchon.parameter.PathParameter
 import kotlin.reflect.KClass
 
-internal typealias PP<T> = PathParameter<T, String>
+internal typealias PP<T> = PathParameter<T, *>
 internal typealias Par = Parameter<*, *>
 
 data class Body<T : Any>(val klass: KClass<T>) : Bodied<T, Body<T>> {
@@ -70,6 +70,15 @@ object RouterContext {
 
     fun PUT( path: String, ) = Endpoint0(
         HTTPMethod.PUT,
+        path.ensureLeadingSlash(),
+        "",
+        description = null,
+        visibility = Visibility.PUBLIC,
+        response = Nothing::class
+    )
+
+    fun POST( path: String, ) = Endpoint0(
+        HTTPMethod.POST,
         path.ensureLeadingSlash(),
         "",
         description = null,
