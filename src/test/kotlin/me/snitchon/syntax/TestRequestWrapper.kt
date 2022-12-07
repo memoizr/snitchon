@@ -16,8 +16,8 @@ data class TestRequestWrapper(
 //
 //    override fun headers(name: String): String? = testRequest.headers[name]
 
-    override fun <PARSED> getParam(param: Parameter<*,PARSED>): PARSED {
+    override fun <RAW, PARSED> getParam(param: Parameter<RAW,PARSED>): PARSED {
         return testRequest.path.parseQuery()[param.name]
-            .let { param.pattern.parse(GsonJsonParser, it as Nothing)}
+            .let { param.pattern.parse(it as RAW)}
     }
 }

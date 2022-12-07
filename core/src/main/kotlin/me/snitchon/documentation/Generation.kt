@@ -1,10 +1,10 @@
 package me.snitchon.documentation
 
 import me.snitchon.endpoint.Endpoint
-import me.snitchon.parameter.HeaderParameter
+import me.snitchon.parameter.Header
 import me.snitchon.parameter.Parameter
-import me.snitchon.parameter.PathParameter
-import me.snitchon.parameter.QueryParameter
+import me.snitchon.parameter.Path
+import me.snitchon.parameter.Query
 import me.snitchon.parsing.Parser
 import me.snitchon.router.Body
 import me.snitchon.router.Router
@@ -18,19 +18,19 @@ import kotlin.reflect.full.starProjectedType
 val <T: Any> Endpoint<T>.headerParams
     get() = this::class
         .memberProperties
-        .map { it.call(this) as? HeaderParameter<*, *> }
+        .map { it.call(this) as? Header<*, *> }
         .filterNotNull()
 
 val <T: Any> Endpoint<T>.pathParams
     get() = this::class
         .memberProperties
-        .map { it.call(this) as? PathParameter<*, *> }
+        .map { it.call(this) as? Path<*, *> }
         .filterNotNull()
 
 val <T: Any> Endpoint<T>.queryParams
     get() = this::class
         .memberProperties
-        .map { it.call(this) as? QueryParameter<*, *> }
+        .map { it.call(this) as? Query<*, *> }
         .filterNotNull()
 
 val <T: Any> Endpoint<T>.bodyParam

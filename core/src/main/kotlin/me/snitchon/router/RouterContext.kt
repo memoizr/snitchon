@@ -9,10 +9,10 @@ import me.snitchon.http.HTTPMethod
 import me.snitchon.parameter.Parameter
 import me.snitchon.parameter.ParametrizedPath1
 import me.snitchon.parameter.ParametrizedPath2
-import me.snitchon.parameter.PathParameter
+import me.snitchon.parameter.Path
 import kotlin.reflect.KClass
 
-internal typealias PP<T> = PathParameter<T, *>
+internal typealias PP<T> = Path<T, *>
 internal typealias Par = Parameter<*, *>
 
 data class Body<T : Any>(val klass: KClass<T>) : Bodied<T, Body<T>> {

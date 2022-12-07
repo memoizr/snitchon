@@ -4,15 +4,13 @@ import com.snitch.HttpResponse
 import com.snitch.NonEmptyString
 import com.snitch.ok
 import me.snitchon.documentation.generateDocs
-import me.snitchon.documentation.headerParams
 import me.snitchon.endpoint.headers
 import me.snitchon.endpoint.plus
 import me.snitchon.http.Handler
 import me.snitchon.http.HTTPMethod
 import me.snitchon.parameter.Header
-import me.snitchon.parameter.HeaderParameter
-import me.snitchon.parameter.PathParameter
-import me.snitchon.parameter.QueryParameter
+import me.snitchon.parameter.Path
+import me.snitchon.parameter.Query
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -25,18 +23,18 @@ class ServiceTest {
     //    context(RequestWrapper)
 
 
-    object userId : PathParameter<userId, String>("userId", pattern = NonEmptyString)
-    object videoId : PathParameter<videoId, String>("videoId", pattern = NonEmptyString)
-    object TokenHeader : HeaderParameter<TokenHeader, String>("token", pattern = NonEmptyString)
+    object userId : Path<userId, String>("userId", pattern = NonEmptyString)
+    object videoId : Path<videoId, String>("videoId", pattern = NonEmptyString)
+    object TokenHeader : Header<TokenHeader, String>(pattern = NonEmptyString, "token")
 
-    object TimeHeader : HeaderParameter<TimeHeader, String>("time", pattern = NonEmptyString)
+    object TimeHeader : Header<TimeHeader, String>(pattern = NonEmptyString, "time")
 //    val contentType by ParamDelegate()
 
-    object `Content-Type` : Header<`Content-Type`>()
-    object HeaderOne : HeaderParameter<HeaderOne, String>("one", pattern = NonEmptyString)
-    object QueryOne : QueryParameter<QueryOne, String>("one", pattern = NonEmptyString)
-    object QueryTwo : QueryParameter<QueryTwo, String>("two", pattern = NonEmptyString)
-    object QueryThree : QueryParameter<QueryThree, String>("two", pattern = NonEmptyString)
+    object `Content-Type` : Header<`Content-Type`, String>(pattern = NonEmptyString)
+    object HeaderOne : Header<HeaderOne, String>(pattern = NonEmptyString, "one")
+    object QueryOne : Query<QueryOne, String>(pattern = NonEmptyString, "one")
+    object QueryTwo : Query<QueryTwo, String>(pattern = NonEmptyString, "two")
+    object QueryThree : Query<QueryThree, String>(pattern = NonEmptyString, "two")
 
     object Routing
 

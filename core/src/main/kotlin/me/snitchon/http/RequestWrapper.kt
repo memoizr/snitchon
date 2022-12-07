@@ -10,7 +10,7 @@ interface RequestWrapper {
 
     fun method() : HTTPMethod
 
-    fun <T> getParam(param: Parameter<*,T>): T
+    fun <RAW, T> getParam(param: Parameter<RAW,T>): T
 }
 
 interface ResponseWrapper {

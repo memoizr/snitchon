@@ -6,10 +6,8 @@ import me.snitchon.documentation.Description
 import me.snitchon.documentation.Visibility
 import me.snitchon.http.Handler
 import me.snitchon.parameter.*
-import me.snitchon.parsing.Parser
 import me.snitchon.router.Body
 import me.snitchon.router.HasBody
-import me.snitchon.syntax.GsonJsonParser
 import me.snitchon.syntax.GsonJsonParser.jsonString
 import me.snitchon.types.Sealed
 import org.junit.Rule
@@ -17,67 +15,46 @@ import org.junit.Test
 import java.text.SimpleDateFormat
 import java.util.*
 
-object stringParam : PathParameter<stringParam, String>(
+object stringParam : Path<stringParam, String>(
     name = "stringParam",
     description = "Description",
     pattern = NonEmptyString
 )
 
-object intparam : PathParameter<intparam, Int>(
+object intparam : Path<intparam, Int>(
     name = "intParam",
     description = "Description",
     pattern = NonNegativeInt
 )
 
-object q : QueryParameter<q, String>(name = "q", description = "description", pattern = NonEmptyString)
+object q : Query<q, String>(NonEmptyString)
+
 object int :
-    QueryParameter<int, Int>(name = "int", description = "description", pattern = NonNegativeInt, emptyAsMissing = true)
+    Query<int, Int>(pattern = NonNegativeInt)
 
-object offset : QueryParameter<offset, Int>(
-    name = "offset",
-    description = "description",
-    pattern = NonNegativeInt,
-    default = { "30" })
+object offset : Query<offset, Int>(NonNegativeInt.optional(defaultIfMissing = { "30" }))
 
-object limit : OptionalQueryParameter<limit, Int>(name = "limit", description = "description", pattern = with (GsonJsonParser) { NonNegativeInt.optional()} )
+object limit : Query<limit, Int?>(NonNegativeInt.optional())
 
-object qHead : HeaderParameter<qHead, String>(_name = "q", description = "description", pattern = NonEmptyString)
-object intHead : HeaderParameter<intHead, Int>(_name = "int", description = "description", pattern = NonNegativeInt)
-object offsetHead : HeaderParameter<offsetHead, Int>(
-    _name = "offsetHead",
-    description = "description",
-    pattern = NonNegativeInt,
+object qHead : Header<qHead, String>(pattern = NonEmptyString)
+object intHead : Header<intHead, Int>(pattern = NonNegativeInt)
+object offsetHead : Header<offsetHead, Int>(
+    pattern = NonNegativeInt.optional { "666" },
     emptyAsMissing = true,
-    default = { "666" })
-
-object limitHead : OptionalHeaderParameter<limitHead, Int>(_name = "limitHead", description = "description", pattern =
-with(GsonJsonParser) {
-    NonNegativeInt.optional()
-}, emptyAsMissing = true
 )
 
-object queryParam : QueryParameter<queryParam, String>(
-    name = "param",
-    description = "parameter",
-    pattern = NonEmptyString,
-    default = { "hey" })
+object limitHead : Header<limitHead, Int?>(
+    pattern = NonNegativeInt.optional(), emptyAsMissing = true
+)
 
-object headerParam : HeaderParameter<headerParam, String>(
-    _name = "param",
-    description = "parameter",
-    pattern = NonEmptyString,
-    visibility = Visibility.INTERNAL,
-    default = { "hey" })
-
-object pathParam : PathParameter<pathParam, String>(name = "param", description = "parameter", pattern = NonEmptyString)
-
-object time : QueryParameter<time, Date>("time", description = "the time", pattern = DateValidator)
+object time : Query<time, Date>(pattern = DateValidator, "time", description = "the time")
 
 object DateValidator : Validator<String, Date> {
     override val description: String = "An iso 8601 format date"
     override val regex: Regex =
         """^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:Z|[+-][01]\d:[0-5]\d)$""".toRegex()
-    override val parse: context(Parser) (String) -> Date = { SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").parse(it) }
+    override val parse: (String) -> Date =
+        { SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").parse(it) }
 }
 
 class ParametersTest : SparkTest() {
@@ -85,11 +62,8 @@ class ParametersTest : SparkTest() {
     @JvmField
     val rule = SparkTestRule(port) {
         GET("stringpath" / stringParam).isHandledBy { TestResult(stringParam()).ok }
-        GET("intpath" / intparam).isHandledBy { IntTestResult(intparam.invoke()).ok }
-
-        GET("intpath2" / intparam / "end").isHandledBy {
-            IntTestResult(intparam()).ok
-        }
+        GET("intpath" / intparam).isHandledBy { IntTestResult(intparam()).ok }
+        GET("intpath2" / intparam / "end").isHandledBy { IntTestResult(intparam()).ok }
 
 //        GET("queriespath") inSummary "does a foo" withQuery q isHandledBy { TestResult(q()).ok }
 

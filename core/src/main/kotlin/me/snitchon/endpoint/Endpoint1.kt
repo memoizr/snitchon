@@ -7,15 +7,15 @@ import me.snitchon.http.Handler
 import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
-import me.snitchon.parameter.HeaderParameter
-import me.snitchon.parameter.QueryParameter
+import me.snitchon.parameter.Header
+import me.snitchon.parameter.Query
 import me.snitchon.router.Body
 import me.snitchon.router.HasBody
 import me.snitchon.router.Par
 import kotlin.reflect.KClass
 
-private typealias HP = HeaderParameter<*, *>
-private typealias QP = QueryParameter<*, *>
+private typealias HP = Header<*, *>
+private typealias QP = Query<*, *>
 
 interface Endpoint<R : Any> {
     val httpMethod: HTTPMethod
