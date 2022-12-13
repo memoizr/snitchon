@@ -23,7 +23,7 @@ val config = Config(description = "A test",
 )
 
 
-open class SparkTestRule(val port: Int, val router: context(RouterContext, SnitchService) Router.() -> Unit) : ExternalResource() {
+open class SparkTestRule(port: Int, val router: context(RouterContext, SnitchService) Router.() -> Unit) : ExternalResource() {
         val server = SparkService(config.copy(port = port))
 
         override fun apply(base: Statement, description: Description): Statement {
@@ -52,5 +52,4 @@ open class SparkTestRule(val port: Int, val router: context(RouterContext, Snitc
                 }
 
         }
-
 }

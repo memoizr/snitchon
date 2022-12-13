@@ -15,8 +15,7 @@ interface SnitchService {
     val config: Config get() = Config()
     fun registerMethod(bundle: Endpoint<*>, path: String)
 
-    fun withRoutes(routerConfiguration: Router.() -> Unit) {
-    }
+    fun withRoutes(routerConfiguration: Router.() -> Unit) {}
 
     fun <T : Exception> handleException(exception: Class<T>, handler: (T, RequestWrapper, ResponseWrapper) -> Unit)
 }
@@ -25,7 +24,6 @@ data class RoutedService(val service: SnitchService, val router: Router) {
     fun startListening(): RoutedService {
         router.endpoints.forEach {
             with(RouterContext) {
-                println(it)
                 service.registerMethod(it, it.url.ensureLeadingSlash())
             }
         }
@@ -36,7 +34,6 @@ data class RoutedService(val service: SnitchService, val router: Router) {
     context(Parser)
     fun handleInvalidParams() {
         service.handleException(ValidationException::class.java) { e, req, res ->
-            println("+++++")
             res.setBody(
                 HttpResponse.ErrorHttpResponse<Any, List<String>>(
                     400,

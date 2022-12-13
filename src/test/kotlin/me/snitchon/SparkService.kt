@@ -26,12 +26,6 @@ class SparkService(override val config: Config) : SnitchService {
         logger.level = Level.INFO
 
         Service.ignite().port(config.port)
-            .apply {
-                this.initExceptionHandler {
-                    println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                    println(it.message)
-                }
-            }
     }
 
     override fun <T : Exception> handleException(
@@ -54,44 +48,43 @@ class SparkService(override val config: Config) : SnitchService {
     override fun registerMethod(bundle: Endpoint<*>, path: String) {
         val sparkPath = path.replace("{", ":").replace("}", "")
         with(GsonJsonParser) {
+            val function: (request: Request, response: Response) -> String? = { request, response ->
+                val call = EmbodiedEndpointCall(
+                    SparkRequestWrapper(request),
+                    SparkResponseWrapper(response),
+                    bundle.response
+                )
+                (bundle.invoke(call) as? HttpResponse.SuccessfulHttpResponse<*>)?.body?.jsonString
+            }
+
             when (bundle.httpMethod) {
                 HTTPMethod.GET -> {
-                    http.get(sparkPath) { request, response ->
-                        val call = EmbodiedEndpointCall(
-                            SparkRequestWrapper(request),
-                            SparkResponseWrapper(response),
-                            bundle.response
-                        )
-                        (bundle.invoke(call) as? HttpResponse.SuccessfulHttpResponse<*>)?.body?.jsonString
-                    }
+                    http.get(sparkPath, function)
                 }
 
                 HTTPMethod.PUT -> {
-                    http.put(sparkPath) { request, response ->
-                        val call = EmbodiedEndpointCall(
-                            SparkRequestWrapper(request),
-                            SparkResponseWrapper(response),
-                            bundle.response
-                        )
-                        (bundle.invoke(call) as? HttpResponse.SuccessfulHttpResponse<*>)?.body?.jsonString
-                    }
+                    http.put(sparkPath, function)
                 }
 
                 HTTPMethod.POST -> {
-                    http.post(sparkPath) { request, response ->
-                        val call = EmbodiedEndpointCall(
-                            SparkRequestWrapper(request),
-                            SparkResponseWrapper(response),
-                            bundle.response
-                        )
-                        (bundle.invoke(call) as? HttpResponse.SuccessfulHttpResponse<*>)?.body?.jsonString
-                    }
+                    http.post(sparkPath, function)
                 }
-//            HTTPMethod.PATCH -> http.patch(sparkPath, it.func)
-//            HTTPMethod.HEAD -> http.head(sparkPath, it.func)
-//            HTTPMethod.DELETE -> http.delete(sparkPath, it.func)
-//            HTTPMethod.OPTIONS -> http.options(sparkPath, it.func)
-                else -> TODO()
+
+                HTTPMethod.PATCH -> {
+                    http.patch(sparkPath, function)
+                }
+
+                HTTPMethod.DELETE -> {
+                    http.delete(sparkPath, function)
+                }
+
+                HTTPMethod.OPTIONS -> {
+                    http.options(sparkPath, function)
+                }
+
+                HTTPMethod.HEAD -> {
+                    http.head(sparkPath, function)
+                }
             }
         }
     }

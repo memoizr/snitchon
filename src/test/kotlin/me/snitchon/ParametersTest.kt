@@ -70,7 +70,7 @@ class ParametersTest : SparkTest() {
 
         GET("queriespath").with(q).isHandledBy { TestResult(q()).ok }
 
-        GET("queriespath2").with(int).isHandledBy { IntTestResult(int()).ok }
+        GET("queriespath2").with(int) .isHandledBy { IntTestResult(int()).ok }
         GET("queriespath3").with(offset).isHandledBy { IntTestResult(offset()).ok }
         GET("queriespath4").with(limit).isHandledBy { NullableIntTestResult(limit()).ok }
 
