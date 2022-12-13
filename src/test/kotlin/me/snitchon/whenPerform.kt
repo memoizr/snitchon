@@ -8,6 +8,7 @@ import java.net.http.HttpResponse
 import java.util.*
 import com.memoizr.assertk.expect
 import me.snitchon.syntax.GsonJsonParser
+import me.snitchon.syntax.GsonJsonParser.parseJson
 
 //val client = HttpClient(CIO)
 private val clnt = java.net.http.HttpClient.newBuilder().build()
@@ -102,7 +103,7 @@ abstract class SparkTest {
 
         infix inline fun <reified T : Any> expectBodyJson(body: T) = apply {
             println(response.body())
-//            expect that response.body().parseJson<T>() isEqualTo body
+            expect that response.body().parseJson(T::class.java) isEqualTo body
         }
     }
 }

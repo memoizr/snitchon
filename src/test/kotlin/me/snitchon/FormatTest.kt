@@ -17,9 +17,6 @@ class FormatTest : SparkTest() {
         PUT("json")
             .with(body<TheBody>())
             .isHandledBy {
-                println("*********************")
-                println(body)
-                println("*********************")
                 TheResponse("ok, body: noo").ok
             }
 //        GET("bytearray").isHandledBy { "ok".ok.format(Format.VideoMP4) }

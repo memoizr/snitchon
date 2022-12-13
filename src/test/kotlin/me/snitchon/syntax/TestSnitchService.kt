@@ -23,13 +23,28 @@ class TestSnitchService : SnitchService {
         service.add(TestRequest(bundle.httpMethod, bundle.url) to bundle.invoke)
     }
 
+    override fun <T : Exception> handleException(
+        exception: Class<T>,
+        handler: (T, RequestWrapper, ResponseWrapper) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
     fun makeRequest(request: TestRequest): Any? {
         val requestFunction1Pair =
             service.find { it.first.path.match(request.path) && it.first.method == request.method }
 
         val func = requestFunction1Pair?.second
         val testRequestWrapper = TestRequestWrapper(request, requestFunction1Pair?.first?.path.orEmpty())
-        val response = object : ResponseWrapper {}
+        val response = object : ResponseWrapper {
+            override fun setStatus(code: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun setBody(body: String) {
+                TODO("Not yet implemented")
+            }
+        }
         return func?.invoke(request.body?.let { EmbodiedEndpointCall(testRequestWrapper, response, it) }
             ?: DisembodiedEndpointCall(testRequestWrapper, response))
     }

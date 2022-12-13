@@ -30,7 +30,7 @@ object intparam : Path<intparam, Int>(
 object q : Query<q, String>(NonEmptyString)
 
 object int :
-    Query<int, Int>(pattern = NonNegativeInt)
+    Query<int, Int>(pattern = NonNegativeInt, emptyAsMissing = true)
 
 object offset : Query<offset, Int>(NonNegativeInt.optional(defaultIfMissing = { "30" }))
 
@@ -39,7 +39,9 @@ object limit : Query<limit, Int?>(NonNegativeInt.optional())
 object qHead : Header<qHead, String>(pattern = NonEmptyString)
 object intHead : Header<intHead, Int>(pattern = NonNegativeInt)
 object offsetHead : Header<offsetHead, Int>(
-    pattern = NonNegativeInt.optional { "666" },
+    pattern = NonNegativeInt.optional {
+        "666"
+    },
     emptyAsMissing = true,
 )
 
@@ -53,8 +55,9 @@ object DateValidator : Validator<String, Date> {
     override val description: String = "An iso 8601 format date"
     override val regex: Regex =
         """^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:Z|[+-][01]\d:[0-5]\d)$""".toRegex()
-    override val parse: (String) -> Date =
-        { SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").parse(it) }
+    override val parse: (String, String) -> Date =
+        { it, _ -> SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").parse(it) }
+    override val required: Boolean = true
 }
 
 class ParametersTest : SparkTest() {
@@ -65,19 +68,16 @@ class ParametersTest : SparkTest() {
         GET("intpath" / intparam).isHandledBy { IntTestResult(intparam()).ok }
         GET("intpath2" / intparam / "end").isHandledBy { IntTestResult(intparam()).ok }
 
-//        GET("queriespath") inSummary "does a foo" withQuery q isHandledBy { TestResult(q()).ok }
+        GET("queriespath").with(q).isHandledBy { TestResult(q()).ok }
 
-        GET("queriespath2").with(int).isHandledBy { IntTestResult(int.invoke()).ok }
+        GET("queriespath2").with(int).isHandledBy { IntTestResult(int()).ok }
         GET("queriespath3").with(offset).isHandledBy { IntTestResult(offset()).ok }
         GET("queriespath4").with(limit).isHandledBy { NullableIntTestResult(limit()).ok }
 
-        GET("headerspath").with(qHead).isHandledBy { TestResult(qHead.invoke()).ok }
+        GET("headerspath").with(qHead).isHandledBy { TestResult(qHead()).ok }
         GET("headerspath2").with(intHead).isHandledBy { IntTestResult(intHead()).ok }
         GET("headerspath3").with(offsetHead).isHandledBy {
-            println("+++++++++++++++++++++++")
             val result = offsetHead.invoke()
-            println("****************************")
-            println(result)
             NullableIntTestResult(result).ok
         }
         GET("headerspath4").with(limitHead).isHandledBy { NullableIntTestResult(limitHead()).ok }
@@ -107,7 +107,7 @@ class ParametersTest : SparkTest() {
         whenPerform Get "/intpath2/4545/end" expectBodyJson IntTestResult(4545)
         whenPerform Get "/intpath2/hello/end" expectBodyJson ErrorHttpResponse<TestResult, List<String>>(
             400,
-            listOf("Path parameter `intParam` is invalid, expecting non negative integer, got `hello`")
+            listOf("Path parameter `intParam` is invalid, expecting non negative integer, but got `hello`")
         )
     }
 
@@ -117,7 +117,7 @@ class ParametersTest : SparkTest() {
         whenPerform Get "/queriespath?q=foo%0Abar" expectBodyJson TestResult("foo\nbar")
         whenPerform Get "/queriespath?q=" expectBodyJson ErrorHttpResponse<TestResult, List<String>>(
             400,
-            listOf("Query parameter `q` is invalid, expecting non empty string, got ``")
+            listOf("Query parameter `q` is invalid, expecting non empty string, but got ``")
         )
         whenPerform Get "/queriespath" expectBodyJson ErrorHttpResponse<TestResult, List<String>>(
             400,
@@ -131,11 +131,11 @@ class ParametersTest : SparkTest() {
         )
         whenPerform Get "/queriespath2?int=hello" expectBodyJson ErrorHttpResponse<TestResult, List<String>>(
             400,
-            listOf("Query parameter `int` is invalid, expecting non negative integer, got `hello`")
+            listOf("Query parameter `int` is invalid, expecting non negative integer, but got `hello`")
         )
         whenPerform Get "/queriespath2?int=-34" expectBodyJson ErrorHttpResponse<TestResult, List<String>>(
             400,
-            listOf("Query parameter `int` is invalid, expecting non negative integer, got `-34`")
+            listOf("Query parameter `int` is invalid, expecting non negative integer, but got `-34`")
         )
     }
 
@@ -151,27 +151,27 @@ class ParametersTest : SparkTest() {
     @Test
     fun `supports header parameters`() {
         whenPerform Get "/headerspath" withHeaders mapOf(qHead.name to "foo") expectBodyJson TestResult("foo")
-        whenPerform Get "/headerspath" withHeaders mapOf(qHead.name to "") expectBodyJson ErrorHttpResponse<TestResult, List<String>>(
+        whenPerform Get "/headerspath" withHeaders mapOf(qHead.name to " ") expectBodyJson ErrorHttpResponse<TestResult, List<String>>(
             400,
-            listOf("Header parameter `q` is invalid, expecting non empty single-line string, got ``")
+            listOf("Header parameter `qHead` is invalid, expecting non empty string, but got ``")
         )
         whenPerform Get "/headerspath" withHeaders mapOf() expectBodyJson ErrorHttpResponse<TestResult, List<String>>(
             400,
-            listOf("Required Header parameter `q` is missing")
+            listOf("Required Header parameter `qHead` is missing")
         )
 
         whenPerform Get "/headerspath2" withHeaders mapOf(intHead.name to 3434) expectBodyJson IntTestResult(3434)
         whenPerform Get "/headerspath2" expectBodyJson ErrorHttpResponse<TestResult, List<String>>(
             400,
-            listOf("Required Header parameter `int` is missing")
+            listOf("Required Header parameter `intHead` is missing")
         )
         whenPerform Get "/headerspath2" withHeaders mapOf(intHead.name to "hello") expectBodyJson ErrorHttpResponse<TestResult, List<String>>(
             400,
-            listOf("Header parameter `int` is invalid, expecting non negative integer, got `hello`")
+            listOf("Header parameter `intHead` is invalid, expecting non negative integer, but got `hello`")
         )
         whenPerform Get "/headerspath2" withHeaders mapOf(intHead.name to -34) expectBodyJson ErrorHttpResponse<TestResult, List<String>>(
             400,
-            listOf("Header parameter `int` is invalid, expecting non negative integer, got `-34`")
+            listOf("Header parameter `intHead` is invalid, expecting non negative integer, but got `-34`")
         )
     }
 
@@ -190,7 +190,7 @@ class ParametersTest : SparkTest() {
 
     @Test
     fun `supports body parameter`() {
-        whenPerform Post "//bodyparam" withBody bodyParam expectBodyJson BodyTestResult(42, 33)
+        whenPerform Post "/bodyparam" withBody bodyParam expectBodyJson BodyTestResult(42, 33)
     }
 
     @Test

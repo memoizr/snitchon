@@ -16,8 +16,8 @@ data class TestRequestWrapper(
 //
 //    override fun headers(name: String): String? = testRequest.headers[name]
 
-    override fun <RAW, PARSED> getParam(param: Parameter<RAW,PARSED>): PARSED {
+    override fun <RAW, PARSED> getParam(param: Parameter<RAW,PARSED>): String? {
         return testRequest.path.parseQuery()[param.name]
-            .let { param.pattern.parse(it as RAW)}
+            .let { param.pattern.parse(it as RAW, param.name)} as String
     }
 }

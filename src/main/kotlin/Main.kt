@@ -17,13 +17,11 @@ object Bar: Goo()
 
 abstract class Goo {
     val name by lazy {
-        println("memoized?")
         this.javaClass.simpleName}
 }
 
 class Noo {
     operator fun getValue(id: Any, property: KProperty<*>): String {
-        println("memoized?")
         return id.javaClass.simpleName
     }
 }
@@ -32,8 +30,6 @@ class Noo {
 fun main() {
 
     val x = object : Any() {}
-
-    println(x)
 
 
 //    with (RouterContext) {

@@ -3,6 +3,7 @@ package me.snitchon.parameter
 import com.snitch.Validator
 import me.snitchon.documentation.Visibility
 import me.snitchon.http.Handler
+import me.snitchon.router.Body
 
 interface Parameter<RAW : Any?, out PARSED : Any?> {
     val type: Class<*>
@@ -13,6 +14,15 @@ interface Parameter<RAW : Any?, out PARSED : Any?> {
     val emptyAsMissing: Boolean
     val invalidAsMissing: Boolean
 }
+
+val <RAW : Any?, PARSED : Any?> Parameter<RAW, PARSED>.kind get() = when (this) {
+    is Path<*,*> -> "Path"
+    is Header<*,*> -> "Header"
+    is Query<*,*> -> "Query"
+    is Body<*> -> "Body"
+    else -> TODO()
+}
+
 
 abstract class Path<T, PARSED>(
     override inline val name: String,
@@ -33,7 +43,7 @@ abstract class Path<T, PARSED>(
 
     context(Handler, T)
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun parse(): PARSED = request.getParam(this)
+    fun parse(): PARSED = request.parseParam(this)
 }
 
 
@@ -60,7 +70,7 @@ abstract class Header<T, PARSED>(
 
     context(Handler, T)
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun parse(): PARSED = request.getParam(this)
+    fun parse(): PARSED = request.parseParam(this)
 }
 
 //abstract class OptionalHeaderParameter<T, PARSED>(
@@ -114,6 +124,6 @@ abstract class Query<T, PARSED>(
 
     context(Handler, T)
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun parse(): PARSED = request.getParam(this)
+    fun parse(): PARSED = request.parseParam(this)
 }
 
