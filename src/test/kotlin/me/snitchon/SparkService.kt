@@ -3,12 +3,14 @@ package com.snitch.spark
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.snitch.HttpResponse
+import me.snitchon.SparkMarkup
 import me.snitchon.config.Config
 import me.snitchon.endpoint.Endpoint
 import me.snitchon.http.EmbodiedEndpointCall
 import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
+import me.snitchon.parameter.Markup
 import me.snitchon.router.Router
 import me.snitchon.router.RouterContext
 import me.snitchon.service.RoutedService
@@ -37,11 +39,24 @@ class SparkService(override val config: Config) : SnitchService {
         }
     }
 
-    fun setRoutes(routerConfiguration: context(RouterContext, SnitchService) Router.() -> Unit): RoutedService {
+
+    fun setRoutes(routerConfiguration: context(Markup, RouterContext, SnitchService) Router.() -> Unit): RoutedService {
         val router = with(RouterContext) {
             Router()
         }
-        routerConfiguration(RouterContext, this, router)
+
+        with (SparkMarkup()) {
+            routerConfiguration(RouterContext, this@SparkService, router)
+        }
+        http.notFound { req, res ->
+//            println("${req.url()}")
+//            println("${req.headers()}")
+//            println("${req.requestMethod()}")
+//            println(http.port())
+//            println(http.routes().map { "${it.httpMethod} ${it.matchUri} ${it.acceptType}" })
+            res.type("application/json")
+            "{\"message\":\"Custom 404\"}"
+        }
         return RoutedService(this, router)
     }
 
@@ -54,7 +69,20 @@ class SparkService(override val config: Config) : SnitchService {
                     SparkResponseWrapper(response),
                     bundle.response
                 )
-                (bundle.invoke(call) as? HttpResponse.SuccessfulHttpResponse<*>)?.body?.jsonString
+
+
+                val result = bundle.invoke(call)
+
+                response.status(result.statusCode)
+
+                when (result) {
+                    is HttpResponse.SuccessfulHttpResponse<*> -> {
+                        result.body?.jsonString
+                    }
+                    is HttpResponse.ErrorHttpResponse<*, *> -> {
+                        result.jsonString
+                    }
+                }
             }
 
             when (bundle.httpMethod) {

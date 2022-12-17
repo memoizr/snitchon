@@ -19,8 +19,6 @@ class SyntaxTest {
                 3,
                 4.1
             )
-            println(subj.jsonString)
-            println(subj.jsonString.parseJson(Foobar::class.java))
         }
     }
 }

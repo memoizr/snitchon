@@ -23,6 +23,10 @@ val <RAW : Any?, PARSED : Any?> Parameter<RAW, PARSED>.kind get() = when (this) 
     else -> TODO()
 }
 
+interface Markup {
+    fun decorate(name: String): String
+}
+
 
 abstract class Path<T, PARSED>(
     override inline val name: String,
@@ -33,6 +37,9 @@ abstract class Path<T, PARSED>(
     override val invalidAsMissing: Boolean = false,
     open val visibility: Visibility = Visibility.PUBLIC,
 ) : Parameter<String, PARSED> {
+
+    context(Markup)
+    val markupName get() = decorate(name)
 
     override val type: Class<*>
         get() = String::class.java

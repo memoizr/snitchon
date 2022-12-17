@@ -3,6 +3,7 @@ package me.snitchon.syntax
 import com.snitch.HttpResponse
 import com.snitch.NonEmptyString
 import com.snitch.ok
+import me.snitchon.SparkMarkup
 import me.snitchon.documentation.generateDocs
 import me.snitchon.endpoint.headers
 import me.snitchon.endpoint.plus
@@ -120,13 +121,15 @@ class ServiceTest {
 
     @Test
     fun `supports 1 path parameter and body`() {
-        service.setRoutes {
-            GET("foo" / userId)
-                .with(body<MyBody>())
-                .isHandledBy {
-                    "param value: ${userId()}, body: ${body.myChoice}".ok
-                }
-        }.startListening()
+        with (SparkMarkup()) {
+            service.setRoutes {
+                GET("foo" / userId)
+                    .with(body<MyBody>())
+                    .isHandledBy {
+                        "param value: ${userId()}, body: ${body.myChoice}".ok
+                    }
+            }.startListening()
+        }
 
         val response1 = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo/good", MyBody("it depends")))
 

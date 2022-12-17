@@ -3,6 +3,7 @@ package me.snitchon
 import com.snitch.spark.SparkService
 import me.snitchon.config.Config
 import me.snitchon.config.DocExpansion
+import me.snitchon.parameter.Markup
 import me.snitchon.router.Router
 import me.snitchon.router.RouterContext
 import me.snitchon.service.SnitchService
@@ -22,8 +23,11 @@ val config = Config(description = "A test",
         docExpansion = DocExpansion.LIST
 )
 
+class SparkMarkup: Markup {
+        override fun decorate(name: String): String = ":$name"
+}
 
-open class SparkTestRule(port: Int, val router: context(RouterContext, SnitchService) Router.() -> Unit) : ExternalResource() {
+open class SparkTestRule(port: Int, val router: context(Markup, RouterContext, SnitchService) Router.() -> Unit) : ExternalResource() {
         val server = SparkService(config.copy(port = port))
 
         override fun apply(base: Statement, description: Description): Statement {
@@ -48,7 +52,9 @@ open class SparkTestRule(port: Int, val router: context(RouterContext, SnitchSer
 
         override fun before() {
                 with(GsonJsonParser) {
-                        server.setRoutes(router).startListening().handleInvalidParams()
+                        with (SparkMarkup()) {
+                                server.setRoutes(router).startListening().handleInvalidParams()
+                        }
                 }
 
         }

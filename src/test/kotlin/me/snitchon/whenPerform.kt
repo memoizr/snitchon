@@ -102,7 +102,6 @@ abstract class SparkTest {
         }
 
         infix inline fun <reified T : Any> expectBodyJson(body: T) = apply {
-            println(response.body())
             expect that response.body().parseJson(T::class.java) isEqualTo body
         }
     }
