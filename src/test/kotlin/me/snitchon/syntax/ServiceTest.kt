@@ -1,8 +1,9 @@
 package me.snitchon.syntax
 
 import com.snitch.HttpResponse
+import com.snitch.HttpResponses
+import com.snitch.HttpResponses.ok
 import com.snitch.NonEmptyString
-import com.snitch.ok
 import me.snitchon.SparkMarkup
 import me.snitchon.documentation.generateDocs
 import me.snitchon.endpoint.headers

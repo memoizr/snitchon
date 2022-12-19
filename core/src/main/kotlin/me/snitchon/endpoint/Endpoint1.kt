@@ -1,6 +1,5 @@
 package me.snitchon.endpoint
 
-import com.snitch.HttpResponse
 import me.snitchon.documentation.Visibility
 import me.snitchon.http.Handler
 
@@ -12,6 +11,7 @@ import me.snitchon.parameter.Query
 import me.snitchon.router.Body
 import me.snitchon.router.HasBody
 import me.snitchon.router.Par
+import com.snitch.HttpResponse
 import kotlin.reflect.KClass
 
 internal typealias HP = Header<*, *>
@@ -177,4 +177,3 @@ data class Endpoint1<
             HasBody
         )
 }
-

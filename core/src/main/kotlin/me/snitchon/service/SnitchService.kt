@@ -1,6 +1,5 @@
 package me.snitchon.service
 
-import com.snitch.HttpResponse
 import com.snitch.MissingRequiredParameterException
 import com.snitch.ValidationException
 import me.snitchon.config.Config
@@ -10,6 +9,7 @@ import me.snitchon.http.ResponseWrapper
 import me.snitchon.parsing.Parser
 import me.snitchon.router.Router
 import me.snitchon.router.RouterContext
+import com.snitch.HttpResponse
 
 interface SnitchService {
     val config: Config get() = Config()

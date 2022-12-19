@@ -2,7 +2,9 @@ package com.snitch.spark
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
+import com.snitch.Format
 import com.snitch.HttpResponse
+import com.snitch.HttpResponses
 import me.snitchon.SparkMarkup
 import me.snitchon.config.Config
 import me.snitchon.endpoint.Endpoint
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory
 import spark.Request
 import spark.Response
 import spark.Service
+import java.io.File
 
 
 class SparkService(override val config: Config) : SnitchService {
@@ -40,13 +43,20 @@ class SparkService(override val config: Config) : SnitchService {
     }
 
 
-    fun setRoutes(routerConfiguration: context(Markup, RouterContext, SnitchService) Router.() -> Unit): RoutedService {
+    fun setRoutes(routerConfiguration: context(Markup, RouterContext, SnitchService, HttpResponses) Router.() -> Unit): RoutedService {
         val router = with(RouterContext) {
             Router()
         }
 
+//        val tmpDir = File(System.getProperty("java.io.tmpdir") + "/swagger-ui/docs")
+//        if (!tmpDir.exists()) {
+//            tmpDir.mkdirs()
+//        }
+//        println(tmpDir)
+//        http.externalStaticFileLocation(tmpDir.absolutePath)
+
         with (SparkMarkup()) {
-            routerConfiguration(RouterContext, this@SparkService, router)
+            routerConfiguration(RouterContext, this@SparkService, HttpResponses, router)
         }
         http.notFound { req, res ->
 //            println("${req.url()}")
@@ -77,7 +87,10 @@ class SparkService(override val config: Config) : SnitchService {
 
                 when (result) {
                     is HttpResponse.SuccessfulHttpResponse<*> -> {
-                        result.body?.jsonString
+                        if (result._format == Format.Json)
+                            result.body?.jsonString
+                        else
+                            result.body.toString()
                     }
                     is HttpResponse.ErrorHttpResponse<*, *> -> {
                         result.jsonString

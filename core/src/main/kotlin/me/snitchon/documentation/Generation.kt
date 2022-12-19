@@ -1,5 +1,8 @@
 package me.snitchon.documentation
 
+import com.snitch.Format
+import com.snitch.HttpResponses.format
+import com.snitch.HttpResponses.ok
 import me.snitchon.endpoint.Endpoint
 import me.snitchon.parameter.Header
 import me.snitchon.parameter.Parameter
@@ -8,6 +11,7 @@ import me.snitchon.parameter.Query
 import me.snitchon.parsing.Parser
 import me.snitchon.router.Body
 import me.snitchon.router.Router
+import me.snitchon.router.RouterContext
 import me.snitchon.service.RoutedService
 import java.io.File
 import java.io.FileOutputStream
@@ -15,25 +19,25 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.starProjectedType
 
 
-val <T: Any> Endpoint<T>.headerParams
+val <T : Any> Endpoint<T>.headerParams
     get() = this::class
         .memberProperties
         .map { it.call(this) as? Header<*, *> }
         .filterNotNull()
 
-val <T: Any> Endpoint<T>.pathParams
+val <T : Any> Endpoint<T>.pathParams
     get() = this::class
         .memberProperties
         .map { it.call(this) as? Path<*, *> }
         .filterNotNull()
 
-val <T: Any> Endpoint<T>.queryParams
+val <T : Any> Endpoint<T>.queryParams
     get() = this::class
         .memberProperties
         .map { it.call(this) as? Query<*, *> }
         .filterNotNull()
 
-val <T: Any> Endpoint<T>.bodyParam
+val <T : Any> Endpoint<T>.bodyParam
     get() = this::class
         .memberProperties
         .map { it.call(this) as? Body<*> }
@@ -108,16 +112,26 @@ fun RoutedService.generateDocs(): Spec {
                 )
             }
         }.fold(openApi) { a, b -> a.withPath(b.first, b.second) }
-        .let { Spec(it.jsonString, router) }
+        .let { Spec(it.jsonString, router, this) }
 }
 
-data class Spec(val spec: String, val router: Router) {
+data class Spec(val spec: String, val router: Router, val routedService: RoutedService) {
 
     fun writeDocsToStaticFolder() {
-        val dest = "tmp/swagger-ui" + "/docs"
-        File(dest).mkdirs()
-        writeToFile(spec, "$dest/spec.json")
-        File("$dest/index.html").writeText(index)
+        with(RouterContext) {
+            with(Router(router.config, "")) {
+                routedService.service.registerMethod(GET("/docs").isHandledBy {
+                    index.ok.format(Format.TextPlain)
+                }, "/docs")
+                routedService.service.registerMethod(GET("/spec.json").isHandledBy {
+                    spec.ok.format(Format.TextPlain)
+                }, "/spec.json")
+            }
+        }
+//        val dest = "tmp/swagger-ui" + "/docs"
+//        File(dest).mkdirs()
+//        writeToFile(spec, "$dest/spec.json")
+//        File("$dest/index.html").writeText(index)
     }
 }
 

@@ -1,5 +1,6 @@
 package me.snitchon.syntax
 
+import com.snitch.HttpResponses
 import me.snitchon.endpoint.*
 import me.snitchon.http.*
 import me.snitchon.router.Router
@@ -11,11 +12,11 @@ import me.snitchon.service.SnitchService
 class TestSnitchService : SnitchService {
     val service = mutableSetOf<Pair<TestRequest, context (Handler) () -> Any?>>()
 
-    fun setRoutes(routerConfiguration: context(RouterContext, SnitchService) Router.() -> Unit): RoutedService {
+    fun setRoutes(routerConfiguration: context(RouterContext, SnitchService, HttpResponses) Router.() -> Unit): RoutedService {
         val router = with(RouterContext) {
             Router()
         }
-        routerConfiguration(RouterContext, this, router)
+        routerConfiguration(RouterContext, this, HttpResponses, router)
         return RoutedService(this, router)
     }
 

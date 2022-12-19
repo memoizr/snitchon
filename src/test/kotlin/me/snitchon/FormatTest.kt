@@ -2,7 +2,6 @@ package me.snitchon
 
 import com.memoizr.assertk.expect
 import com.memoizr.assertk.isEqualTo
-import com.snitch.ok
 import me.snitchon.syntax.DslJsonParser.jsonString
 import org.junit.Rule
 import org.junit.Test

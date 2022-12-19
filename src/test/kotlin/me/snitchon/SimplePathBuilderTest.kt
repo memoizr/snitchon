@@ -1,6 +1,7 @@
 package me.snitchon
 
 import com.snitch.*
+import com.snitch.HttpResponses.badRequest
 import me.snitchon.parameter.Path
 import me.snitchon.syntax.GsonJsonParser.jsonString
 import org.junit.Rule
