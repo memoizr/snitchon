@@ -1,7 +1,6 @@
 package me.snitchon.syntax
 
 import com.snitch.HttpResponse
-import com.snitch.HttpResponses
 import com.snitch.HttpResponses.ok
 import com.snitch.NonEmptyString
 import me.snitchon.SparkMarkup
@@ -11,7 +10,7 @@ import me.snitchon.endpoint.plus
 import me.snitchon.http.Handler
 import me.snitchon.http.HTTPMethod
 import me.snitchon.parameter.Header
-import me.snitchon.parameter.Path
+import me.snitchon.path.Path
 import me.snitchon.parameter.Query
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

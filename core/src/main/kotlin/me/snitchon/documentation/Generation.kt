@@ -6,7 +6,7 @@ import com.snitch.HttpResponses.ok
 import me.snitchon.endpoint.Endpoint
 import me.snitchon.parameter.Header
 import me.snitchon.parameter.Parameter
-import me.snitchon.parameter.Path
+import me.snitchon.path.Path
 import me.snitchon.parameter.Query
 import me.snitchon.parsing.Parser
 import me.snitchon.router.Body

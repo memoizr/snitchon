@@ -1,9 +1,10 @@
-package me.snitchon.parameter
+package me.snitchon.path
 
 import com.snitch.Validator
 import me.snitchon.documentation.Visibility
 import me.snitchon.http.Handler
-import me.snitchon.router.Body
+import me.snitchon.parameter.ParameterMarkupDecorator
+import me.snitchon.parameter.Parameter
 
 
 abstract class Path<T, PARSED>(
@@ -16,7 +17,7 @@ abstract class Path<T, PARSED>(
     open val visibility: Visibility = Visibility.PUBLIC,
 ) : Parameter<String, PARSED> {
 
-    context(Markup)
+    context(ParameterMarkupDecorator)
     val markupName
         get() = decorate(name)
 

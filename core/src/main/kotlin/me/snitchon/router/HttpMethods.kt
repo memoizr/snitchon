@@ -4,6 +4,7 @@ import me.snitchon.documentation.Visibility
 import me.snitchon.endpoint.*
 import me.snitchon.http.HTTPMethod
 import me.snitchon.parameter.*
+import me.snitchon.path.Path
 
 internal typealias PP<T> = Path<T, *>
 internal typealias Par = Parameter<*, *>
@@ -53,7 +54,7 @@ object HttpMethods {
         response = Nothing::class
     )
 
-    context(Markup)
+    context(ParameterMarkupDecorator)
     fun <P1 : PP<P1>>
             GET(path: P1) =
         Endpoint1(
@@ -117,7 +118,7 @@ object HttpMethods {
             path.a, path.b
         )
 
-    context(Markup)
+    context(ParameterMarkupDecorator)
     operator fun <P1 : PP<P1>, P2 : PP<P2>> ParametrizedPath1<P1>.div(path: P2): ParametrizedPath2<P1, P2> {
         return ParametrizedPath2(this.path + path.markupName.ensureLeadingSlash(), this.a, path)
     }

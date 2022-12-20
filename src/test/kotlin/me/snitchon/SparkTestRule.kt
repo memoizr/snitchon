@@ -4,11 +4,10 @@ import com.snitch.HttpResponses
 import com.snitch.spark.SparkService
 import me.snitchon.config.Config
 import me.snitchon.config.DocExpansion
-import me.snitchon.parameter.Markup
+import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods
 import me.snitchon.router.SlashSyntax
-import me.snitchon.service.SnitchService
 import me.snitchon.syntax.GsonJsonParser
 import org.junit.rules.ExternalResource
 import org.junit.runner.Description
@@ -26,13 +25,13 @@ val config = Config(
     docExpansion = DocExpansion.LIST
 )
 
-class SparkMarkup : Markup {
+class SparkMarkup : ParameterMarkupDecorator {
     override fun decorate(name: String): String = ":$name"
 }
 
 open class SparkTestRule(
     port: Int, val router: context(
-    Markup,
+    ParameterMarkupDecorator,
     HttpMethods,
     SlashSyntax,
     HttpResponses

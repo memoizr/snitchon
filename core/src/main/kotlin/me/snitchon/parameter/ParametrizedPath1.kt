@@ -1,5 +1,7 @@
 package me.snitchon.parameter
 
+import me.snitchon.path.Path
+
 
 data class ParametrizedPath0
         (val path: String)

@@ -6,6 +6,7 @@ import me.snitchon.documentation.Description
 import me.snitchon.documentation.Visibility
 import me.snitchon.http.Handler
 import me.snitchon.parameter.*
+import me.snitchon.path.Path
 import me.snitchon.router.Body
 import me.snitchon.router.HasBody
 import me.snitchon.syntax.GsonJsonParser.jsonString

@@ -3,14 +3,14 @@ package me.snitchon.syntax
 import com.snitch.HttpResponses
 import me.snitchon.endpoint.*
 import me.snitchon.http.*
-import me.snitchon.parameter.Markup
+import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods
 import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
 
-class TestMarkup : Markup {
+class TestMarkup : ParameterMarkupDecorator {
     override fun decorate(name: String): String = ":$name"
 }
 
@@ -20,7 +20,7 @@ class TestSnitchService : SnitchService {
 
     override fun withRoutes(
         routerConfiguration: context(
-        Markup,
+        ParameterMarkupDecorator,
         HttpMethods,
         SlashSyntax,
         HttpResponses

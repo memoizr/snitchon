@@ -11,7 +11,7 @@ import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods
 import com.snitch.HttpResponse
 import com.snitch.HttpResponses
-import me.snitchon.parameter.Markup
+import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.router.SlashSyntax
 import me.snitchon.router.ensureLeadingSlash
 
@@ -21,7 +21,7 @@ interface SnitchService {
 
     fun withRoutes(
         routerConfiguration: context(
-        Markup,
+        ParameterMarkupDecorator,
         HttpMethods,
         SlashSyntax,
         HttpResponses

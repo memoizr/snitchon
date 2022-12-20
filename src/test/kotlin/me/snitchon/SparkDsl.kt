@@ -4,6 +4,7 @@ import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
 import me.snitchon.parameter.*
+import me.snitchon.path.Path
 import me.snitchon.syntax.GsonJsonParser.parseJson
 import spark.Request
 import spark.Response

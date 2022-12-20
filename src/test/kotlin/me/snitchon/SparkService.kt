@@ -12,7 +12,7 @@ import me.snitchon.http.BodyHandler
 import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
-import me.snitchon.parameter.Markup
+import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods
 import me.snitchon.router.SlashSyntax
@@ -45,7 +45,7 @@ class SparkService(override val config: Config) : SnitchService {
 
     override fun withRoutes(
         routerConfiguration: context(
-        Markup,
+        ParameterMarkupDecorator,
         HttpMethods,
         SlashSyntax,
         HttpResponses

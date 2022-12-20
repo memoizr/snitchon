@@ -1,5 +1,5 @@
 package me.snitchon.parameter
 
-interface Markup {
+interface ParameterMarkupDecorator {
     fun decorate(name: String): String
 }

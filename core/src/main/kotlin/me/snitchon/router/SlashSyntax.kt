@@ -1,9 +1,11 @@
 package me.snitchon.router
 
+import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.parameter.*
+import me.snitchon.path.Path
 
 object SlashSyntax {
-    context(Router, Markup, HttpMethods)
+    context(Router, ParameterMarkupDecorator, HttpMethods)
     operator fun String.div(block: context(ParametrizedPath0) Router.() -> Unit): Router {
         val router = Router(config, prefix + this.ensureLeadingSlash())
         block(ParametrizedPath0(prefix + this.ensureLeadingSlash()), router)
@@ -13,7 +15,7 @@ object SlashSyntax {
         return router
     }
 
-    context(Router, ParametrizedPath0, Markup, HttpMethods)
+    context(Router, ParametrizedPath0, ParameterMarkupDecorator, HttpMethods)
     operator fun <T : Path<T, *>> T.div(block: context(ParametrizedPath1<T>, T) Router.() -> Unit): Router {
         val router = Router(config, prefix + this.markupName.ensureLeadingSlash())
         block(ParametrizedPath1(prefix + this.markupName.ensureLeadingSlash(), this), this, router)
@@ -27,7 +29,7 @@ object SlashSyntax {
         return this.ensureLeadingSlash() + "/" + path
     }
 
-    context(Markup)
+    context(ParameterMarkupDecorator)
     operator fun <P : PP<P>> String.div(path: P): ParametrizedPath1<P> {
         return ParametrizedPath1(this + path.markupName.ensureLeadingSlash(), path)
     }
