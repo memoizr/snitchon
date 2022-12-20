@@ -8,8 +8,9 @@ import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
 import me.snitchon.parsing.Parser
 import me.snitchon.router.Router
-import me.snitchon.router.RouterContext
+import me.snitchon.router.HttpMethods
 import com.snitch.HttpResponse
+import me.snitchon.router.ensureLeadingSlash
 
 interface SnitchService {
     val config: Config get() = Config()
@@ -23,7 +24,7 @@ interface SnitchService {
 data class RoutedService(val service: SnitchService, val router: Router) {
     fun startListening(): RoutedService {
         router.endpoints.forEach {
-            with(RouterContext) {
+            with(HttpMethods) {
                 service.registerMethod(it, it.params.url.ensureLeadingSlash())
             }
         }

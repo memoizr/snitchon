@@ -11,7 +11,7 @@ import me.snitchon.parameter.Query
 import me.snitchon.parsing.Parser
 import me.snitchon.router.Body
 import me.snitchon.router.Router
-import me.snitchon.router.RouterContext
+import me.snitchon.router.HttpMethods
 import me.snitchon.service.RoutedService
 import java.io.File
 import java.io.FileOutputStream
@@ -118,7 +118,7 @@ fun RoutedService.generateDocs(): Spec {
 data class Spec(val spec: String, val router: Router, val routedService: RoutedService) {
 
     fun writeDocsToStaticFolder() {
-        with(RouterContext) {
+        with(HttpMethods) {
             with(Router(router.config, "")) {
                 routedService.service.registerMethod(GET("/docs").isHandledBy {
                     index.ok.format(Format.TextPlain)

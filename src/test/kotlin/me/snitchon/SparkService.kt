@@ -14,7 +14,8 @@ import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
 import me.snitchon.parameter.Markup
 import me.snitchon.router.Router
-import me.snitchon.router.RouterContext
+import me.snitchon.router.HttpMethods
+import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
 import me.snitchon.syntax.GsonJsonParser
@@ -22,7 +23,6 @@ import org.slf4j.LoggerFactory
 import spark.Request
 import spark.Response
 import spark.Service
-import java.io.File
 
 
 class SparkService(override val config: Config) : SnitchService {
@@ -43,27 +43,20 @@ class SparkService(override val config: Config) : SnitchService {
     }
 
 
-    fun setRoutes(routerConfiguration: context(Markup, RouterContext, SnitchService, HttpResponses) Router.() -> Unit): RoutedService {
-        val router = with(RouterContext) {
-            Router()
-        }
+    fun setRoutes(
+        routerConfiguration: context(
+        Markup,
+        HttpMethods,
+        SlashSyntax,
+        SnitchService,
+        HttpResponses
+        ) Router.() -> Unit
+    ): RoutedService {
+        val router = with(HttpMethods) { Router() }
 
-//        val tmpDir = File(System.getProperty("java.io.tmpdir") + "/swagger-ui/docs")
-//        if (!tmpDir.exists()) {
-//            tmpDir.mkdirs()
-//        }
-//        println(tmpDir)
-//        http.externalStaticFileLocation(tmpDir.absolutePath)
+        routerConfiguration(SparkMarkup(), HttpMethods, SlashSyntax, this@SparkService, HttpResponses, router)
 
-        with (SparkMarkup()) {
-            routerConfiguration(RouterContext, this@SparkService, HttpResponses, router)
-        }
         http.notFound { req, res ->
-//            println("${req.url()}")
-//            println("${req.headers()}")
-//            println("${req.requestMethod()}")
-//            println(http.port())
-//            println(http.routes().map { "${it.httpMethod} ${it.matchUri} ${it.acceptType}" })
             res.type("application/json")
             "{\"message\":\"Custom 404\"}"
         }
@@ -92,6 +85,7 @@ class SparkService(override val config: Config) : SnitchService {
                         else
                             result.body.toString()
                     }
+
                     is HttpResponse.ErrorHttpResponse<*, *> -> {
                         result.jsonString
                     }
