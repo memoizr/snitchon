@@ -29,22 +29,3 @@ interface ResponseWrapper {
     fun setStatus(code: Int)
     fun setBody(body: String)
 }
-
-interface Handler {
-    val request: RequestWrapper
-    val response: ResponseWrapper
-}
-
-data class DisembodiedEndpointCall(
-    override inline val request: RequestWrapper,
-    override inline val response: ResponseWrapper,
-): Handler
-
-data class EmbodiedEndpointCall<T>(
-    override inline val request: RequestWrapper,
-    override inline val response: ResponseWrapper,
-    inline val body: T
-): Handler
-
-
-data class Embodied<T: Any>(val body: Body<T>)
