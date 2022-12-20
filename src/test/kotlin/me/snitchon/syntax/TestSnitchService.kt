@@ -47,8 +47,8 @@ class TestSnitchService : SnitchService {
                 TODO("Not yet implemented")
             }
         }
-        return func?.invoke(request.body?.let { EmbodiedEndpointCall(testRequestWrapper, response, it) }
-            ?: DisembodiedEndpointCall(testRequestWrapper, response))
+        return func?.invoke(request.body?.let { BodyHandler(testRequestWrapper, response, it) }
+            ?: NoBodyHandler(testRequestWrapper, response))
     }
 }
 

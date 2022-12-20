@@ -5,12 +5,12 @@ interface Handler {
     val response: ResponseWrapper
 }
 
-data class DisembodiedEndpointCall(
+data class NoBodyHandler(
     override inline val request: RequestWrapper,
     override inline val response: ResponseWrapper,
 ): Handler
 
-data class EmbodiedEndpointCall<T>(
+data class BodyHandler<T>(
     override inline val request: RequestWrapper,
     override inline val response: ResponseWrapper,
     inline val body: T

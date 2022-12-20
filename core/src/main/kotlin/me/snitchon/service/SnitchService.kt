@@ -24,9 +24,7 @@ interface SnitchService {
 data class RoutedService(val service: SnitchService, val router: Router) {
     fun startListening(): RoutedService {
         router.endpoints.forEach {
-            with(HttpMethods) {
-                service.registerMethod(it, it.params.url.ensureLeadingSlash())
-            }
+            service.registerMethod(it, it.params.url.ensureLeadingSlash())
         }
 
         return this

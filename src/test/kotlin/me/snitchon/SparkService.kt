@@ -8,7 +8,7 @@ import com.snitch.HttpResponses
 import me.snitchon.SparkMarkup
 import me.snitchon.config.Config
 import me.snitchon.endpoint.Endpoint
-import me.snitchon.http.EmbodiedEndpointCall
+import me.snitchon.http.BodyHandler
 import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
@@ -67,7 +67,7 @@ class SparkService(override val config: Config) : SnitchService {
         val sparkPath = path.replace("{", ":").replace("}", "")
         with(GsonJsonParser) {
             val function: (request: Request, response: Response) -> String? = { request, response ->
-                val call = EmbodiedEndpointCall(
+                val call = BodyHandler(
                     SparkRequestWrapper(request),
                     SparkResponseWrapper(response),
                     bundle.response
