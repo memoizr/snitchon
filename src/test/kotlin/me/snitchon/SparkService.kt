@@ -98,7 +98,7 @@ class SparkService(override val config: Config) : SnitchService {
                 }
             }
 
-            when (bundle.httpMethod) {
+            when (bundle.params.httpMethod) {
                 HTTPMethod.GET -> {
                     http.get(sparkPath, function)
                 }

@@ -123,11 +123,7 @@ typealias After = (RequestWrapper, ResponseWrapper) -> Unit
 data class Endpoint1<
         A : Par,
         RETURN : Any>(
-    override val httpMethod: HTTPMethod,
-    override val url: String,
-    override val summary: String?,
-    override val description: String?,
-    override val visibility: Visibility,
+    override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -141,11 +137,7 @@ data class Endpoint1<
 
     fun <B : Par> with(parameter: B): Endpoint2<A, B, RETURN> =
         Endpoint2(
-            httpMethod,
-            url,
-            summary,
-            description,
-            visibility,
+            params,
             before,
             after,
             response,
@@ -164,11 +156,7 @@ data class Endpoint1<
 
     fun <B, BODY : Body<B>> with(body: BODY): Endpoint3<A, BODY, HasBody, RETURN> =
         Endpoint3(
-            httpMethod,
-            url,
-            summary,
-            description,
-            visibility,
+            params,
             before,
             after,
             response,

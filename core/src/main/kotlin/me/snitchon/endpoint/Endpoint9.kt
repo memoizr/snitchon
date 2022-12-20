@@ -20,11 +20,7 @@ data class Endpoint9<
         H : Par,
         I : Par,
         RETURN : Any>(
-    override val httpMethod: HTTPMethod,
-    override val url: String,
-    override val summary: String?,
-    override val description: String?,
-    override val visibility: Visibility,
+    override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -45,11 +41,7 @@ data class Endpoint9<
 
     fun <I : Par> with(parameter: I) =
         Endpoint10(
-            httpMethod,
-            url,
-            summary,
-            description,
-            visibility,
+            params,
             before,
             after,
             response,

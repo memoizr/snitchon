@@ -57,38 +57,46 @@ interface Bodied<T : Any, A : Body<T>> : Parameter<Any, T> {
 object RouterContext {
 
     fun GET(path: String = "") = Endpoint0(
-        HTTPMethod.GET,
-        if (path.isEmpty()) "" else path.ensureLeadingSlash(),
-        "",
-        description = null,
-        visibility = Visibility.PUBLIC,
+        EndpointParameters(
+            HTTPMethod.GET,
+            if (path.isEmpty()) "" else path.ensureLeadingSlash(),
+            "",
+            description = null,
+            visibility = Visibility.PUBLIC,
+        ),
         response = Nothing::class
     )
 
     fun PUT(path: String) = Endpoint0(
-        HTTPMethod.PUT,
-        path.ensureLeadingSlash(),
-        "",
-        description = null,
-        visibility = Visibility.PUBLIC,
+        EndpointParameters(
+            HTTPMethod.PUT,
+            path.ensureLeadingSlash(),
+            "",
+            description = null,
+            visibility = Visibility.PUBLIC,
+        ),
         response = Nothing::class
     )
 
     fun POST(path: String) = Endpoint0(
-        HTTPMethod.POST,
-        path.ensureLeadingSlash(),
-        "",
-        description = null,
-        visibility = Visibility.PUBLIC,
+        EndpointParameters(
+            HTTPMethod.POST,
+            path.ensureLeadingSlash(),
+            "",
+            description = null,
+            visibility = Visibility.PUBLIC,
+        ),
         response = Nothing::class
     )
 
     fun DELETE(path: String) = Endpoint0(
-        HTTPMethod.DELETE,
-        path.ensureLeadingSlash(),
-        "",
-        description = null,
-        visibility = Visibility.PUBLIC,
+        EndpointParameters(
+            HTTPMethod.DELETE,
+            path.ensureLeadingSlash(),
+            "",
+            description = null,
+            visibility = Visibility.PUBLIC,
+        ),
         response = Nothing::class
     )
 
@@ -96,11 +104,13 @@ object RouterContext {
     fun <P1 : PP<P1>>
             GET(path: P1) =
         Endpoint1(
-            HTTPMethod.GET,
-            path.markupName,
-            null,
-            null,
-            Visibility.PUBLIC,
+            EndpointParameters(
+                HTTPMethod.GET,
+                path.markupName,
+                null,
+                null,
+                Visibility.PUBLIC,
+            ),
             {},
             { _, res -> res },
             Nothing::class,
@@ -110,11 +120,13 @@ object RouterContext {
     fun <P1 : PP<P1>>
             GET(path: ParametrizedPath1<P1>) =
         Endpoint1(
-            HTTPMethod.GET,
-            path.path,
-            null,
-            null,
-            Visibility.PUBLIC,
+            EndpointParameters(
+                HTTPMethod.GET,
+                path.path,
+                null,
+                null,
+                Visibility.PUBLIC,
+            ),
             {},
             { _, res -> res },
             Nothing::class,
@@ -124,11 +136,13 @@ object RouterContext {
     fun <P1 : PP<P1>>
             PUT(path: ParametrizedPath1<P1>) =
         Endpoint1(
-            HTTPMethod.PUT,
-            path.path,
-            null,
-            null,
-            Visibility.PUBLIC,
+            EndpointParameters(
+                HTTPMethod.PUT,
+                path.path,
+                null,
+                null,
+                Visibility.PUBLIC,
+            ),
             {},
             { _, res -> res },
             Nothing::class,
@@ -138,10 +152,12 @@ object RouterContext {
     fun <A : PP<A>, B : PP<B>>
             GET(path: ParametrizedPath2<A, B>) =
         Endpoint2(
-            HTTPMethod.GET, path.path,
-            null,
-            null,
-            Visibility.PUBLIC,
+            EndpointParameters(
+                HTTPMethod.GET, path.path,
+                null,
+                null,
+                Visibility.PUBLIC,
+            ),
             {},
             { _, res -> res },
             Nothing::class,

@@ -21,7 +21,7 @@ class TestSnitchService : SnitchService {
     }
 
     override fun registerMethod(bundle: Endpoint<*>, path: String) {
-        service.add(TestRequest(bundle.httpMethod, bundle.url) to bundle.invoke)
+        service.add(TestRequest(bundle.params.httpMethod, bundle.params.url) to bundle.invoke)
     }
 
     override fun <T : Exception> handleException(

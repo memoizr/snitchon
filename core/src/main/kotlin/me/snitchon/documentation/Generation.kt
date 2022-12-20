@@ -49,17 +49,17 @@ context(Parser)
 fun RoutedService.generateDocs(): Spec {
     val openApi = OpenApi(info = Info(router.config.title, "1.0"), servers = listOf(Server(router.config.host)))
     return router.endpoints
-        .groupBy { it.url }
+        .groupBy { it.params.url }
         .map { entry ->
             entry.key to entry.value.foldRight(Path()) { bundle: Endpoint<*>, path ->
                 path.withOperation(
-                    bundle.httpMethod,
+                    bundle.params.httpMethod,
                     Operation(
-                        tags = bundle.url.split("/").drop(1).firstOrNull()?.let { listOf(it) },
-                        summary = bundle.summary,
-                        description = bundle.description,
+                        tags = bundle.params.url.split("/").drop(1).firstOrNull()?.let { listOf(it) },
+                        summary = bundle.params.summary,
+                        description = bundle.params.description,
                         responses = emptyMap(),
-                        visibility = bundle.visibility
+                        visibility = bundle.params.visibility
                     )
                         .withResponse(ContentType.APPLICATION_JSON, bundle.response, "200")
                         .let {

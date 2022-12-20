@@ -1,8 +1,6 @@
 package me.snitchon.endpoint
 
 import com.snitch.HttpResponse
-import me.snitchon.documentation.Visibility
-import me.snitchon.http.HTTPMethod
 import me.snitchon.http.Handler
 import me.snitchon.http.RequestWrapper
 import me.snitchon.router.Body
@@ -18,11 +16,7 @@ data class Endpoint5<
         D : Par,
         E : Par,
         RETURN : Any>(
-    override val httpMethod: HTTPMethod,
-    override val url: String,
-    override val summary: String?,
-    override val description: String?,
-    override val visibility: Visibility,
+    override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -40,11 +34,7 @@ data class Endpoint5<
 
     infix fun <F : Par> with(parameter: F): Endpoint6<A, B, C, D, E, F, RETURN> =
         Endpoint6(
-            httpMethod,
-            url,
-            summary,
-            description,
-            visibility,
+            params,
             before,
             after,
             response,
@@ -65,11 +55,7 @@ data class Endpoint5<
 
     fun <F, BODY : Body<F>> with(body: BODY): Endpoint7<A, B, C, D, E, BODY, HasBody, RETURN> =
         Endpoint7(
-            httpMethod,
-            url,
-            summary,
-            description,
-            visibility,
+            params,
             before,
             after,
             response,

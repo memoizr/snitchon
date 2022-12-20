@@ -1,23 +1,14 @@
 package me.snitchon.endpoint
 
 import com.snitch.HttpResponse
-import me.snitchon.documentation.Visibility
-import me.snitchon.http.HTTPMethod
 import me.snitchon.http.Handler
 import me.snitchon.http.RequestWrapper
-import me.snitchon.parameter.Header
-import me.snitchon.parameter.Query
 import me.snitchon.router.Body
 import me.snitchon.router.HasBody
-import me.snitchon.router.Par
 import kotlin.reflect.KClass
 
 data class Endpoint0<RETURN : Any>(
-    override val httpMethod: HTTPMethod,
-    override val url: String,
-    override val summary: String?,
-    override val description: String?,
-    override val visibility: Visibility,
+    override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -36,11 +27,7 @@ data class Endpoint0<RETURN : Any>(
 
     fun <A : QP> with(parameter: A) =
         Endpoint1(
-            httpMethod,
-            url,
-            summary,
-            description,
-            visibility,
+            params,
             before,
             after,
             response,
@@ -49,11 +36,7 @@ data class Endpoint0<RETURN : Any>(
 
     fun <A : HP> with(parameter: A) =
         Endpoint1(
-            httpMethod,
-            url,
-            summary,
-            description,
-            visibility,
+            params,
             before,
             after,
             response,
@@ -62,11 +45,7 @@ data class Endpoint0<RETURN : Any>(
 
     fun <A, BODY : Body<A>> with(body: BODY) =
         Endpoint2(
-            httpMethod,
-            url,
-            summary,
-            description,
-            visibility,
+            params,
             before,
             after,
             response,
