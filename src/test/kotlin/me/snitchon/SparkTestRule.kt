@@ -35,7 +35,6 @@ open class SparkTestRule(
     Markup,
     HttpMethods,
     SlashSyntax,
-    SnitchService,
     HttpResponses
     ) Router.() -> Unit
 ) : ExternalResource() {
@@ -64,7 +63,7 @@ open class SparkTestRule(
     override fun before() {
         with(GsonJsonParser) {
             with(SparkMarkup()) {
-                server.setRoutes(router).startListening().handleInvalidParams()
+                server.withRoutes(router).startListening().handleInvalidParams()
             }
         }
 

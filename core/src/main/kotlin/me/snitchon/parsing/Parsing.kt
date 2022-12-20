@@ -1,8 +1,5 @@
 package me.snitchon.parsing
 
-import kotlin.reflect.KClass
-
-
 interface Parser {
     val Any.jsonString: String
     val Any.jsonByteArray: ByteArray

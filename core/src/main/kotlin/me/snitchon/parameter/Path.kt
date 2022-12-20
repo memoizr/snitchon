@@ -27,7 +27,6 @@ interface Markup {
     fun decorate(name: String): String
 }
 
-
 abstract class Path<T, PARSED>(
     override inline val name: String,
     override inline val description: String = "description",

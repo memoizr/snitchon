@@ -10,13 +10,24 @@ import me.snitchon.parsing.Parser
 import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods
 import com.snitch.HttpResponse
+import com.snitch.HttpResponses
+import me.snitchon.parameter.Markup
+import me.snitchon.router.SlashSyntax
 import me.snitchon.router.ensureLeadingSlash
 
 interface SnitchService {
     val config: Config get() = Config()
     fun registerMethod(bundle: Endpoint<*>, path: String)
 
-    fun withRoutes(routerConfiguration: Router.() -> Unit) {}
+    fun withRoutes(
+        routerConfiguration: context(
+        Markup,
+        HttpMethods,
+        SlashSyntax,
+        HttpResponses
+        )
+        Router.() -> Unit
+    ): RoutedService
 
     fun <T : Exception> handleException(exception: Class<T>, handler: (T, RequestWrapper, ResponseWrapper) -> Unit)
 }

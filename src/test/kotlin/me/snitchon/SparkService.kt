@@ -43,18 +43,17 @@ class SparkService(override val config: Config) : SnitchService {
     }
 
 
-    fun setRoutes(
+    override fun withRoutes(
         routerConfiguration: context(
         Markup,
         HttpMethods,
         SlashSyntax,
-        SnitchService,
         HttpResponses
         ) Router.() -> Unit
     ): RoutedService {
         val router = with(HttpMethods) { Router() }
 
-        routerConfiguration(SparkMarkup(), HttpMethods, SlashSyntax, this@SparkService, HttpResponses, router)
+        routerConfiguration(SparkMarkup(), HttpMethods, SlashSyntax, HttpResponses, router)
 
         http.notFound { req, res ->
             res.type("application/json")
@@ -64,7 +63,6 @@ class SparkService(override val config: Config) : SnitchService {
     }
 
     override fun registerMethod(bundle: Endpoint<*>, path: String) {
-        val sparkPath = path.replace("{", ":").replace("}", "")
         with(GsonJsonParser) {
             val function: (request: Request, response: Response) -> String? = { request, response ->
                 val call = BodyHandler(
@@ -94,31 +92,31 @@ class SparkService(override val config: Config) : SnitchService {
 
             when (bundle.params.httpMethod) {
                 HTTPMethod.GET -> {
-                    http.get(sparkPath, function)
+                    http.get(path, function)
                 }
 
                 HTTPMethod.PUT -> {
-                    http.put(sparkPath, function)
+                    http.put(path, function)
                 }
 
                 HTTPMethod.POST -> {
-                    http.post(sparkPath, function)
+                    http.post(path, function)
                 }
 
                 HTTPMethod.PATCH -> {
-                    http.patch(sparkPath, function)
+                    http.patch(path, function)
                 }
 
                 HTTPMethod.DELETE -> {
-                    http.delete(sparkPath, function)
+                    http.delete(path, function)
                 }
 
                 HTTPMethod.OPTIONS -> {
-                    http.options(sparkPath, function)
+                    http.options(path, function)
                 }
 
                 HTTPMethod.HEAD -> {
-                    http.head(sparkPath, function)
+                    http.head(path, function)
                 }
             }
         }

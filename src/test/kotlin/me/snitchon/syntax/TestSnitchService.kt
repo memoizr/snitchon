@@ -3,21 +3,33 @@ package me.snitchon.syntax
 import com.snitch.HttpResponses
 import me.snitchon.endpoint.*
 import me.snitchon.http.*
+import me.snitchon.parameter.Markup
 import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods
 import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
 
+class TestMarkup : Markup {
+    override fun decorate(name: String): String = ":$name"
+}
+
 @Suppress("UNCHECKED_CAST")
 class TestSnitchService : SnitchService {
     val service = mutableSetOf<Pair<TestRequest, context (Handler) () -> Any?>>()
 
-    fun setRoutes(routerConfiguration: context(HttpMethods, SlashSyntax, SnitchService, HttpResponses) Router.() -> Unit): RoutedService {
+    override fun withRoutes(
+        routerConfiguration: context(
+        Markup,
+        HttpMethods,
+        SlashSyntax,
+        HttpResponses
+        ) Router.() -> Unit
+    ): RoutedService {
         val router = with(HttpMethods) {
             Router()
         }
-        routerConfiguration(HttpMethods, SlashSyntax, this, HttpResponses, router)
+        routerConfiguration(TestMarkup(), HttpMethods, SlashSyntax, HttpResponses, router)
         return RoutedService(this, router)
     }
 
@@ -53,10 +65,11 @@ class TestSnitchService : SnitchService {
 }
 
 fun String.parseQuery(): Map<String, String> {
-    val map = this.dropWhile { it != '?'}
+    val map = this.dropWhile { it != '?' }
         .drop(1)
         .split('&')
-        .map { val (name, value) = it.split('=')
+        .map {
+            val (name, value) = it.split('=')
             name to value
         }.toMap()
     return map
@@ -65,7 +78,7 @@ fun String.parseQuery(): Map<String, String> {
 
 fun String.parse(url: String): Map<String, String> {
     val map = this.split('/').filter { it.isNotBlank() }
-        .zip(url.takeWhile { it != '?'}.split('/').filter { it.isNotBlank() })
+        .zip(url.takeWhile { it != '?' }.split('/').filter { it.isNotBlank() })
         .filter { it.first.startsWith(':') }
         .map { it.copy(first = it.first.drop(1)) }
         .toMap()

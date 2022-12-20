@@ -50,7 +50,7 @@ class ServiceTest {
         }
 
         with(GsonJsonParser) {
-            service.setRoutes {
+            service.withRoutes {
                 GET("foo")
                     .isHandledBy(handler)
                 GET("foo" / "bar")
@@ -123,7 +123,7 @@ class ServiceTest {
     @Test
     fun `supports 1 path parameter and body`() {
         with (SparkMarkup()) {
-            service.setRoutes {
+            service.withRoutes {
                 GET("foo" / userId)
                     .with(body<MyBody>())
                     .isHandledBy {

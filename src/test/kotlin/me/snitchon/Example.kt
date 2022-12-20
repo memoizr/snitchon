@@ -8,13 +8,9 @@ import me.snitchon.syntax.GsonJsonParser
 
 fun main() {
     with(GsonJsonParser) {
-        SparkService(Config(port = 3000)).setRoutes {
-            val handledBy: Endpoint0<Any> = GET("hello").isHandledBy {
-                if (true) {
-                    Failure("world").ok
-                } else {
-                    Response("world").ok
-                }
+        SparkService(Config(port = 3000)).withRoutes {
+            GET("hello").isHandledBy {
+                Response("world").ok
             }
             GET("textplain").isHandledBy {
                 "this is just plain text".ok.plainText

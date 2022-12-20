@@ -3,7 +3,6 @@ package me.snitchon.http
 import com.snitch.MissingRequiredParameterException
 import me.snitchon.parameter.Parameter
 import me.snitchon.parameter.kind
-import me.snitchon.router.Body
 
 interface RequestWrapper {
     fun <T: Any> body(c: Class<T>): T
