@@ -258,7 +258,7 @@ object HttpMethods {
             path.p8,
             path.p9,
             path.p10,
-            path.p10,
+            path.p11,
         )
 
     context(ParameterMarkupDecorator)
