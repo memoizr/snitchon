@@ -183,7 +183,9 @@ object HttpMethods {
             path.p7,
         )
 
-    fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>, P6 : PP<P6>, P7 : PP<P7>, P8 : PP<P8>> GET(path: ParametrizedPath8<P1, P2, P3, P4, P5, P6, P7, P8>) =
+    fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>, P6 : PP<P6>, P7 : PP<P7>, P8 : PP<P8>> GET(
+        path: ParametrizedPath8<P1, P2, P3, P4, P5, P6, P7, P8>
+    ) =
         Endpoint8(
             EndpointParameters(HTTPMethod.GET, path.path, null, null, Visibility.PUBLIC),
             {},
@@ -199,7 +201,9 @@ object HttpMethods {
             path.p8,
         )
 
-    fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>, P6 : PP<P6>, P7 : PP<P7>, P8 : PP<P8>, P9 : PP<P9>> GET(path: ParametrizedPath9<P1, P2, P3, P4, P5, P6, P7, P8, P9>) =
+    fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>, P6 : PP<P6>, P7 : PP<P7>, P8 : PP<P8>, P9 : PP<P9>> GET(
+        path: ParametrizedPath9<P1, P2, P3, P4, P5, P6, P7, P8, P9>
+    ) =
         Endpoint9(
             EndpointParameters(HTTPMethod.GET, path.path, null, null, Visibility.PUBLIC),
             {},
@@ -216,7 +220,9 @@ object HttpMethods {
             path.p9,
         )
 
-    fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>, P6 : PP<P6>, P7 : PP<P7>, P8 : PP<P8>, P9 : PP<P9>, P10 : PP<P10>> GET(path: ParametrizedPath10<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10>) =
+    fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>, P6 : PP<P6>, P7 : PP<P7>, P8 : PP<P8>, P9 : PP<P9>, P10 : PP<P10>> GET(
+        path: ParametrizedPath10<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10>
+    ) =
         Endpoint10(
             EndpointParameters(HTTPMethod.GET, path.path, null, null, Visibility.PUBLIC),
             {},
@@ -231,6 +237,27 @@ object HttpMethods {
             path.p7,
             path.p8,
             path.p9,
+            path.p10,
+        )
+
+    fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>, P6 : PP<P6>, P7 : PP<P7>, P8 : PP<P8>, P9 : PP<P9>, P10 : PP<P10>, P11 : PP<P11>> GET(
+        path: ParametrizedPath11<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11>
+    ) =
+        Endpoint11(
+            EndpointParameters(HTTPMethod.GET, path.path, null, null, Visibility.PUBLIC),
+            {},
+            { _, res -> res },
+            Nothing::class,
+            path.p1,
+            path.p2,
+            path.p3,
+            path.p4,
+            path.p5,
+            path.p6,
+            path.p7,
+            path.p8,
+            path.p9,
+            path.p10,
             path.p10,
         )
 

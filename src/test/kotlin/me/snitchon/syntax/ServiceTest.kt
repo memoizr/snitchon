@@ -3,7 +3,6 @@ package me.snitchon.syntax
 import com.snitch.HttpResponse
 import com.snitch.HttpResponses.ok
 import com.snitch.NonEmptyString
-import me.snitchon.endpoint.plus
 import me.snitchon.http.Handler
 import me.snitchon.http.HTTPMethod
 import me.snitchon.parameter.Header
@@ -24,6 +23,26 @@ class ServiceTest {
     object path3 : Path<path3, String>(pattern = NonEmptyString)
     object path4 : Path<path4, String>(pattern = NonEmptyString)
     object path5 : Path<path5, String>(pattern = NonEmptyString)
+    object path6 : Path<path6, String>(pattern = NonEmptyString)
+    object path7 : Path<path7, String>(pattern = NonEmptyString)
+    object path8 : Path<path8, String>(pattern = NonEmptyString)
+    object path9 : Path<path9, String>(pattern = NonEmptyString)
+    object path10 : Path<path10, String>(pattern = NonEmptyString)
+    object path11 : Path<path11, String>(pattern = NonEmptyString)
+    object path12 : Path<path12, String>(pattern = NonEmptyString)
+    object path13 : Path<path13, String>(pattern = NonEmptyString)
+    object path14 : Path<path14, String>(pattern = NonEmptyString)
+    object path15 : Path<path15, String>(pattern = NonEmptyString)
+    object path16 : Path<path16, String>(pattern = NonEmptyString)
+    object path17 : Path<path17, String>(pattern = NonEmptyString)
+    object path18 : Path<path18, String>(pattern = NonEmptyString)
+    object path19 : Path<path19, String>(pattern = NonEmptyString)
+    object path20 : Path<path20, String>(pattern = NonEmptyString)
+    object path21 : Path<path21, String>(pattern = NonEmptyString)
+    object path22 : Path<path22, String>(pattern = NonEmptyString)
+    object path23 : Path<path23, String>(pattern = NonEmptyString)
+    object path24 : Path<path24, String>(pattern = NonEmptyString)
+
     object TokenHeader : Header<TokenHeader, String>(pattern = NonEmptyString, "token")
     object QueryOne : Query<QueryOne, String>(pattern = NonEmptyString, "one")
     object QueryTwo : Query<QueryTwo, String>(pattern = NonEmptyString, "two")
@@ -113,6 +132,67 @@ class ServiceTest {
 
         assertEquals(""""get.foo.one.two.three.four.five"""", get("/foo/one/two/three/four/five"))
     }
+
+    @Test
+    fun `supports 6 path parameters`() {
+        service.withRoutes {
+            GET("foo" / path1 / "hey" / path2 / path3 / path4 / "there" / path5 / path6 / "friend")
+                .isHandledBy { "get.foo.${path1()}.${path2()}.${path3()}.${path4()}.${path5()}.${path6()}".ok }
+        }.startListening()
+
+        assertEquals(""""get.foo.1.2.3.4.5.6"""", get("/foo/1/hey/2/3/4/there/5/6/friend"))
+    }
+
+    @Test
+    fun `supports 7 path parameters`() {
+        service.withRoutes {
+            GET("foo" / path1 / path2 / path3 / path4 / path5 / path6 / path7)
+                .isHandledBy { "get.foo.${path1()}.${path2()}.${path3()}.${path4()}.${path5()}.${path6()}.${path7()}".ok }
+        }.startListening()
+
+        assertEquals(""""get.foo.1.2.3.4.5.6.7"""", get("/foo/1/2/3/4/5/6/7"))
+    }
+
+    @Test
+    fun `supports 8 path parameters`() {
+        service.withRoutes {
+            GET("foo" / path1 / path2 / path3 / path4 / path5 / path6 / path7 / path8)
+                .isHandledBy { "get.foo.${path1()}.${path2()}.${path3()}.${path4()}.${path5()}.${path6()}.${path7()}.${path8()}".ok }
+        }.startListening()
+
+        assertEquals(""""get.foo.1.2.3.4.5.6.7.8"""", get("/foo/1/2/3/4/5/6/7/8"))
+    }
+
+    @Test
+    fun `supports 9 path parameters`() {
+        service.withRoutes {
+            GET("foo" / path1 / path2 / path3 / path4 / path5 / path6 / path7 / path8 / path9)
+                .isHandledBy { "get.foo.${path1()}.${path2()}.${path3()}.${path4()}.${path5()}.${path6()}.${path7()}.${path8()}.${path9()}".ok }
+        }.startListening()
+
+        assertEquals(""""get.foo.1.2.3.4.5.6.7.8.9"""", get("/foo/1/2/3/4/5/6/7/8/9"))
+    }
+
+    @Test
+    fun `supports 10 path parameters`() {
+        service.withRoutes {
+            GET("foo" / path1 / path2 / path3 / path4 / path5 / path6 / path7 / path8 / path9 / path10)
+                .isHandledBy { "get.foo.${path1()}.${path2()}.${path3()}.${path4()}.${path5()}.${path6()}.${path7()}.${path8()}.${path9()}.${path10()}".ok }
+        }.startListening()
+
+        assertEquals(""""get.foo.1.2.3.4.5.6.7.8.9.10"""", get("/foo/1/2/3/4/5/6/7/8/9/10"))
+    }
+
+    @Test
+    fun `supports 11 path parameters`() {
+        service.withRoutes {
+            GET("foo" / path1 / path2 / path3 / path4 / path5 / path6 / path7 / path8 / path9 / path10 / path11)
+                .isHandledBy { "get.foo.${path1()}.${path2()}.${path3()}.${path4()}.${path5()}.${path6()}.${path7()}.${path8()}.${path9()}.${path10()}.${path11()}".ok }
+        }.startListening()
+
+        assertEquals(""""get.foo.1.2.3.4.5.6.7.8.9.10.11"""", get("/foo/1/2/3/4/5/6/7/8/9/10/11"))
+    }
+
 
     @Test
     fun `supports 1 path parameter and body`() {
