@@ -20,6 +20,8 @@ interface Endpoint<R : Any> {
 
     context(OnlyQuery)
     infix operator fun <T : QP> plus(t: T): Endpoint<R>
+
+//    abstract fun queries(function: () -> R): Any
 }
 
 data class EndpointParameters(

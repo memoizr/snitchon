@@ -11,8 +11,7 @@ abstract class Query<T, PARSED>(
     override val emptyAsMissing: Boolean = false,
     override val invalidAsMissing: Boolean = false,
     open val visibility: Visibility = Visibility.PUBLIC,
-
-    ) : Parameter<String, PARSED> {
+) : Parameter<String, PARSED> {
 
     override val name: String get() = _name ?: javaClass.simpleName
 
@@ -20,7 +19,6 @@ abstract class Query<T, PARSED>(
         get() = String::class.java
 
     override val required: Boolean = true
-
 
     context(Handler, T)
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")

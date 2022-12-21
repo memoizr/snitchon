@@ -118,9 +118,39 @@ object HttpMethods {
             path.a, path.b
         )
 
+    fun <
+            A : PP<A>,
+            B : PP<B>,
+            C : PP<C>,
+            >
+            GET(path: ParametrizedPath3<A, B, C>) =
+        Endpoint3(
+            EndpointParameters(
+                HTTPMethod.GET, path.path,
+                null,
+                null,
+                Visibility.PUBLIC,
+            ),
+            {},
+            { _, res -> res },
+            Nothing::class,
+            path.a,
+            path.b,
+            path.c,
+        )
+
     context(ParameterMarkupDecorator)
     operator fun <P1 : PP<P1>, P2 : PP<P2>> ParametrizedPath1<P1>.div(path: P2): ParametrizedPath2<P1, P2> {
         return ParametrizedPath2(this.path + path.markupName.ensureLeadingSlash(), this.a, path)
+    }
+
+    context(ParameterMarkupDecorator)
+    operator fun <
+            P1 : PP<P1>,
+            P2 : PP<P2>,
+            P3 : PP<P3>,
+            > ParametrizedPath2<P1, P2>.div(path: P3): ParametrizedPath3<P1, P2, P3> {
+        return ParametrizedPath3(this.path + path.markupName.ensureLeadingSlash(), a, b, path)
     }
 
 }

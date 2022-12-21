@@ -9,19 +9,19 @@ import org.junit.Test
 
 class SimplePathBuilderTest : SparkTest() {
     object clipId: Path<clipId, Int>(
-        name = "clipId",
+        _name = "clipId",
         pattern = NonNegativeInt,
         description = "The clip id"
     )
 
     object otherPathParam: Path<otherPathParam, Int>(
-        name = "otherPathParam",
+        _name = "otherPathParam",
         pattern = NonNegativeInt,
         description = "The clip id"
     )
 
     object thirdPathParam: Path<thirdPathParam, Int>(
-        name = "thirdPathParam",
+        _name = "thirdPathParam",
         pattern = NonNegativeInt,
         description = "The clip id"
     )

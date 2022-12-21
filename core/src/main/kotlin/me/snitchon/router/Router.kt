@@ -4,6 +4,7 @@ import com.snitch.HttpResponse
 import me.snitchon.config.Config
 import me.snitchon.endpoint.*
 import me.snitchon.http.Handler
+import me.snitchon.parameter.Parameter
 
 context (HttpMethods)
 data class Router(val config: Config = Config(), val prefix: String = "") {
@@ -18,6 +19,12 @@ data class Router(val config: Config = Config(), val prefix: String = "") {
     val EndpointParameters.prefixed
         get() =
             copy(url = prefix + if (url.isEmpty()) "" else url.ensureLeadingSlash())
+
+    fun <X : Endpoint<RETURN>, Y : Endpoint<RETURN>, RETURN> X.headers(block: context(X, OnlyHeader) () -> Y): Y =
+        block(this@X, OnlyHeader)
+
+    fun <X : Endpoint<RETURN>, Y : Endpoint<RETURN>, RETURN> X.queries(block: context(X, OnlyQuery) () -> Y): Y =
+        block(this@X, OnlyQuery)
 
     inline fun <reified RETURN : Any>
             Endpoint0<Nothing>.isHandledBy(

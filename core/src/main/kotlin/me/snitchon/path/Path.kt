@@ -8,7 +8,7 @@ import me.snitchon.parameter.Parameter
 
 
 abstract class Path<T, PARSED>(
-    override inline val name: String,
+    inline val _name: String? = null,
     override inline val description: String = "description",
     override val pattern: Validator<String, PARSED>,
     override val required: Boolean = false,
@@ -16,6 +16,7 @@ abstract class Path<T, PARSED>(
     override val invalidAsMissing: Boolean = false,
     open val visibility: Visibility = Visibility.PUBLIC,
 ) : Parameter<String, PARSED> {
+    override val name: String by lazy { _name ?: this.javaClass.simpleName }
 
     context(ParameterMarkupDecorator)
     val markupName

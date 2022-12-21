@@ -17,13 +17,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object stringParam : Path<stringParam, String>(
-    name = "stringParam",
+    _name = "stringParam",
     description = "Description",
     pattern = NonEmptyString
 )
 
 object intparam : Path<intparam, Int>(
-    name = "intParam",
+    _name = "intParam",
     description = "Description",
     pattern = NonNegativeInt
 )

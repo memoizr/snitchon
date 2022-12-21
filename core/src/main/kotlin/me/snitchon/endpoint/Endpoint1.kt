@@ -111,11 +111,6 @@ infix operator fun <
         RETURN : Any> ONE.plus(parameter: TWO) = with(this).with(parameter)
 
 
-fun <X : Endpoint<RETURN>, Y : Endpoint<RETURN>, RETURN> X.headers(block: context(X, OnlyHeader) () -> Y): Y =
-    block(this@X, OnlyHeader)
-
-fun <X : Endpoint<RETURN>, Y : Endpoint<RETURN>, RETURN> X.queries(block: context(X, OnlyQuery) () -> Y): Y =
-    block(this@X, OnlyQuery)
 
 typealias After = (RequestWrapper, ResponseWrapper) -> Unit
 

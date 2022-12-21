@@ -9,6 +9,8 @@ import me.snitchon.router.HttpMethods
 import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
+import com.snitch.HttpResponse
+import me.snitchon.syntax.GsonJsonParser.jsonString
 
 class TestMarkup : ParameterMarkupDecorator {
     override fun decorate(name: String): String = ":$name"
@@ -59,8 +61,14 @@ class TestSnitchService : SnitchService {
                 TODO("Not yet implemented")
             }
         }
-        return func?.invoke(request.body?.let { BodyHandler(testRequestWrapper, response, it) }
+        val result = func?.invoke(request.body?.let { BodyHandler(testRequestWrapper, response, it) }
             ?: NoBodyHandler(testRequestWrapper, response))
+
+        return when (result) {
+            is HttpResponse.SuccessfulHttpResponse<*> -> result.body?.jsonString
+            is HttpResponse.ErrorHttpResponse<*,*> -> result.jsonString
+            else -> TODO()
+        }
     }
 }
 

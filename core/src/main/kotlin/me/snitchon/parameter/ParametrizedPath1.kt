@@ -14,3 +14,9 @@ data class ParametrizedPath2<
         A : Path<A, *>,
         B : Path<B, *>
         >(val path: String, val a: A, val b: B)
+
+data class ParametrizedPath3<
+        A : Path<A, *>,
+        B : Path<B, *>,
+        C : Path<C, *>,
+        >(val path: String, val a: A, val b: B, val c: C)
