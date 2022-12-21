@@ -10,29 +10,30 @@ import kotlin.reflect.KClass
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint8<
-        A : Par,
-        B : Par,
-        C : Par,
-        D : Par,
-        E : Par,
-        F : Par,
-        G : Par,
-        H : Par,
+        P1 : Par,
+        P2 : Par,
+        P3 : Par,
+        P4 : Par,
+        P5 : Par,
+        P6 : Par,
+        P7 : Par,
+        P8 : Par,
         RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
-    inline val a: A,
-    inline val b: B,
-    inline val c: C,
-    inline val d: D,
-    inline val e: E,
-    inline val f: F,
-    inline val g: G,
-    inline val h: H,
-    val handler: (context(A, B, C, D, E, F, G, H, Handler) () -> HttpResponse<RETURN>)? = null,
+    inline val a: P1,
+    inline val b: P2,
+    inline val c: P3,
+    inline val d: P4,
+    inline val e: P5,
+    inline val f: P6,
+    inline val g: P7,
+    inline val h: P8,
+    val handler: (context(P1, P2, P3, P4, P5, P6, P7, P8, Handler) () -> HttpResponse<RETURN>)? = null,
 ) : Endpoint<RETURN> {
+
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
         handler!!.invoke(a, b, c, d, e, f, g, h, it)
     }

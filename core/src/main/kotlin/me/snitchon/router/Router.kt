@@ -4,7 +4,6 @@ import com.snitch.HttpResponse
 import me.snitchon.config.Config
 import me.snitchon.endpoint.*
 import me.snitchon.http.Handler
-import me.snitchon.parameter.Parameter
 
 context (HttpMethods)
 data class Router(val config: Config = Config(), val prefix: String = "") {
@@ -46,7 +45,7 @@ data class Router(val config: Config = Config(), val prefix: String = "") {
         before,
         after,
         RETURN::class,
-        a,
+        p1,
         handler
     ).also(::addEndpoint)
 

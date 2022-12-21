@@ -25,8 +25,6 @@ class ServiceTest {
     object path4 : Path<path4, String>(pattern = NonEmptyString)
     object path5 : Path<path5, String>(pattern = NonEmptyString)
     object TokenHeader : Header<TokenHeader, String>(pattern = NonEmptyString, "token")
-
-
     object QueryOne : Query<QueryOne, String>(pattern = NonEmptyString, "one")
     object QueryTwo : Query<QueryTwo, String>(pattern = NonEmptyString, "two")
 
@@ -84,16 +82,36 @@ class ServiceTest {
         assertEquals(""""foo.one.two"""", get("/foo/one/two"))
     }
 
-    fun get(path: String) = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo/one/two"))
+    fun get(path: String) = service.makeRequest(TestRequest(HTTPMethod.GET, path))
 
     @Test
     fun `supports 3 path parameters`() {
         service.withRoutes {
             GET("foo" / path1 / path2 / path3)
-                .isHandledBy { "get=foo.${path1()}.${path2()}.${path3()}".ok }
+                .isHandledBy { "get.foo.${path1()}.${path2()}.${path3()}".ok }
         }.startListening()
 
-        assertEquals(""""get=foo.one.two.three"""", get("/foo/one/two/three"))
+        assertEquals(""""get.foo.one.two.three"""", get("/foo/one/two/three"))
+    }
+
+    @Test
+    fun `supports 4 path parameters`() {
+        service.withRoutes {
+            GET("foo" / path1 / path2 / path3 / path4)
+                .isHandledBy { "get.foo.${path1()}.${path2()}.${path3()}.${path4()}".ok }
+        }.startListening()
+
+        assertEquals(""""get.foo.one.two.three.four"""", get("/foo/one/two/three/four"))
+    }
+
+    @Test
+    fun `supports 5 path parameters`() {
+        service.withRoutes {
+            GET("foo" / path1 / path2 / path3 / path4 / path5)
+                .isHandledBy { "get.foo.${path1()}.${path2()}.${path3()}.${path4()}.${path5()}".ok }
+        }.startListening()
+
+        assertEquals(""""get.foo.one.two.three.four.five"""", get("/foo/one/two/three/four/five"))
     }
 
     @Test
@@ -169,17 +187,3 @@ class ServiceTest {
 fun <A, B> with(a: A, b: B, x: context(A, B) () -> Unit) {
     x(a, b)
 }
-
-
-//fun main() {
-//    with("foobar", 3) {
-//        println(double())
-//        println(len())
-//    }
-//}
-
-context(Int)
-fun double() = toDouble()
-
-context(String)
-fun len() = length

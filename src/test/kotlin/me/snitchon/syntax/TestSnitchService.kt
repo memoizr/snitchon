@@ -61,6 +61,9 @@ class TestSnitchService : SnitchService {
                 TODO("Not yet implemented")
             }
         }
+
+        println(testRequestWrapper)
+
         val result = func?.invoke(request.body?.let { BodyHandler(testRequestWrapper, response, it) }
             ?: NoBodyHandler(testRequestWrapper, response))
 

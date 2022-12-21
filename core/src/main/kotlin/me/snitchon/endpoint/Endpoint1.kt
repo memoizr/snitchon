@@ -1,9 +1,7 @@
 package me.snitchon.endpoint
 
-import me.snitchon.documentation.Visibility
 import me.snitchon.http.Handler
 
-import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
 import me.snitchon.parameter.Header
@@ -111,32 +109,31 @@ infix operator fun <
         RETURN : Any> ONE.plus(parameter: TWO) = with(this).with(parameter)
 
 
-
 typealias After = (RequestWrapper, ResponseWrapper) -> Unit
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint1<
-        A : Par,
+        P1 : Par,
         RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
-    inline val a: A,
-    val handler: (context(A, Handler) () -> HttpResponse<RETURN>)? = null,
+    inline val p1: P1,
+    val handler: (context(P1, Handler) () -> HttpResponse<RETURN>)? = null,
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(a, it)
+        handler!!.invoke(p1, it)
     }
 
-    fun <B : Par> with(parameter: B): Endpoint2<A, B, RETURN> =
+    fun <B : Par> with(parameter: B): Endpoint2<P1, B, RETURN> =
         Endpoint2(
             params,
             before,
             after,
             response,
-            a,
+            p1,
             parameter
         )
 
@@ -146,16 +143,16 @@ data class Endpoint1<
     context(OnlyQuery)
     override infix operator fun <T : QP> plus(t: T) = with(t)
 
-    fun <X : Endpoint<RETURN>> with(block: context(Endpoint1<A, RETURN>) () -> X): X =
+    fun <X : Endpoint<RETURN>> with(block: context(Endpoint1<P1, RETURN>) () -> X): X =
         block(this)
 
-    fun <B, BODY : Body<B>> with(body: BODY): Endpoint3<A, BODY, HasBody, RETURN> =
+    fun <B, BODY : Body<B>> with(body: BODY): Endpoint3<P1, BODY, HasBody, RETURN> =
         Endpoint3(
             params,
             before,
             after,
             response,
-            a,
+            p1,
             body,
             HasBody
         )
