@@ -1,31 +1,34 @@
 package me.snitchon
 
 import com.memoizr.assertk.expect
+import me.snitchon.tests.ServiceFactory
 import me.snitchon.tests.SnitchTest
-import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-class FormatTest : SnitchTest() {
+open class FormatTest(service: ServiceFactory) : SnitchTest(service) {
     data class TheBody(val yo: String, val bar: Int)
     data class TheResponse(val value: String)
 
-    @Rule
-    @JvmField val rule = TestService {
-        PUT("json")
-            .with(body<TheBody>())
-            .isHandledBy {
-                TheResponse("ok, body: noo").ok
-            }
+    @BeforeEach
+    fun before() {
+        routes {
+            PUT("json")
+                .with(body<TheBody>())
+                .isHandledBy {
+                    TheResponse("ok, body: noo").ok
+                }
 //        GET("bytearray").isHandledBy { "ok".ok.format(Format.VideoMP4) }
 //        GET("image").isHandledBy { val readBytes = File("./squat.jpg").readBytes()
 //            readBytes.size.print()
 //            readBytes.ok.format(Format.ImageJpeg) }
+        }
     }
 
     @Test
     fun `returns correct format`() {
         whenPerform Put "/json" withBody TheBody("hello", 3) expect {
-            expect that it.body() isEqualTo "ok"
+            expect that it.body() isEqualTo """{"value":"ok, body: noo"}"""
         }
     }
 

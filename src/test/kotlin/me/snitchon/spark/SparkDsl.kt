@@ -1,4 +1,4 @@
-package me.snitchon
+package me.snitchon.spark
 
 import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper

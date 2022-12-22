@@ -1,13 +1,10 @@
-package com.snitch.spark
+package me.snitchon.spark
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.snitch.Format
 import com.snitch.HttpResponse
 import com.snitch.HttpResponses
-import me.snitchon.SparkMarkup
-import me.snitchon.SparkRequestWrapper
-import me.snitchon.SparkResponseWrapper
 import me.snitchon.config.Config
 import me.snitchon.endpoint.Endpoint
 import me.snitchon.http.BodyHandler
@@ -26,6 +23,10 @@ import spark.Request
 import spark.Response
 import spark.Service
 
+
+class SparkMarkup : ParameterMarkupDecorator {
+    override fun decorate(name: String): String = ":$name"
+}
 
 class SparkService(override val config: Config) : SnitchService {
     val http by lazy {
@@ -71,7 +72,6 @@ class SparkService(override val config: Config) : SnitchService {
                     SparkResponseWrapper(response),
                     bundle.response
                 )
-
 
                 val result = bundle.invoke(call)
 

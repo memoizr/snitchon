@@ -2,13 +2,37 @@ package me.snitchon
 
 import com.snitch.*
 import com.snitch.HttpResponses.badRequest
+import me.snitchon.spark.SparkService
+import me.snitchon.config.Config
 import me.snitchon.path.Path
 import me.snitchon.parsers.GsonJsonParser.jsonString
+import me.snitchon.service.SnitchService
+import me.snitchon.tests.ServiceFactory
 import me.snitchon.tests.SnitchTest
-import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.extension.ExtensionContext
+import org.junit.jupiter.api.extension.ParameterContext
+import org.junit.jupiter.api.extension.ParameterResolver
 
-class SimplePathBuilderTest : SnitchTest() {
+open class CustomTypeParameterResolver : ParameterResolver {
+
+	override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
+        val type = parameterContext.parameter.type
+        println(type)
+        println(type.toString().contains("Function1"))
+		return type.toString().contains("Function1")
+	}
+
+	override fun resolveParameter( parameterContext: ParameterContext,extensionContext:  ExtensionContext ): ServiceFactory {
+		return {it -> SparkService(Config(port = it)) }
+	}
+}
+
+
+@ExtendWith(CustomTypeParameterResolver::class)
+open class SimplePathBuilderTest(service: ServiceFactory) : SnitchTest(service) {
     object clipId: Path<clipId, Int>(
         _name = "clipId",
         pattern = NonNegativeInt,
@@ -27,65 +51,64 @@ class SimplePathBuilderTest : SnitchTest() {
         description = "The clip id"
     )
 
-    @Rule
-    @JvmField
-    val rule = TestService {
-        GET("foo")
-//            .inSummary("returns a foo")
-//            .isDescribedAs("")
-            .isHandledBy { TestResult("get value").ok }
+    @BeforeEach
+    fun before() {
+        routes {
+            GET("foo")
+                .isHandledBy { TestResult("get value").ok }
 
-        PUT("/foo").isHandledBy { TestResult("put value").created }
-        POST("/foo").isHandledBy { TestResult("post value").created }
-        DELETE("/foo").isHandledBy { TestResult("delete value").ok }
+            PUT("/foo").isHandledBy { TestResult("put value").created }
+            POST("/foo").isHandledBy { TestResult("post value").created }
+            DELETE("/foo").isHandledBy { TestResult("delete value").ok }
 
-        GET("/error").isHandledBy { if (false) TestResult("never happens").ok else badRequest("Something went wrong") }
-        GET("/forbidden").isHandledBy { if (false) TestResult("never happens").ok else forbidden("Forbidden") }
+            GET("/error").isHandledBy { if (false) TestResult("never happens").ok else badRequest("Something went wrong") }
+            GET("/forbidden").isHandledBy { if (false) TestResult("never happens").ok else forbidden("Forbidden") }
 
-        GET("noslash/bar").isHandledBy { TestResult("success").ok }
-        PUT("noslash/bar").isHandledBy { TestResult("success").ok }
-        POST("noslash/bar").isHandledBy { TestResult("success").ok }
-        DELETE("noslash/bar").isHandledBy { TestResult("success").ok }
+            GET("noslash/bar").isHandledBy { TestResult("success").ok }
+            PUT("noslash/bar").isHandledBy { TestResult("success").ok }
+            POST("noslash/bar").isHandledBy { TestResult("success").ok }
+            DELETE("noslash/bar").isHandledBy { TestResult("success").ok }
 
-        GET("infixslash" / "bar").isHandledBy { TestResult("success").ok }
-        PUT("infixslash" / "bar").isHandledBy { TestResult("success").ok }
-        POST("infixslash" / "bar").isHandledBy { TestResult("success").ok }
-        DELETE("infixslash" / "bar").isHandledBy { TestResult("success").ok }
+            GET("infixslash" / "bar").isHandledBy { TestResult("success").ok }
+            PUT("infixslash" / "bar").isHandledBy { TestResult("success").ok }
+            POST("infixslash" / "bar").isHandledBy { TestResult("success").ok }
+            DELETE("infixslash" / "bar").isHandledBy { TestResult("success").ok }
 
-        "one" / {
-            GET("/a").isHandledBy { TestResult("get value").ok }
-            GET("/b").isHandledBy { TestResult("get value").ok }
-            "two" / {
-                GET("/c").isHandledBy { TestResult("get value").ok }
-            }
-        }
-
-        "hey" / "there" / {
-            GET("/a").isHandledBy { TestResult("get value there a").ok }
-        }
-
-        "v1" / {
-            GET().isHandledBy { TestResult("get value").ok }
-            GET(clipId).isHandledBy { TestResult("get value").ok }
-            GET("one" / clipId).isHandledBy { TestResult("get value").ok }
-        }
-
-        GET("params1" / clipId / "params2" / otherPathParam).isHandledBy { TestResult("${clipId()}${otherPathParam()}").ok }
-
-        GET("params3" / clipId / "params4" / otherPathParam).isHandledBy { TestResult("${clipId()}${otherPathParam()}").ok }
-
-        GET().isHandledBy { TestResult("get value").ok }
-
-        "hey" / {
-            clipId / {
-                GET("/a").isHandledBy {
-                    TestResult("get value").ok
+            "one" / {
+                GET("/a").isHandledBy { TestResult("get value").ok }
+                GET("/b").isHandledBy { TestResult("get value").ok }
+                "two" / {
+                    GET("/c").isHandledBy { TestResult("get value").ok }
                 }
-                "level2" / {
-                    otherPathParam / {
-                        "nope" / {
-                            GET().isHandledBy {
-                                TestResult("get ${clipId()} ${otherPathParam()}").ok
+            }
+
+            "hey" / "there" / {
+                GET("/a").isHandledBy { TestResult("get value there a").ok }
+            }
+
+            "v1" / {
+                GET().isHandledBy { TestResult("get value").ok }
+                GET(clipId).isHandledBy { TestResult("get value").ok }
+                GET("one" / clipId).isHandledBy { TestResult("get value").ok }
+            }
+
+            GET("params1" / clipId / "params2" / otherPathParam).isHandledBy { TestResult("${clipId()}${otherPathParam()}").ok }
+
+            GET("params3" / clipId / "params4" / otherPathParam).isHandledBy { TestResult("${clipId()}${otherPathParam()}").ok }
+
+            GET().isHandledBy { TestResult("get value").ok }
+
+            "hey" / {
+                clipId / {
+                    GET("/a").isHandledBy {
+                        TestResult("get value").ok
+                    }
+                    "level2" / {
+                        otherPathParam / {
+                            "nope" / {
+                                GET().isHandledBy {
+                                    TestResult("get ${clipId()} ${otherPathParam()}").ok
+                                }
                             }
                         }
                     }
@@ -97,10 +120,12 @@ class SimplePathBuilderTest : SnitchTest() {
 
     @Test
     fun `supports nested routes`() {
+        routes {
+
+        }
+
         whenPerform Get "/hey/there/a" expectBodyJson TestResult("get value there a") expectCode 200
-
         whenPerform Get "/hey/123/level2/3459/nope" expectBodyJson TestResult("get 123 3459") expectCode 200
-
         whenPerform Get "/one/a" expectBodyJson TestResult("get value") expectCode 200
         whenPerform Get "/one/b" expectBodyJson TestResult("get value") expectCode 200
         whenPerform Get "/one/two/c" expectBodyJson TestResult("get value") expectCode 200

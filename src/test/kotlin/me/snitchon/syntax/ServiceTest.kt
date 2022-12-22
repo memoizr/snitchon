@@ -9,7 +9,7 @@ import me.snitchon.parameter.Header
 import me.snitchon.path.Path
 import me.snitchon.parameter.Query
 import me.snitchon.parsers.GsonJsonParser.jsonString
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class ServiceTest {

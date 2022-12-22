@@ -6,8 +6,33 @@ import java.net.URI
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.util.*
+import com.snitch.HttpResponses
+import me.snitchon.parameter.ParameterMarkupDecorator
+import me.snitchon.router.Router
+import me.snitchon.router.HttpMethods
+import me.snitchon.router.SlashSyntax
+import me.snitchon.service.SnitchService
+import java.net.BindException
+import java.net.ConnectException
 
-abstract class SnitchTest {
+private fun <T> retry(block: () -> T): T {
+    fun go(): T {
+        try {
+            return block()
+        } catch (b: BindException) {
+            return go()
+        } catch (e: ConnectException) {
+            return go()
+        }
+    }
+    return go()
+}
+
+typealias ServiceFactory = (Int) -> SnitchService
+
+abstract class SnitchTest(
+    val service: ServiceFactory
+) {
 
     protected val whenPerform = this
     val port = Random().nextInt(5000) + 2000
@@ -45,17 +70,19 @@ abstract class SnitchTest {
             headers: Map<String, String>,
             fn: HttpRequest.Builder.() -> HttpRequest.Builder
         ) =
-            clnt.send(
-                HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .apply {
-                        headers.forEach {
-                            setHeader(it.key, it.value)
+            retry {
+                clnt.send(
+                    HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .apply {
+                            headers.forEach {
+                                setHeader(it.key, it.value)
+                            }
                         }
-                    }
-                    .fn()
-                    .build(), HttpResponse.BodyHandlers.ofString()
-            )
+                        .fn()
+                        .build(), HttpResponse.BodyHandlers.ofString()
+                )
+            }
 
         fun get(url: String, headers: Map<String, String>) = call(url, headers) { GET() }
         fun post(url: String, headers: Map<String, String>, body: String?) =
@@ -97,6 +124,21 @@ abstract class SnitchTest {
 
         infix inline fun <reified T : Any> expectBodyJson(body: T) = apply {
             com.memoizr.assertk.expect that response.body().parseJson(T::class.java) isEqualTo body
+        }
+    }
+
+    fun routes(
+        router: context(
+        ParameterMarkupDecorator,
+        HttpMethods,
+        SlashSyntax,
+        HttpResponses
+        ) Router.() -> Unit
+    ) {
+        retry {
+            with(GsonJsonParser) {
+                service(port).withRoutes(router).startListening().handleInvalidParams()
+            }
         }
     }
 }

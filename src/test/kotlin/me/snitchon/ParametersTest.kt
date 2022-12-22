@@ -10,10 +10,11 @@ import me.snitchon.path.Path
 import me.snitchon.router.Body
 import me.snitchon.router.HasBody
 import me.snitchon.parsers.GsonJsonParser.jsonString
+import me.snitchon.tests.ServiceFactory
 import me.snitchon.tests.SnitchTest
 import me.snitchon.types.Sealed
-import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -62,40 +63,41 @@ object DateValidator : Validator<String, Date> {
     override val required: Boolean = true
 }
 
-class ParametersTest : SnitchTest() {
-    @Rule
-    @JvmField
-    val rule = TestService {
-        GET("stringpath" / stringParam).isHandledBy { TestResult(stringParam()).ok }
-        GET("intpath" / intparam).isHandledBy { IntTestResult(intparam()).ok }
-        GET("intpath2" / intparam / "end").isHandledBy { IntTestResult(intparam()).ok }
+open class ParametersTest(service: ServiceFactory) : SnitchTest(service) {
+    @BeforeEach
+    fun before() {
+        routes {
+            GET("stringpath" / stringParam).isHandledBy { TestResult(stringParam()).ok }
+            GET("intpath" / intparam).isHandledBy { IntTestResult(intparam()).ok }
+            GET("intpath2" / intparam / "end").isHandledBy { IntTestResult(intparam()).ok }
 
-        GET("queriespath").with(q).isHandledBy { TestResult(q()).ok }
+            GET("queriespath").with(q).isHandledBy { TestResult(q()).ok }
 
-        GET("queriespath2").with(int) .isHandledBy { IntTestResult(int()).ok }
-        GET("queriespath3").with(offset).isHandledBy { IntTestResult(offset()).ok }
-        GET("queriespath4").with(limit).isHandledBy { NullableIntTestResult(limit()).ok }
+            GET("queriespath2").with(int).isHandledBy { IntTestResult(int()).ok }
+            GET("queriespath3").with(offset).isHandledBy { IntTestResult(offset()).ok }
+            GET("queriespath4").with(limit).isHandledBy { NullableIntTestResult(limit()).ok }
 
-        GET("headerspath").with(qHead).isHandledBy { TestResult(qHead()).ok }
-        GET("headerspath2").with(intHead).isHandledBy { IntTestResult(intHead()).ok }
-        GET("headerspath3").with(offsetHead).isHandledBy {
-            val result = offsetHead.invoke()
-            NullableIntTestResult(result).ok
+            GET("headerspath").with(qHead).isHandledBy { TestResult(qHead()).ok }
+            GET("headerspath2").with(intHead).isHandledBy { IntTestResult(intHead()).ok }
+            GET("headerspath3").with(offsetHead).isHandledBy {
+                val result = offsetHead.invoke()
+                NullableIntTestResult(result).ok
+            }
+            GET("headerspath4").with(limitHead).isHandledBy { NullableIntTestResult(limitHead()).ok }
+
+            GET("customParsing").with(time).isHandledBy { DateResult(time()).ok }
+
+            val function: context(Body<BodyParam>, HasBody, Handler) () -> HttpResponse<BodyTestResult> = {
+                val sealed = body.sealed
+                BodyTestResult(
+                    body.int, when (sealed) {
+                        is SealedClass.One -> sealed.oneInt
+                        is SealedClass.Two -> 2
+                    }
+                ).ok
+            }
+            POST("bodyparam").with(body<BodyParam>()).isHandledBy(function)
         }
-        GET("headerspath4").with(limitHead).isHandledBy { NullableIntTestResult(limitHead()).ok }
-
-        GET("customParsing").with(time).isHandledBy { DateResult(time()).ok }
-
-        val function: context(Body<BodyParam>, HasBody, Handler) () -> HttpResponse<BodyTestResult> = {
-            val sealed = body.sealed
-            BodyTestResult(
-                body.int, when (sealed) {
-                    is SealedClass.One -> sealed.oneInt
-                    is SealedClass.Two -> 2
-                }
-            ).ok
-        }
-        POST("bodyparam").with(body<BodyParam>()).isHandledBy(function)
     }
 
     @Test
