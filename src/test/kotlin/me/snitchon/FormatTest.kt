@@ -1,18 +1,16 @@
 package me.snitchon
 
 import com.memoizr.assertk.expect
-import com.memoizr.assertk.isEqualTo
-import me.snitchon.syntax.DslJsonParser.jsonString
+import me.snitchon.tests.SnitchTest
 import org.junit.Rule
 import org.junit.Test
-import java.io.File
 
-class FormatTest : SparkTest() {
+class FormatTest : SnitchTest() {
     data class TheBody(val yo: String, val bar: Int)
     data class TheResponse(val value: String)
 
     @Rule
-    @JvmField val rule = SparkTestRule(port) {
+    @JvmField val rule = TestService {
         PUT("json")
             .with(body<TheBody>())
             .isHandledBy {

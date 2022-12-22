@@ -1,20 +1,16 @@
-package me.snitchon
+package me.snitchon.tests
 
+import me.snitchon.parsers.GsonJsonParser
+import me.snitchon.parsers.GsonJsonParser.parseJson
 import java.net.URI
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.util.*
-import com.memoizr.assertk.expect
-import me.snitchon.parsers.GsonJsonParser
-import me.snitchon.parsers.GsonJsonParser.parseJson
 
-//val client = HttpClient(CIO)
-private val clnt = java.net.http.HttpClient.newBuilder().build()
-
-abstract class SparkTest {
+abstract class SnitchTest {
 
     protected val whenPerform = this
-    protected val port = Random().nextInt(5000) + 2000
+    val port = Random().nextInt(5000) + 2000
 
     infix fun Get(endpoint: String): Expectation {
         return Expectation(port, HttpMethod.GET, endpoint)
@@ -87,11 +83,11 @@ abstract class SparkTest {
             copy(headers = headers.map { it.key to it.value.toString() }.toMap())
 
         infix fun expectBody(body: String) = apply {
-            expect that response.body() isEqualTo body
+            com.memoizr.assertk.expect that response.body() isEqualTo body
         }
 
         infix fun expectCode(code: Int) = apply {
-            expect that response.statusCode() isEqualTo code
+            com.memoizr.assertk.expect that response.statusCode() isEqualTo code
         }
 
         infix fun expect(block: (HttpResponse<String>) -> Unit): Expectation {
@@ -100,8 +96,9 @@ abstract class SparkTest {
         }
 
         infix inline fun <reified T : Any> expectBodyJson(body: T) = apply {
-            expect that response.body().parseJson(T::class.java) isEqualTo body
+            com.memoizr.assertk.expect that response.body().parseJson(T::class.java) isEqualTo body
         }
     }
 }
 
+private val clnt = java.net.http.HttpClient.newBuilder().build()

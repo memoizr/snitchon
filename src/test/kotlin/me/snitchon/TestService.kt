@@ -29,8 +29,9 @@ class SparkMarkup : ParameterMarkupDecorator {
     override fun decorate(name: String): String = ":$name"
 }
 
-open class SparkTestRule(
-    port: Int, val router: context(
+context(me.snitchon.tests.SnitchTest)
+open class TestService(
+    val router: context(
     ParameterMarkupDecorator,
     HttpMethods,
     SlashSyntax,

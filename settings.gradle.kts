@@ -1,2 +1,2 @@
 rootProject.name = "snitchon"
-include("core", "gsonparser")
+include("core", "gsonparser", "tests")

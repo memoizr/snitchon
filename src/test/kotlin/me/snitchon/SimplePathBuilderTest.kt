@@ -4,10 +4,11 @@ import com.snitch.*
 import com.snitch.HttpResponses.badRequest
 import me.snitchon.path.Path
 import me.snitchon.parsers.GsonJsonParser.jsonString
+import me.snitchon.tests.SnitchTest
 import org.junit.Rule
 import org.junit.Test
 
-class SimplePathBuilderTest : SparkTest() {
+class SimplePathBuilderTest : SnitchTest() {
     object clipId: Path<clipId, Int>(
         _name = "clipId",
         pattern = NonNegativeInt,
@@ -28,7 +29,7 @@ class SimplePathBuilderTest : SparkTest() {
 
     @Rule
     @JvmField
-    val rule = SparkTestRule(port) {
+    val rule = TestService {
         GET("foo")
 //            .inSummary("returns a foo")
 //            .isDescribedAs("")

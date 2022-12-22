@@ -2,8 +2,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.7.21"
-    kotlin("kapt") version "1.7.21"
-    application
 }
 
 group = "me.snitchon"
@@ -23,18 +21,13 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.22")
 
-    testImplementation(project(":core"))
-    testImplementation(project(":gsonparser"))
-    testImplementation(project(":tests"))
+    implementation(project(":core"))
+    implementation(project(":gsonparser"))
 
-    testImplementation(kotlin("test"))
-    testImplementation("com.dslplatform:dsl-json-java8:1.9.9")
-    testImplementation("com.sparkjava:spark-core:2.9.3")
-    testImplementation("com.github.memoizr:assertk-core:-SNAPSHOT")
-    testImplementation(kotlin("test-junit"))
+    api("com.github.memoizr:assertk-core:-SNAPSHOT")
+    api("org.assertj:assertj-core:3.18.1")
 
     api("ch.qos.logback:logback-classic:1.1.7")
-    kapt("com.dslplatform:dsl-json-java8:1.9.9")
 }
 
 tasks.test {
@@ -43,8 +36,4 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
-}
-
-application {
-    mainClass.set("MainKt")
 }

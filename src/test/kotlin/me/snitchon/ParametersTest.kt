@@ -10,6 +10,7 @@ import me.snitchon.path.Path
 import me.snitchon.router.Body
 import me.snitchon.router.HasBody
 import me.snitchon.parsers.GsonJsonParser.jsonString
+import me.snitchon.tests.SnitchTest
 import me.snitchon.types.Sealed
 import org.junit.Rule
 import org.junit.Test
@@ -61,10 +62,10 @@ object DateValidator : Validator<String, Date> {
     override val required: Boolean = true
 }
 
-class ParametersTest : SparkTest() {
+class ParametersTest : SnitchTest() {
     @Rule
     @JvmField
-    val rule = SparkTestRule(port) {
+    val rule = TestService {
         GET("stringpath" / stringParam).isHandledBy { TestResult(stringParam()).ok }
         GET("intpath" / intparam).isHandledBy { IntTestResult(intparam()).ok }
         GET("intpath2" / intparam / "end").isHandledBy { IntTestResult(intparam()).ok }
