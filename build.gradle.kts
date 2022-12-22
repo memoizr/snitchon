@@ -22,13 +22,16 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.22")
+
     testImplementation(project(":core"))
-    testImplementation("com.google.code.gson:gson:2.8.5")
+    testImplementation(project(":gsonparser"))
+
     testImplementation(kotlin("test"))
     testImplementation("com.dslplatform:dsl-json-java8:1.9.9")
     testImplementation("com.sparkjava:spark-core:2.9.3")
     testImplementation("com.github.memoizr:assertk-core:-SNAPSHOT")
     testImplementation(kotlin("test-junit"))
+
     api("ch.qos.logback:logback-classic:1.1.7")
     kapt("com.dslplatform:dsl-json-java8:1.9.9")
 }

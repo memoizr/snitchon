@@ -3,8 +3,7 @@ package me.snitchon
 import com.snitch.spark.SparkService
 import me.snitchon.config.Config
 import me.snitchon.documentation.generateDocs
-import me.snitchon.endpoint.Endpoint0
-import me.snitchon.syntax.GsonJsonParser
+import me.snitchon.parsers.GsonJsonParser
 
 fun main() {
     with(GsonJsonParser) {

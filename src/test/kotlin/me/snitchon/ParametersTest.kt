@@ -9,7 +9,7 @@ import me.snitchon.parameter.*
 import me.snitchon.path.Path
 import me.snitchon.router.Body
 import me.snitchon.router.HasBody
-import me.snitchon.syntax.GsonJsonParser.jsonString
+import me.snitchon.parsers.GsonJsonParser.jsonString
 import me.snitchon.types.Sealed
 import org.junit.Rule
 import org.junit.Test

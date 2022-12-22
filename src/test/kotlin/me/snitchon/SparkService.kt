@@ -6,6 +6,8 @@ import com.snitch.Format
 import com.snitch.HttpResponse
 import com.snitch.HttpResponses
 import me.snitchon.SparkMarkup
+import me.snitchon.SparkRequestWrapper
+import me.snitchon.SparkResponseWrapper
 import me.snitchon.config.Config
 import me.snitchon.endpoint.Endpoint
 import me.snitchon.http.BodyHandler
@@ -18,7 +20,7 @@ import me.snitchon.router.HttpMethods
 import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
-import me.snitchon.syntax.GsonJsonParser
+import me.snitchon.parsers.GsonJsonParser
 import org.slf4j.LoggerFactory
 import spark.Request
 import spark.Response
@@ -41,7 +43,6 @@ class SparkService(override val config: Config) : SnitchService {
             handler(ex, SparkRequestWrapper(request), SparkResponseWrapper(response))
         }
     }
-
 
     override fun withRoutes(
         routerConfiguration: context(

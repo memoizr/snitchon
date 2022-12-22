@@ -3,7 +3,7 @@ package me.snitchon
 import com.snitch.*
 import com.snitch.HttpResponses.badRequest
 import me.snitchon.path.Path
-import me.snitchon.syntax.GsonJsonParser.jsonString
+import me.snitchon.parsers.GsonJsonParser.jsonString
 import org.junit.Rule
 import org.junit.Test
 

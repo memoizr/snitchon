@@ -8,7 +8,7 @@ import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods
 import me.snitchon.router.SlashSyntax
-import me.snitchon.syntax.GsonJsonParser
+import me.snitchon.parsers.GsonJsonParser
 import org.junit.rules.ExternalResource
 import org.junit.runner.Description
 import org.junit.runners.model.Statement

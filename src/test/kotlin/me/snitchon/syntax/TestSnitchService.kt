@@ -10,7 +10,7 @@ import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
 import com.snitch.HttpResponse
-import me.snitchon.syntax.GsonJsonParser.jsonString
+import me.snitchon.parsers.GsonJsonParser.jsonString
 
 class TestMarkup : ParameterMarkupDecorator {
     override fun decorate(name: String): String = ":$name"

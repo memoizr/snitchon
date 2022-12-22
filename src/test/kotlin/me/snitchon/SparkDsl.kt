@@ -1,11 +1,11 @@
-package com.snitch.spark
+package me.snitchon
 
 import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
 import me.snitchon.parameter.*
 import me.snitchon.path.Path
-import me.snitchon.syntax.GsonJsonParser.parseJson
+import me.snitchon.parsers.GsonJsonParser.parseJson
 import spark.Request
 import spark.Response
 
@@ -25,7 +25,6 @@ class SparkRequestWrapper(val request: Request) : RequestWrapper {
             is Header<*, *> -> request.headers(param.name)
             else -> TODO()
     }
-
 }
 
 class SparkResponseWrapper(val response: Response) : ResponseWrapper {

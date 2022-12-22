@@ -55,7 +55,7 @@ data class Endpoint1<P1 : Par, RETURN : Any>(
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint2<P1 : Par,P2 : Par, RETURN : Any>(
+data class Endpoint2<P1 : Par, P2 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -103,7 +103,7 @@ data class Endpoint2<P1 : Par,P2 : Par, RETURN : Any>(
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint3<P1 : Par,P2 : Par,P3 : Par, RETURN : Any>(
+data class Endpoint3<P1 : Par, P2 : Par, P3 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -154,7 +154,7 @@ data class Endpoint3<P1 : Par,P2 : Par,P3 : Par, RETURN : Any>(
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint4<P1 : Par,P2 : Par,P3 : Par,P4 : Par, RETURN : Any>(
+data class Endpoint4<P1 : Par, P2 : Par, P3 : Par, P4 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -208,7 +208,7 @@ data class Endpoint4<P1 : Par,P2 : Par,P3 : Par,P4 : Par, RETURN : Any>(
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint5<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par, RETURN : Any>(
+data class Endpoint5<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -265,7 +265,7 @@ data class Endpoint5<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par, RETURN : Any>
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint6<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par, RETURN : Any>(
+data class Endpoint6<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -325,7 +325,7 @@ data class Endpoint6<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par, RETU
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint7<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par, RETURN : Any>(
+data class Endpoint7<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -388,7 +388,7 @@ data class Endpoint7<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : 
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint8<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par, RETURN : Any>(
+data class Endpoint8<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -454,7 +454,7 @@ data class Endpoint8<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : 
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint9<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par, RETURN : Any>(
+data class Endpoint9<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -523,7 +523,7 @@ data class Endpoint9<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : 
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint10<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par, RETURN : Any>(
+data class Endpoint10<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -595,7 +595,7 @@ data class Endpoint10<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint11<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par, RETURN : Any>(
+data class Endpoint11<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -670,7 +670,7 @@ data class Endpoint11<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint12<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par, RETURN : Any>(
+data class Endpoint12<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -748,7 +748,7 @@ data class Endpoint12<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint13<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par, RETURN : Any>(
+data class Endpoint13<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -829,7 +829,7 @@ data class Endpoint13<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint14<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par, RETURN : Any>(
+data class Endpoint14<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -913,7 +913,7 @@ data class Endpoint14<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint15<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par, RETURN : Any>(
+data class Endpoint15<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -1000,7 +1000,7 @@ data class Endpoint15<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint16<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par, RETURN : Any>(
+data class Endpoint16<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -1090,7 +1090,7 @@ data class Endpoint16<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint17<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par, RETURN : Any>(
+data class Endpoint17<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -1183,7 +1183,7 @@ data class Endpoint17<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint18<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par, RETURN : Any>(
+data class Endpoint18<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -1279,7 +1279,7 @@ data class Endpoint18<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint19<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par, RETURN : Any>(
+data class Endpoint19<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -1378,7 +1378,7 @@ data class Endpoint19<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint20<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par, RETURN : Any>(
+data class Endpoint20<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -1480,7 +1480,7 @@ data class Endpoint20<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint21<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par, RETURN : Any>(
+data class Endpoint21<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -1510,7 +1510,30 @@ data class Endpoint21<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint22<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, B, RETURN> =
@@ -1585,7 +1608,7 @@ data class Endpoint21<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint22<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par, RETURN : Any>(
+data class Endpoint22<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -1616,7 +1639,31 @@ data class Endpoint22<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint23<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, B, RETURN> =
@@ -1693,7 +1740,7 @@ data class Endpoint22<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint23<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par, RETURN : Any>(
+data class Endpoint23<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -1725,7 +1772,32 @@ data class Endpoint23<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint24<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, B, RETURN> =
@@ -1804,7 +1876,7 @@ data class Endpoint23<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint24<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par,P24 : Par, RETURN : Any>(
+data class Endpoint24<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -1837,7 +1909,33 @@ data class Endpoint24<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            p24,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint25<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, B, RETURN> =
@@ -1918,7 +2016,7 @@ data class Endpoint24<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint25<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par,P24 : Par,P25 : Par, RETURN : Any>(
+data class Endpoint25<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -1952,7 +2050,34 @@ data class Endpoint25<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            p24,
+            p25,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint26<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, B, RETURN> =
@@ -2035,7 +2160,7 @@ data class Endpoint25<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint26<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par,P24 : Par,P25 : Par,P26 : Par, RETURN : Any>(
+data class Endpoint26<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -2070,7 +2195,35 @@ data class Endpoint26<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            p24,
+            p25,
+            p26,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint27<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, B, RETURN> =
@@ -2155,7 +2308,7 @@ data class Endpoint26<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint27<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par,P24 : Par,P25 : Par,P26 : Par,P27 : Par, RETURN : Any>(
+data class Endpoint27<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -2191,7 +2344,36 @@ data class Endpoint27<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            p24,
+            p25,
+            p26,
+            p27,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint28<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, P27, B, RETURN> =
@@ -2278,7 +2460,7 @@ data class Endpoint27<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint28<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par,P24 : Par,P25 : Par,P26 : Par,P27 : Par,P28 : Par, RETURN : Any>(
+data class Endpoint28<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -2315,7 +2497,37 @@ data class Endpoint28<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            p24,
+            p25,
+            p26,
+            p27,
+            p28,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint29<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, P27, P28, B, RETURN> =
@@ -2404,7 +2616,7 @@ data class Endpoint28<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint29<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par,P24 : Par,P25 : Par,P26 : Par,P27 : Par,P28 : Par,P29 : Par, RETURN : Any>(
+data class Endpoint29<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -2442,7 +2654,38 @@ data class Endpoint29<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            p24,
+            p25,
+            p26,
+            p27,
+            p28,
+            p29,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint30<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, P27, P28, P29, B, RETURN> =
@@ -2533,7 +2776,7 @@ data class Endpoint29<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint30<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par,P24 : Par,P25 : Par,P26 : Par,P27 : Par,P28 : Par,P29 : Par,P30 : Par, RETURN : Any>(
+data class Endpoint30<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -2572,7 +2815,39 @@ data class Endpoint30<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            p24,
+            p25,
+            p26,
+            p27,
+            p28,
+            p29,
+            p30,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint31<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, P27, P28, P29, P30, B, RETURN> =
@@ -2665,7 +2940,7 @@ data class Endpoint30<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint31<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par,P24 : Par,P25 : Par,P26 : Par,P27 : Par,P28 : Par,P29 : Par,P30 : Par,P31 : Par, RETURN : Any>(
+data class Endpoint31<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, P31 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -2705,7 +2980,40 @@ data class Endpoint31<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            p24,
+            p25,
+            p26,
+            p27,
+            p28,
+            p29,
+            p30,
+            p31,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint32<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, P27, P28, P29, P30, P31, B, RETURN> =
@@ -2800,7 +3108,7 @@ data class Endpoint31<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint32<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par,P24 : Par,P25 : Par,P26 : Par,P27 : Par,P28 : Par,P29 : Par,P30 : Par,P31 : Par,P32 : Par, RETURN : Any>(
+data class Endpoint32<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, P31 : Par, P32 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -2841,7 +3149,41 @@ data class Endpoint32<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31, p32, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            p24,
+            p25,
+            p26,
+            p27,
+            p28,
+            p29,
+            p30,
+            p31,
+            p32,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint33<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, P27, P28, P29, P30, P31, P32, B, RETURN> =
@@ -2938,7 +3280,7 @@ data class Endpoint32<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint33<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par,P24 : Par,P25 : Par,P26 : Par,P27 : Par,P28 : Par,P29 : Par,P30 : Par,P31 : Par,P32 : Par,P33 : Par, RETURN : Any>(
+data class Endpoint33<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, P31 : Par, P32 : Par, P33 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -2980,7 +3322,42 @@ data class Endpoint33<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31, p32, p33, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            p24,
+            p25,
+            p26,
+            p27,
+            p28,
+            p29,
+            p30,
+            p31,
+            p32,
+            p33,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint34<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, P27, P28, P29, P30, P31, P32, P33, B, RETURN> =
@@ -3079,7 +3456,7 @@ data class Endpoint33<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint34<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par,P24 : Par,P25 : Par,P26 : Par,P27 : Par,P28 : Par,P29 : Par,P30 : Par,P31 : Par,P32 : Par,P33 : Par,P34 : Par, RETURN : Any>(
+data class Endpoint34<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, P31 : Par, P32 : Par, P33 : Par, P34 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -3122,7 +3499,43 @@ data class Endpoint34<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31, p32, p33, p34, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            p24,
+            p25,
+            p26,
+            p27,
+            p28,
+            p29,
+            p30,
+            p31,
+            p32,
+            p33,
+            p34,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint35<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, P27, P28, P29, P30, P31, P32, P33, P34, B, RETURN> =
@@ -3223,7 +3636,7 @@ data class Endpoint34<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint35<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par,P24 : Par,P25 : Par,P26 : Par,P27 : Par,P28 : Par,P29 : Par,P30 : Par,P31 : Par,P32 : Par,P33 : Par,P34 : Par,P35 : Par, RETURN : Any>(
+data class Endpoint35<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, P31 : Par, P32 : Par, P33 : Par, P34 : Par, P35 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -3267,7 +3680,44 @@ data class Endpoint35<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31, p32, p33, p34, p35, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            p24,
+            p25,
+            p26,
+            p27,
+            p28,
+            p29,
+            p30,
+            p31,
+            p32,
+            p33,
+            p34,
+            p35,
+            it
+        )
     }
 
     fun <B : Par> with(parameter: B): Endpoint36<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, P27, P28, P29, P30, P31, P32, P33, P34, P35, B, RETURN> =
@@ -3370,7 +3820,7 @@ data class Endpoint35<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 }
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-data class Endpoint36<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 : Par,P8 : Par,P9 : Par,P10 : Par,P11 : Par,P12 : Par,P13 : Par,P14 : Par,P15 : Par,P16 : Par,P17 : Par,P18 : Par,P19 : Par,P20 : Par,P21 : Par,P22 : Par,P23 : Par,P24 : Par,P25 : Par,P26 : Par,P27 : Par,P28 : Par,P29 : Par,P30 : Par,P31 : Par,P32 : Par,P33 : Par,P34 : Par,P35 : Par,P36 : Par, RETURN : Any>(
+data class Endpoint36<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, P31 : Par, P32 : Par, P33 : Par, P34 : Par, P35 : Par, P36 : Par, RETURN : Any>(
     override val params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
@@ -3415,7 +3865,45 @@ data class Endpoint36<P1 : Par,P2 : Par,P3 : Par,P4 : Par,P5 : Par,P6 : Par,P7 :
 ) : Endpoint<RETURN> {
 
     override val invoke: (Handler) -> HttpResponse<RETURN> = {
-        handler!!.invoke(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31, p32, p33, p34, p35, p36, it)
+        handler!!.invoke(
+            p1,
+            p2,
+            p3,
+            p4,
+            p5,
+            p6,
+            p7,
+            p8,
+            p9,
+            p10,
+            p11,
+            p12,
+            p13,
+            p14,
+            p15,
+            p16,
+            p17,
+            p18,
+            p19,
+            p20,
+            p21,
+            p22,
+            p23,
+            p24,
+            p25,
+            p26,
+            p27,
+            p28,
+            p29,
+            p30,
+            p31,
+            p32,
+            p33,
+            p34,
+            p35,
+            p36,
+            it
+        )
     }
 
 //    fun <B : Par> with(parameter: B): Endpoint37<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26, P27, P28, P29, P30, P31, P32, P33, P34, P35, P36, B, RETURN> =

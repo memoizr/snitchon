@@ -1,14 +1,12 @@
 package me.snitchon
 
-import java.lang.Exception
-
 import java.net.URI
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.util.*
 import com.memoizr.assertk.expect
-import me.snitchon.syntax.GsonJsonParser
-import me.snitchon.syntax.GsonJsonParser.parseJson
+import me.snitchon.parsers.GsonJsonParser
+import me.snitchon.parsers.GsonJsonParser.parseJson
 
 //val client = HttpClient(CIO)
 private val clnt = java.net.http.HttpClient.newBuilder().build()

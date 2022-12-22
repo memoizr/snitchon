@@ -8,7 +8,7 @@ import me.snitchon.http.HTTPMethod
 import me.snitchon.parameter.Header
 import me.snitchon.path.Path
 import me.snitchon.parameter.Query
-import me.snitchon.syntax.GsonJsonParser.jsonString
+import me.snitchon.parsers.GsonJsonParser.jsonString
 import org.junit.Test
 import kotlin.test.assertEquals
 
