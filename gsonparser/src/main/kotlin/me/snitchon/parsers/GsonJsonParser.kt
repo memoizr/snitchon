@@ -14,11 +14,6 @@ import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 
 class SealedAdapter : JsonDeserializer<Sealed> {
-
-    class Typed {
-        val type: String = this::class.simpleName!!
-    }
-
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Sealed {
         val type = json?.asJsonObject?.get("type")?.jsonString
         val rawType = TypeToken.get(typeOfT).rawType
@@ -33,10 +28,10 @@ class SealedAdapter : JsonDeserializer<Sealed> {
 
 
 object GsonJsonParser : Parser {
-    private val gson = GsonBuilder()
+    val builder = GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
         .registerTypeHierarchyAdapter(Sealed::class.java, SealedAdapter())
-        .create()
+    private val gson = builder.create()
 
     override val Any.jsonString get() = gson.toJson(this)
 

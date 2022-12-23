@@ -1,5 +1,6 @@
 package me.snitchon.springboot
 
+import com.google.gson.GsonBuilder
 import com.snitch.Format
 import com.snitch.HttpResponse
 import com.snitch.HttpResponses
@@ -12,6 +13,7 @@ import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.parsers.GsonJsonParser
+import me.snitchon.parsers.GsonJsonParser.builder
 import me.snitchon.parsers.GsonJsonParser.jsonString
 import me.snitchon.router.HttpMethods
 import me.snitchon.router.Router
@@ -20,6 +22,8 @@ import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.gson.GsonBuilderCustomizer
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
@@ -31,7 +35,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.function.*
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver
 
-@SpringBootApplication
+@SpringBootApplication(exclude = [JacksonAutoConfiguration::class]) // Exclude the automatic configuration of JACKSON
 open class Application {
 }
 
@@ -139,6 +143,7 @@ class SpringService(override val config: Config = Config()) : SnitchService {
             mapOf(
                 "server.port" to config.port,
                 "spring.main.allow-bean-definition-overriding" to true,
+                "spring.mvc.converters.preferred-json" to "gson"
             )
         )
         app.run(*emptyArray())
@@ -161,7 +166,8 @@ open class WebConfig : WebMvcConfigurer {
                 handler: Any?,
                 ex: java.lang.Exception
             ): ModelAndView? {
-                logger.error("9999999999999999999999999999999")
+                logger.info("===================================")
+                logger.info(ex.stackTrace)
                 return exceptions[ex::class.java]
                     ?.invoke(ex, SpringServletRequestWrapper(request))
                     ?.let {
@@ -172,6 +178,14 @@ open class WebConfig : WebMvcConfigurer {
         }
         r.setWarnLogCategory("logger")
         return r
+    }
+
+    @Bean
+    open fun gsonBuilder(customizers: List<GsonBuilderCustomizer>): GsonBuilder {
+        customizers.forEach {
+            it.customize(builder)
+        }
+        return builder
     }
 
     override fun configureMessageConverters(converters: List<HttpMessageConverter<*>>) {

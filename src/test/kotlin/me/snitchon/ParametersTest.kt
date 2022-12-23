@@ -15,6 +15,7 @@ import me.snitchon.tests.SnitchTest
 import me.snitchon.types.Sealed
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.slf4j.LoggerFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -194,7 +195,7 @@ open class ParametersTest(service: ServiceFactory) : SnitchTest(service) {
 
     @Test
     fun `supports body parameter`() {
-        whenPerform Post "/bodyparam" withBody bodyParam expectBodyJson BodyTestResult(42, 33)
+        whenPerform Post "/bodyparam" withBody bodyParam withHeaders mapOf("Content-Type" to Format.Json.type) expectBodyJson BodyTestResult(42, 33)
     }
 
     @Test
