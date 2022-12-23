@@ -10,7 +10,6 @@ import me.snitchon.endpoint.Endpoint
 import me.snitchon.http.BodyHandler
 import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
-import me.snitchon.http.ResponseWrapper
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods
@@ -18,6 +17,7 @@ import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
 import me.snitchon.parsers.GsonJsonParser
+import me.snitchon.parsers.GsonJsonParser.jsonString
 import org.slf4j.LoggerFactory
 import spark.Request
 import spark.Response
@@ -38,10 +38,16 @@ class SparkService(override val config: Config) : SnitchService {
 
     override fun <T : Exception> handleException(
         exception: Class<T>,
-        handler: (T, RequestWrapper, ResponseWrapper) -> Unit
+        handler: (T, RequestWrapper) -> HttpResponse<*>
     ) {
         http.exception(exception) { ex, request, response ->
-            handler(ex, SparkRequestWrapper(request), SparkResponseWrapper(response))
+            handler(ex, SparkRequestWrapper(request)).also {
+                response.status(it.statusCode)
+                when (it) {
+                    is HttpResponse.SuccessfulHttpResponse<*> -> response.body(it.body?.jsonString)
+                    is HttpResponse.ErrorHttpResponse<*,*> -> response.body(it.jsonString)
+                }
+            }
         }
     }
 

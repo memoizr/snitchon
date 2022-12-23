@@ -1,6 +1,6 @@
 package me.snitchon.parameter
 
-import com.snitch.Validator
+import me.snitchon.Validator
 
 interface Parameter<RAW : Any?, out PARSED : Any?> {
     val type: Class<*>

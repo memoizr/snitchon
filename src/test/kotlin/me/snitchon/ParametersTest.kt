@@ -149,7 +149,7 @@ open class ParametersTest(service: ServiceFactory) : SnitchTest(service) {
         whenPerform Get "/queriespath3" expectBody IntTestResult(30).jsonString
 
         whenPerform Get "/queriespath4?limit=42" expectBody NullableIntTestResult(42).jsonString
-        whenPerform Get "/queriespath4" expectBody """{}"""
+        whenPerform Get "/queriespath4" expectBodyJson NullableIntTestResult(null)
     }
 
     @Test
@@ -186,8 +186,8 @@ open class ParametersTest(service: ServiceFactory) : SnitchTest(service) {
         whenPerform Get "/headerspath3" expectBody IntTestResult(666).jsonString
 
         whenPerform Get "/headerspath4" withHeaders mapOf(limitHead.name to 42) expectBody NullableIntTestResult(42).jsonString
-        whenPerform Get "/headerspath4" withHeaders mapOf(limitHead.name to "") expectBody """{}"""
-        whenPerform Get "/headerspath4" expectBody """{}"""
+        whenPerform Get "/headerspath4" withHeaders mapOf(limitHead.name to "") expectBodyJson NullableIntTestResult(null)
+        whenPerform Get "/headerspath4" expectBodyJson NullableIntTestResult(null)
     }
 
     val bodyParam = BodyParam(42, "hello", SealedClass.One(33))
@@ -199,9 +199,9 @@ open class ParametersTest(service: ServiceFactory) : SnitchTest(service) {
 
     @Test
     fun `supports custom parsing`() {
-        val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.ENGLISH);
         val date = "2018-06-30T02:59:51-00:00"
-        whenPerform Get "/customParsing?time=$date" expectBody DateResult(df.parse(date)).jsonString
+        whenPerform Get "/customParsing?time=$date" expectBody DateResult(df.parse(date).also {println(it)}).jsonString.also{println(it)}
     }
 
     data class IntTestResult(val result: Int)

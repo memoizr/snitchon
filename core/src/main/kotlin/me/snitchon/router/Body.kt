@@ -1,6 +1,6 @@
 package me.snitchon.router
 
-import com.snitch.Validator
+import me.snitchon.Validator
 import kotlin.reflect.KClass
 import me.snitchon.endpoint.*
 import me.snitchon.parameter.*

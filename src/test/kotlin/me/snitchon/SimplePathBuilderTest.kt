@@ -6,7 +6,6 @@ import me.snitchon.spark.SparkService
 import me.snitchon.config.Config
 import me.snitchon.path.Path
 import me.snitchon.parsers.GsonJsonParser.jsonString
-import me.snitchon.service.SnitchService
 import me.snitchon.tests.ServiceFactory
 import me.snitchon.tests.SnitchTest
 import org.junit.jupiter.api.BeforeEach
@@ -61,7 +60,7 @@ open class SimplePathBuilderTest(service: ServiceFactory) : SnitchTest(service) 
             POST("/foo").isHandledBy { TestResult("post value").created }
             DELETE("/foo").isHandledBy { TestResult("delete value").ok }
 
-            GET("/error").isHandledBy { if (false) TestResult("never happens").ok else badRequest("Something went wrong") }
+            GET("/errors").isHandledBy { if (false) TestResult("never happens").ok else badRequest("Something went wrong") }
             GET("/forbidden").isHandledBy { if (false) TestResult("never happens").ok else forbidden("Forbidden") }
 
             GET("noslash/bar").isHandledBy { TestResult("success").ok }
@@ -120,10 +119,6 @@ open class SimplePathBuilderTest(service: ServiceFactory) : SnitchTest(service) 
 
     @Test
     fun `supports nested routes`() {
-        routes {
-
-        }
-
         whenPerform Get "/hey/there/a" expectBodyJson TestResult("get value there a") expectCode 200
         whenPerform Get "/hey/123/level2/3459/nope" expectBodyJson TestResult("get 123 3459") expectCode 200
         whenPerform Get "/one/a" expectBodyJson TestResult("get value") expectCode 200
@@ -148,7 +143,7 @@ open class SimplePathBuilderTest(service: ServiceFactory) : SnitchTest(service) 
 
     @Test
     fun `returns error responses`() {
-        whenPerform Get "/error" withHeaders mapOf("Accept" to "Text/Plain") expectBodyJson badRequest<TestResult, String>("Something went wrong") expectCode 400
+        whenPerform Get "/errors"  expectBodyJson badRequest<TestResult, String>("Something went wrong") expectCode 400
         whenPerform Get "/forbidden" expectBodyJson badRequest<TestResult, String>("Forbidden", 403) expectCode 403
     }
 

@@ -1,7 +1,7 @@
 package me.snitchon.service
 
-import com.snitch.MissingRequiredParameterException
-import com.snitch.ValidationException
+import me.snitchon.MissingRequiredParameterException
+import me.snitchon.ValidationException
 import me.snitchon.config.Config
 import me.snitchon.endpoint.*
 import me.snitchon.http.RequestWrapper
@@ -29,7 +29,9 @@ interface SnitchService {
         Router.() -> Unit
     ): RoutedService
 
-    fun <T : Exception> handleException(exception: Class<T>, handler: (T, RequestWrapper, ResponseWrapper) -> Unit)
+    fun <T : Exception> handleException(exception: Class<T>, handler: (T, RequestWrapper) -> HttpResponse<*>)
+
+    fun onStart() {}
 }
 
 data class RoutedService(val service: SnitchService, val router: Router) {
@@ -38,29 +40,25 @@ data class RoutedService(val service: SnitchService, val router: Router) {
             service.registerMethod(it, it.params.url.ensureLeadingSlash())
         }
 
+        service.onStart()
+
         return this
     }
 
     context(Parser)
     fun handleInvalidParams() {
-        service.handleException(ValidationException::class.java) { e, req, res ->
-            res.setBody(
-                HttpResponse.ErrorHttpResponse<Any, List<String>>(
-                    400,
-                    listOf(e.invalidValue)
-                ).jsonString
+        service.handleException(ValidationException::class.java) { e, req ->
+            HttpResponse.ErrorHttpResponse<Any, List<String>>(
+                400,
+                listOf(e.invalidValue)
             )
-            res.setStatus(400)
         }
 
-        service.handleException(MissingRequiredParameterException::class.java) { e, req, res ->
-            res.setBody(
-                HttpResponse.ErrorHttpResponse<Any, List<String>>(
-                    400,
-                    listOf(e.message!!)
-                ).jsonString
+        service.handleException(MissingRequiredParameterException::class.java) { e, req ->
+            HttpResponse.ErrorHttpResponse<Any, List<String>>(
+                400,
+                listOf(e.message!!)
             )
-            res.setStatus(400)
         }
     }
 }

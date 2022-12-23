@@ -1,6 +1,6 @@
 package me.snitchon.http
 
-import com.snitch.MissingRequiredParameterException
+import me.snitchon.MissingRequiredParameterException
 import me.snitchon.parameter.Parameter
 import me.snitchon.path.Path
 import me.snitchon.parameter.Header

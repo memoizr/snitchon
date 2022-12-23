@@ -1,4 +1,4 @@
-package com.snitch
+package me.snitchon
 
 import java.lang.NumberFormatException
 import kotlin.reflect.KClass

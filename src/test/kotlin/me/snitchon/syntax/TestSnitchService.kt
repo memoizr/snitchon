@@ -41,7 +41,7 @@ class TestSnitchService : SnitchService {
 
     override fun <T : Exception> handleException(
         exception: Class<T>,
-        handler: (T, RequestWrapper, ResponseWrapper) -> Unit
+        handler: (T, RequestWrapper) -> HttpResponse<*>
     ) {
         TODO("Not yet implemented")
     }

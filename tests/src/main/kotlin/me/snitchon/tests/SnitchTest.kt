@@ -123,7 +123,8 @@ abstract class SnitchTest(
         }
 
         infix inline fun <reified T : Any> expectBodyJson(body: T) = apply {
-            com.memoizr.assertk.expect that response.body().parseJson(T::class.java) isEqualTo body
+            val r = response.body()
+            com.memoizr.assertk.expect that r.parseJson(T::class.java) isEqualTo body
         }
     }
 

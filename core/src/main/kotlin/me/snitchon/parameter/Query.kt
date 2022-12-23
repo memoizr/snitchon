@@ -1,6 +1,6 @@
 package me.snitchon.parameter
 
-import com.snitch.Validator
+import me.snitchon.Validator
 import me.snitchon.documentation.Visibility
 import me.snitchon.http.Handler
 

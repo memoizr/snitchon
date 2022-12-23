@@ -28,6 +28,9 @@ dependencies {
     testImplementation(project(":tests"))
 
     testImplementation(kotlin("test"))
+    implementation("org.springframework:spring-webmvc:6.0.3")
+    implementation("org.springframework:spring-web:6.0.3")
+    implementation("org.springframework.boot:spring-boot-starter-web:3.0.0")
     testImplementation("com.dslplatform:dsl-json-java8:1.9.9")
     testImplementation("com.sparkjava:spark-core:2.9.3")
     testImplementation("com.github.memoizr:assertk-core:-SNAPSHOT")
