@@ -24,6 +24,6 @@ open class SuiteOfSuites {
 
     @Nested
     @DisplayName("Spark")
-    inner class ChildSuite : Suite({ SparkService(config.copy(port = it)) })
+    inner class SparkSuite : Suite({ SparkService(config.copy(port = it)) })
 }
 

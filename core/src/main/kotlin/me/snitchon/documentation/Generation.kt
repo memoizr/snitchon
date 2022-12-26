@@ -117,21 +117,18 @@ fun RoutedService.generateDocs(): Spec {
 
 data class Spec(val spec: String, val router: Router, val routedService: RoutedService) {
 
-    fun writeDocsToStaticFolder() {
+    fun writeDocsToStaticFolder(): Spec {
         with(HttpMethods) {
             with(Router(router.config, "")) {
                 routedService.service.registerMethod(GET("/docs").isHandledBy {
-                    index.ok.format(Format.TextPlain)
+                    index.ok.format(Format.TextHTML)
                 }, "/docs")
                 routedService.service.registerMethod(GET("/spec.json").isHandledBy {
                     spec.ok.format(Format.TextPlain)
                 }, "/spec.json")
             }
         }
-//        val dest = "tmp/swagger-ui" + "/docs"
-//        File(dest).mkdirs()
-//        writeToFile(spec, "$dest/spec.json")
-//        File("$dest/index.html").writeText(index)
+        return this
     }
 }
 

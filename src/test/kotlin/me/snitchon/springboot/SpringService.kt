@@ -96,7 +96,9 @@ class SpringService(override val config: Config = Config()) : SnitchService {
                                 .contentType(MediaType.parseMediaType(Format.Json.type))
                                 .body(result.body)
                         else
-                            ServerResponse.status(result.statusCode).body(result.body)
+                            ServerResponse.status(result.statusCode)
+                                .contentType(MediaType.parseMediaType(result._format.type))
+                                .body(result.body)
                     }
 
                     is HttpResponse.ErrorHttpResponse<*, *> -> {

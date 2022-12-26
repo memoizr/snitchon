@@ -28,7 +28,7 @@ class SparkMarkup : ParameterMarkupDecorator {
     override fun decorate(name: String): String = ":$name"
 }
 
-class SparkService(override val config: Config) : SnitchService {
+class SparkService(override val config: Config = Config()) : SnitchService {
     val http by lazy {
         val logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as Logger
         logger.level = Level.INFO

@@ -31,4 +31,5 @@ enum class Format(val type: String) {
     ImageJpeg("image/jpeg"),
     VideoMP4("video/mp4"),
     TextPlain("text/plain"),
+    TextHTML("text/html"),
 }
