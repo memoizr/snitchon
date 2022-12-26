@@ -1,11 +1,13 @@
 package me.snitchon
 
-import com.memoizr.assertk.describedAs
 import me.snitchon.config.Config
 import me.snitchon.documentation.Description
+import me.snitchon.documentation.Visibility
+import me.snitchon.documentation.Visibility.INTERNAL
 import me.snitchon.documentation.generateDocs
 import me.snitchon.endpoint.description
 import me.snitchon.endpoint.summary
+import me.snitchon.endpoint.visibility
 import me.snitchon.parameter.Query
 import me.snitchon.parsers.GsonJsonParser
 import me.snitchon.path.Path
@@ -29,9 +31,16 @@ fun main(args: Array<String>) {
                     .isHandledBy {
                         Result("She is ok").ok
                     }
+
+                GET("ola"/"is"/"secret")
+                    .visibility(INTERNAL)
+                    .isHandledBy {
+                        Result("She is ok").ok
+                    }
             }
             .generateDocs()
-            .writeDocsToStaticFolder()
+            .servePublicDocumenation()
+            .serveInternalDocumenation()
             .routedService.startListening()
 
         SpringService(Config(port= 3001))
@@ -52,7 +61,7 @@ fun main(args: Array<String>) {
                 }
             }
             .generateDocs()
-            .writeDocsToStaticFolder()
+            .servePublicDocumenation()
             .routedService.startListening()
     }
 }

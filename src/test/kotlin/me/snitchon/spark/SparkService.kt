@@ -85,10 +85,13 @@ class SparkService(override val config: Config = Config()) : SnitchService {
 
                 when (result) {
                     is HttpResponse.SuccessfulHttpResponse<*> -> {
-                        if (result._format == Format.Json)
+                        if (result._format == Format.Json) {
+                            response.type(result._format.type)
                             result.body?.jsonString
-                        else
+                        } else {
+                            response.type(result._format.type)
                             result.body.toString()
+                        }
                     }
 
                     is HttpResponse.ErrorHttpResponse<*, *> -> {

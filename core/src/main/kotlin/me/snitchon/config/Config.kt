@@ -7,6 +7,8 @@ data class Config(
     val port: Int = 3000,
 //    val logLevel: Level = Level.INFO,
     val basePath: String = "",
+    val publicDocumentationPath: String = "public-api",
+    val internalDocumentationPath: String = "internal-api",
     val docPath: String = "swagger-spec",
     val termsOfService: String? = null,
     val contact: ConfigContact? = null,

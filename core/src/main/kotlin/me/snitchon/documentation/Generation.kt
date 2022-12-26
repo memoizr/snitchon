@@ -45,89 +45,131 @@ val <T : Any> Endpoint<T>.bodyParam
         .firstOrNull()
         .let { it ?: Body(Nothing::class) }
 
+fun <T> Visibility.visibleOrNull(visibility: Visibility, block: () -> T) =
+    if (this == Visibility.INTERNAL || this == visibility)
+        block()
+    else
+        null
+
+
 context(Parser)
-fun RoutedService.generateDocs(): Spec {
-    val openApi = OpenApi(info = Info(router.config.title, "1.0"), servers = listOf(Server("${router.config.host}:${router.config.port}")))
+fun RoutedService.generateDocs(visibility: Visibility = Visibility.PUBLIC): OpenApi {
+    val openApi = OpenApi(
+        info = Info(router.config.title, "1.0"),
+        servers = listOf(Server("${router.config.host}:${router.config.port}"))
+    )
+
     return router.endpoints
         .groupBy { it.params.url }
         .map { entry ->
             entry.key to entry.value.foldRight(Path()) { bundle: Endpoint<*>, path ->
-                path.withOperation(
-                    bundle.params.httpMethod,
-                    Operation(
-                        tags = bundle.params.url.split("/").drop(1).firstOrNull()?.let { listOf(it) },
-                        summary = bundle.params.summary,
-                        description = bundle.params.description,
-                        responses = emptyMap(),
-                        visibility = bundle.params.visibility
-                    )
-                        .withResponse(ContentType.APPLICATION_JSON, bundle.response, "200")
-                        .let {
-                            if (bundle.bodyParam.klass != Nothing::class) {
-                                it.withRequestBody(ContentType.APPLICATION_JSON, bundle.bodyParam.klass)
-                            } else it
-                        }
-                        .let {
-                            bundle.headerParams.fold(it) { acc, p ->
-                                acc.withParameter(
-                                    Parameters.HeaderParameter(
-                                        name = p.name,
-                                        required = p.required,
-                                        description = getDescription(p),
-                                        visibility = p.visibility,
-                                        schema = toSchema(p.type.kotlin.starProjectedType)
-                                            .withPattern(p.pattern.regex)
-                                    )
-                                )
+                visibility.visibleOrNull(bundle.params.visibility) {
+                    path.withOperation(
+                        bundle.params.httpMethod,
+                        Operation(
+                            tags = bundle.params.url.split("/").drop(1).firstOrNull()?.let { listOf(it) },
+                            summary = bundle.params.summary,
+                            description = bundle.params.description,
+                            responses = emptyMap(),
+                            visibility = bundle.params.visibility
+                        )
+                            .withResponse(ContentType.APPLICATION_JSON, bundle.response, "200")
+                            .let {
+                                if (bundle.bodyParam.klass != Nothing::class) {
+                                    it.withRequestBody(ContentType.APPLICATION_JSON, bundle.bodyParam.klass)
+                                } else it
                             }
-                        }
-                        .let {
-                            bundle.pathParams.fold(it) { acc, param ->
-                                acc.withParameter(
-                                    Parameters.PathParameter(
-                                        name = param.name,
-                                        description = getDescription(param),
-                                        schema = toSchema(param.type.kotlin.starProjectedType)
-                                            .withPattern(param.pattern.regex)
+                            .let {
+                                bundle.headerParams.fold(it) { acc, p ->
+                                    acc.withParameter(
+                                        Parameters.HeaderParameter(
+                                            name = p.name,
+                                            required = p.required,
+                                            description = getDescription(p),
+                                            visibility = p.visibility,
+                                            schema = toSchema(p.type.kotlin.starProjectedType)
+                                                .withPattern(p.pattern.regex)
+                                        )
                                     )
-                                )
+                                }
                             }
-                        }
-                        .let {
-                            bundle.queryParams.fold(it) { acc, p ->
-                                acc.withParameter(
-                                    Parameters.QueryParameter(
-                                        name = p.name,
-                                        description = getDescription(p),
-                                        allowEmptyValue = p.emptyAsMissing,
-                                        required = p.required,
-                                        visibility = p.visibility,
-                                        schema = toSchema(p.type.kotlin.starProjectedType)
-                                            .withPattern(p.pattern.regex)
+                            .let {
+                                bundle.pathParams.fold(it) { acc, param ->
+                                    acc.withParameter(
+                                        Parameters.PathParameter(
+                                            name = param.name,
+                                            description = getDescription(param),
+                                            schema = toSchema(param.type.kotlin.starProjectedType)
+                                                .withPattern(param.pattern.regex)
+                                        )
+                                    )
+                                }
+                            }
+                            .let {
+                                bundle.queryParams.fold(it) { acc, p ->
+                                    acc.withParameter(
+                                        Parameters.QueryParameter(
+                                            name = p.name,
+                                            description = getDescription(p),
+                                            allowEmptyValue = p.emptyAsMissing,
+                                            required = p.required,
+                                            visibility = p.visibility,
+                                            schema = toSchema(p.type.kotlin.starProjectedType)
+                                                .withPattern(p.pattern.regex)
 
+                                        )
                                     )
-                                )
+                                }
                             }
-                        }
-                )
+                    )
+                } ?: path
             }
         }.fold(openApi) { a, b -> a.withPath(b.first, b.second) }
-        .let { Spec(it, it.jsonString, router, this) }
 }
 
-data class Spec(
-    val openApi: OpenApi,
-    val spec: String, val router: Router, val routedService: RoutedService) {
+context(Parser)
+fun RoutedService.generateDocs(): Spec =
+    Spec(
+        generateDocs(Visibility.PUBLIC),
+        generateDocs(Visibility.INTERNAL),
+        router,
+        this
+    )
 
-    fun writeDocsToStaticFolder(): Spec {
+data class Spec(
+    val publicApi: OpenApi,
+    val internalApi: OpenApi,
+    val router: Router, val routedService: RoutedService
+) {
+
+    fun servePublicDocumenation(): Spec {
         with(HttpMethods) {
             with(Router(router.config, "")) {
-                routedService.service.registerMethod(GET("/docs").isHandledBy {
-                    index.ok.format(Format.TextHTML)
-                }, "/docs")
-                routedService.service.registerMethod(GET("/spec.json").isHandledBy {
-                    spec.ok.format(Format.TextPlain)
-                }, "/spec.json")
+                val path = config.publicDocumentationPath
+                val docPath = "$path/spec.json"
+                routedService.service.registerMethod(GET(path).isHandledBy {
+                    index(docPath).ok.format(Format.TextHTML)
+                }, path)
+                routedService.service.registerMethod(GET(docPath).isHandledBy {
+                    publicApi.ok.format(Format.Json)
+                }, docPath)
+            }
+        }
+        return this
+    }
+
+    fun serveInternalDocumenation(): Spec {
+        with(HttpMethods) {
+            with(Router(router.config, "")) {
+
+                val path = config.internalDocumentationPath
+                val docPath = "$path/spec.json"
+                routedService.service.registerMethod(GET(path).isHandledBy {
+                    index(docPath).ok.format(Format.TextHTML)
+                }, path)
+                routedService.service.registerMethod(GET(docPath).isHandledBy {
+                    internalApi.ok.format(Format.Json)
+                }, docPath)
             }
         }
         return this
@@ -146,7 +188,7 @@ internal fun writeToFile(content: String, destination: String) {
     }
 }
 
-val index = """
+fun index(docPath: String) = """
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -182,7 +224,7 @@ val index = """
     window.onload = function() {
       // Begin Swagger UI call region
       const ui = SwaggerUIBundle({
-        url: "./spec.json",
+        url: "$docPath",
         dom_id: '#swagger-ui',
         deepLinking: true,
         presets: [

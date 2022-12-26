@@ -24,6 +24,7 @@ interface Endpoint<R : Any> {
 
 fun <T : Any, E: Endpoint<T>> E.description(description: String) = apply { params = params.copy(description = description) }
 fun <T : Any, E: Endpoint<T>> E.summary(summary: String) = apply { params = params.copy(summary = summary) }
+fun <T : Any, E: Endpoint<T>> E.visibility(visibility: Visibility) = apply { params = params.copy(visibility = visibility) }
 
 
 data class EndpointParameters(
