@@ -1,8 +1,11 @@
 package me.snitchon
 
-import com.snitch.Format
+import com.memoizr.assertk.describedAs
 import me.snitchon.config.Config
+import me.snitchon.documentation.Description
 import me.snitchon.documentation.generateDocs
+import me.snitchon.endpoint.description
+import me.snitchon.endpoint.summary
 import me.snitchon.parameter.Query
 import me.snitchon.parsers.GsonJsonParser
 import me.snitchon.path.Path
@@ -33,16 +36,20 @@ fun main(args: Array<String>) {
 
         SpringService(Config(port= 3001))
             .withRoutes { ->
-                GET("hello" / id / "world")
-                    .with(query)
-                    .isHandledBy {
-                        Result("foobar, id:${id()} qq:${query()}").ok
-                    }
+                "welcome" / {
+                    GET("hello" / id / "me")
+                        .description("A tragedy")
+                        .summary("sample")
+                        .with(query)
+                        .isHandledBy {
+                            Result("foobar, id:${id()} qq:${query()}").ok
+                        }
 
-                GET("ola"/"is"/"lovely")
-                    .isHandledBy {
-                        Result("She is ok").ok
-                    }
+                    GET("ola" / "is" / "lovely")
+                        .isHandledBy {
+                            Result("She is ok").ok
+                        }
+                }
             }
             .generateDocs()
             .writeDocsToStaticFolder()
@@ -50,5 +57,5 @@ fun main(args: Array<String>) {
     }
 }
 
-data class Result(val message: String)
+data class Result(@Description("the message") val message: String)
 

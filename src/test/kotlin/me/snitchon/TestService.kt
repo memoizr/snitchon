@@ -8,7 +8,7 @@ val config = Config(
     basePath = "/",
     title = "Tunemoji API Documentation",
     port = 3000,
-    host = "http://localhost:3000/",
+    host = "http://localhost:9999/",
     docPath = "spec",
     docExpansion = DocExpansion.LIST
 )

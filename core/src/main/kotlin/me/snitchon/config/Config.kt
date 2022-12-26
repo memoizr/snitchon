@@ -3,7 +3,7 @@ package me.snitchon.config
 data class Config(
     val description: String = "",
     val title: String = "",
-    val host: String = "http://localhost:3000",
+    val host: String = "http://localhost",
     val port: Int = 3000,
 //    val logLevel: Level = Level.INFO,
     val basePath: String = "",

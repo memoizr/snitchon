@@ -9,7 +9,7 @@ import com.snitch.HttpResponse
 import kotlin.reflect.KClass
 
 interface Endpoint<R : Any> {
-    val params: EndpointParameters
+    var params: EndpointParameters
     val invoke: (Handler) -> HttpResponse<R>
     val before: (RequestWrapper) -> Unit
     val after: (RequestWrapper, ResponseWrapper) -> Unit
@@ -20,9 +20,11 @@ interface Endpoint<R : Any> {
 
     context(OnlyQuery)
     infix operator fun <T : QP> plus(t: T): Endpoint<R>
-
-//    abstract fun queries(function: () -> R): Any
 }
+
+fun <T : Any, E: Endpoint<T>> E.description(description: String) = apply { params = params.copy(description = description) }
+fun <T : Any, E: Endpoint<T>> E.summary(summary: String) = apply { params = params.copy(summary = summary) }
+
 
 data class EndpointParameters(
     val httpMethod: HTTPMethod,

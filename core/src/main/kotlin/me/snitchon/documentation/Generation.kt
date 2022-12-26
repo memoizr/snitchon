@@ -47,7 +47,7 @@ val <T : Any> Endpoint<T>.bodyParam
 
 context(Parser)
 fun RoutedService.generateDocs(): Spec {
-    val openApi = OpenApi(info = Info(router.config.title, "1.0"), servers = listOf(Server(router.config.host)))
+    val openApi = OpenApi(info = Info(router.config.title, "1.0"), servers = listOf(Server("${router.config.host}:${router.config.port}")))
     return router.endpoints
         .groupBy { it.params.url }
         .map { entry ->
@@ -118,6 +118,7 @@ fun RoutedService.generateDocs(): Spec {
 data class Spec(val spec: String, val router: Router, val routedService: RoutedService) {
 
     fun writeDocsToStaticFolder(): Spec {
+        println(spec)
         with(HttpMethods) {
             with(Router(router.config, "")) {
                 routedService.service.registerMethod(GET("/docs").isHandledBy {

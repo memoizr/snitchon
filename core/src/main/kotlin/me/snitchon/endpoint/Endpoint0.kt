@@ -8,7 +8,7 @@ import me.snitchon.router.HasBody
 import kotlin.reflect.KClass
 
 data class Endpoint0<RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,

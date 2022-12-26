@@ -65,7 +65,7 @@ class SpringService(override val config: Config = Config()) : SnitchService {
         HttpResponses
         ) Router.() -> Unit
     ): RoutedService {
-        val router = with(HttpMethods) { Router() }
+        val router = with(HttpMethods) { Router(config) }
 
         routerConfiguration(SpringMarkup(), HttpMethods, SlashSyntax, HttpResponses, router)
 

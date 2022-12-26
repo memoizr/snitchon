@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint1<P1 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -56,7 +56,7 @@ data class Endpoint1<P1 : Par, RETURN : Any>(
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint2<P1 : Par, P2 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -104,7 +104,7 @@ data class Endpoint2<P1 : Par, P2 : Par, RETURN : Any>(
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint3<P1 : Par, P2 : Par, P3 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -155,7 +155,7 @@ data class Endpoint3<P1 : Par, P2 : Par, P3 : Par, RETURN : Any>(
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint4<P1 : Par, P2 : Par, P3 : Par, P4 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -209,7 +209,7 @@ data class Endpoint4<P1 : Par, P2 : Par, P3 : Par, P4 : Par, RETURN : Any>(
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint5<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -266,7 +266,7 @@ data class Endpoint5<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, RETURN : 
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint6<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -326,7 +326,7 @@ data class Endpoint6<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par,
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint7<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -389,7 +389,7 @@ data class Endpoint7<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par,
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint8<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -455,7 +455,7 @@ data class Endpoint8<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par,
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint9<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -524,7 +524,7 @@ data class Endpoint9<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par,
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint10<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -596,7 +596,7 @@ data class Endpoint10<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint11<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -671,7 +671,7 @@ data class Endpoint11<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint12<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -749,7 +749,7 @@ data class Endpoint12<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint13<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -830,7 +830,7 @@ data class Endpoint13<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint14<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -914,7 +914,7 @@ data class Endpoint14<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint15<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -1001,7 +1001,7 @@ data class Endpoint15<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint16<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -1091,7 +1091,7 @@ data class Endpoint16<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint17<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -1184,7 +1184,7 @@ data class Endpoint17<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint18<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -1280,7 +1280,7 @@ data class Endpoint18<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint19<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -1379,7 +1379,7 @@ data class Endpoint19<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint20<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -1481,7 +1481,7 @@ data class Endpoint20<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint21<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -1609,7 +1609,7 @@ data class Endpoint21<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint22<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -1741,7 +1741,7 @@ data class Endpoint22<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint23<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -1877,7 +1877,7 @@ data class Endpoint23<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint24<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -2017,7 +2017,7 @@ data class Endpoint24<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint25<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -2161,7 +2161,7 @@ data class Endpoint25<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint26<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -2309,7 +2309,7 @@ data class Endpoint26<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint27<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -2461,7 +2461,7 @@ data class Endpoint27<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint28<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -2617,7 +2617,7 @@ data class Endpoint28<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint29<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -2777,7 +2777,7 @@ data class Endpoint29<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint30<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -2941,7 +2941,7 @@ data class Endpoint30<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint31<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, P31 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -3109,7 +3109,7 @@ data class Endpoint31<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint32<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, P31 : Par, P32 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -3281,7 +3281,7 @@ data class Endpoint32<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint33<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, P31 : Par, P32 : Par, P33 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -3457,7 +3457,7 @@ data class Endpoint33<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint34<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, P31 : Par, P32 : Par, P33 : Par, P34 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -3637,7 +3637,7 @@ data class Endpoint34<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint35<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, P31 : Par, P32 : Par, P33 : Par, P34 : Par, P35 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
@@ -3821,7 +3821,7 @@ data class Endpoint35<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 data class Endpoint36<P1 : Par, P2 : Par, P3 : Par, P4 : Par, P5 : Par, P6 : Par, P7 : Par, P8 : Par, P9 : Par, P10 : Par, P11 : Par, P12 : Par, P13 : Par, P14 : Par, P15 : Par, P16 : Par, P17 : Par, P18 : Par, P19 : Par, P20 : Par, P21 : Par, P22 : Par, P23 : Par, P24 : Par, P25 : Par, P26 : Par, P27 : Par, P28 : Par, P29 : Par, P30 : Par, P31 : Par, P32 : Par, P33 : Par, P34 : Par, P35 : Par, P36 : Par, RETURN : Any>(
-    override val params: EndpointParameters,
+    override var params: EndpointParameters,
     override val before: (RequestWrapper) -> Unit = {},
     override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
