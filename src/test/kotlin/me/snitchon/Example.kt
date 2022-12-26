@@ -2,7 +2,6 @@ package me.snitchon
 
 import me.snitchon.config.Config
 import me.snitchon.documentation.Description
-import me.snitchon.documentation.Visibility
 import me.snitchon.documentation.Visibility.INTERNAL
 import me.snitchon.documentation.generateDocs
 import me.snitchon.endpoint.description

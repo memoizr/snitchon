@@ -4,13 +4,14 @@ import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
 import me.snitchon.parameter.*
+import me.snitchon.parsing.Parser
 import me.snitchon.path.Path
-import me.snitchon.parsers.GsonJsonParser.parseJson
 import spark.Request
 import spark.Response
 
 class SparkRequestWrapper(val request: Request) : RequestWrapper {
 
+    context(Parser)
     override fun <T : Any> body(body: Class<T>): T {
         val body1 = request.body()
         return body1.parseJson(body)

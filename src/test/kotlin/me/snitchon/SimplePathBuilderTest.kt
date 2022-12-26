@@ -3,6 +3,7 @@ package me.snitchon
 import me.snitchon.http.HttpResponses.badRequest
 import me.snitchon.spark.SparkService
 import me.snitchon.config.Config
+import me.snitchon.parsers.GsonJsonParser
 import me.snitchon.path.Path
 import me.snitchon.parsers.GsonJsonParser.jsonString
 import me.snitchon.tests.ServiceFactory
@@ -16,34 +17,37 @@ import org.junit.jupiter.api.extension.ParameterResolver
 
 open class CustomTypeParameterResolver : ParameterResolver {
 
-	override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
+    override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
         val type = parameterContext.parameter.type
         println(type)
         println(type.toString().contains("Function1"))
-		return type.toString().contains("Function1")
-	}
+        return type.toString().contains("Function1")
+    }
 
-	override fun resolveParameter( parameterContext: ParameterContext,extensionContext:  ExtensionContext ): ServiceFactory {
-		return {it -> SparkService(Config(port = it)) }
-	}
+    override fun resolveParameter(
+        parameterContext: ParameterContext,
+        extensionContext: ExtensionContext
+    ): ServiceFactory {
+        return { it -> with(GsonJsonParser) { SparkService(Config(port = it)) } }
+    }
 }
 
 
 @ExtendWith(CustomTypeParameterResolver::class)
 open class SimplePathBuilderTest(service: ServiceFactory) : SnitchTest(service) {
-    object clipId: Path<clipId, Int>(
+    object clipId : Path<clipId, Int>(
         _name = "clipId",
         pattern = NonNegativeInt,
         description = "The clip id"
     )
 
-    object otherPathParam: Path<otherPathParam, Int>(
+    object otherPathParam : Path<otherPathParam, Int>(
         _name = "otherPathParam",
         pattern = NonNegativeInt,
         description = "The clip id"
     )
 
-    object thirdPathParam: Path<thirdPathParam, Int>(
+    object thirdPathParam : Path<thirdPathParam, Int>(
         _name = "thirdPathParam",
         pattern = NonNegativeInt,
         description = "The clip id"
@@ -142,7 +146,7 @@ open class SimplePathBuilderTest(service: ServiceFactory) : SnitchTest(service) 
 
     @Test
     fun `returns error responses`() {
-        whenPerform Get "/errors"  expectBodyJson badRequest<TestResult, String>("Something went wrong") expectCode 400
+        whenPerform Get "/errors" expectBodyJson badRequest<TestResult, String>("Something went wrong") expectCode 400
         whenPerform Get "/forbidden" expectBodyJson badRequest<TestResult, String>("Forbidden", 403) expectCode 403
     }
 

@@ -5,12 +5,14 @@ import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.Parameter
 import me.snitchon.parameter.Query
 import me.snitchon.parameter.Header
+import me.snitchon.parsing.Parser
 import me.snitchon.path.Path
 
 data class TestRequestWrapper(
     val testRequest: TestRequest,
     val path: String
 ) : RequestWrapper {
+    context(Parser)
     override fun <T : Any> body(body: Class<T>): T = testRequest.body as T
 
     override fun method(): HTTPMethod = HTTPMethod.fromString("PUT")

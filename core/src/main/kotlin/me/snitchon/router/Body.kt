@@ -5,6 +5,7 @@ import kotlin.reflect.KClass
 import me.snitchon.endpoint.*
 import me.snitchon.parameter.*
 import me.snitchon.http.Handler
+import me.snitchon.parsing.Parser
 
 data class Body<T : Any>(val klass: KClass<T>) : Bodied<T, Body<T>> {
     override val type: Class<*>
@@ -42,7 +43,7 @@ object HasBody : Parameter<Nothing, Nothing> {
 }
 
 interface Bodied<T : Any, A : Body<T>> : Parameter<Any, T> {
-    context (Handler, A, HasBody)
+    context (Handler, A, HasBody, Parser)
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     val body: T
         get() = request.body(type) as T

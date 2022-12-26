@@ -6,6 +6,7 @@ import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
 import me.snitchon.parameter.*
 import me.snitchon.parsers.GsonJsonParser.parseJson
+import me.snitchon.parsing.Parser
 import me.snitchon.path.Path
 import org.slf4j.LoggerFactory
 import org.springframework.web.servlet.function.ServerRequest
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.function.paramOrNull
 class SpringRequestWrapper(val request: ServerRequest) : RequestWrapper {
     var bd: Any? = null
 
+    context(Parser)
     override fun <T : Any> body(body: Class<T>): T {
         return bd as? T ?: request.body(body).also { bd = it } as T
     }

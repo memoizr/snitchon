@@ -11,13 +11,12 @@ import me.snitchon.http.BodyHandler
 import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.ParameterMarkupDecorator
+import me.snitchon.parsing.Parser
 import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods
 import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
-import me.snitchon.parsers.GsonJsonParser
-import me.snitchon.parsers.GsonJsonParser.jsonString
 import org.slf4j.LoggerFactory
 import spark.Request
 import spark.Response
@@ -28,6 +27,7 @@ class SparkMarkup : ParameterMarkupDecorator {
     override fun decorate(name: String): String = ":$name"
 }
 
+context(Parser)
 class SparkService(override val config: Config = Config()) : SnitchService {
     val http by lazy {
         val logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as Logger
@@ -71,7 +71,6 @@ class SparkService(override val config: Config = Config()) : SnitchService {
     }
 
     override fun registerMethod(bundle: Endpoint<*>, path: String) {
-        with(GsonJsonParser) {
             val function: (request: Request, response: Response) -> String? = { request, response ->
                 val call = BodyHandler(
                     SparkRequestWrapper(request),
@@ -129,6 +128,5 @@ class SparkService(override val config: Config = Config()) : SnitchService {
                     http.head(path, function)
                 }
             }
-        }
     }
 }

@@ -168,8 +168,6 @@ open class WebConfig : WebMvcConfigurer {
                 handler: Any?,
                 ex: java.lang.Exception
             ): ModelAndView? {
-                logger.info("===================================")
-                logger.info(ex.stackTrace)
                 return exceptions[ex::class.java]
                     ?.invoke(ex, SpringServletRequestWrapper(request))
                     ?.let {

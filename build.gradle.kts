@@ -26,17 +26,15 @@ dependencies {
     testImplementation(project(":core"))
     testImplementation(project(":gsonparser"))
     testImplementation(project(":tests"))
+    testImplementation(project(":spring"))
+    testImplementation(project(":spark"))
 
     testImplementation(kotlin("test"))
-    implementation("org.springframework:spring-webmvc:6.0.3")
-    implementation("org.springframework:spring-web:6.0.3")
-    implementation("org.springframework.boot:spring-boot-starter-web:3.0.0")
     testImplementation("com.dslplatform:dsl-json-java8:1.9.9")
-    testImplementation("com.sparkjava:spark-core:2.9.3")
     testImplementation("com.github.memoizr:assertk-core:-SNAPSHOT")
 //    testImplementation(kotlin("test-junit"))
 
-    api("ch.qos.logback:logback-classic:1.1.7")
+    api("ch.qos.logback:logback-classic:1.4.5")
     kapt("com.dslplatform:dsl-json-java8:1.9.9")
 }
 
