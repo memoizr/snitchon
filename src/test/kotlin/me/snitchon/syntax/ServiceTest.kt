@@ -1,7 +1,7 @@
 package me.snitchon.syntax
 
-import com.snitch.HttpResponse
-import com.snitch.HttpResponses.ok
+import me.snitchon.http.HttpResponse
+import me.snitchon.http.HttpResponses.ok
 import me.snitchon.NonEmptyString
 import me.snitchon.http.Handler
 import me.snitchon.http.HTTPMethod

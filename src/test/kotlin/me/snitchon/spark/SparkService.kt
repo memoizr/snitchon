@@ -2,9 +2,9 @@ package me.snitchon.spark
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
-import com.snitch.Format
-import com.snitch.HttpResponse
-import com.snitch.HttpResponses
+import me.snitchon.http.Format
+import me.snitchon.http.HttpResponse
+import me.snitchon.http.HttpResponses
 import me.snitchon.config.Config
 import me.snitchon.endpoint.Endpoint
 import me.snitchon.http.BodyHandler

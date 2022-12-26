@@ -6,7 +6,7 @@ import me.snitchon.http.RequestWrapper
 import me.snitchon.router.Body
 import me.snitchon.router.HasBody
 import me.snitchon.router.Par
-import com.snitch.HttpResponse
+import me.snitchon.http.HttpResponse
 import kotlin.reflect.KClass
 
 @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")

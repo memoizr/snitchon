@@ -1,7 +1,6 @@
 package me.snitchon
 
-import com.snitch.*
-import com.snitch.HttpResponses.badRequest
+import me.snitchon.http.HttpResponses.badRequest
 import me.snitchon.spark.SparkService
 import me.snitchon.config.Config
 import me.snitchon.path.Path

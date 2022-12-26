@@ -1,8 +1,8 @@
 package me.snitchon.documentation
 
-import com.snitch.Format
-import com.snitch.HttpResponses.format
-import com.snitch.HttpResponses.ok
+import me.snitchon.http.Format
+import me.snitchon.http.HttpResponses.format
+import me.snitchon.http.HttpResponses.ok
 import me.snitchon.endpoint.Endpoint
 import me.snitchon.parameter.Header
 import me.snitchon.parameter.Parameter
@@ -112,13 +112,14 @@ fun RoutedService.generateDocs(): Spec {
                 )
             }
         }.fold(openApi) { a, b -> a.withPath(b.first, b.second) }
-        .let { Spec(it.jsonString, router, this) }
+        .let { Spec(it, it.jsonString, router, this) }
 }
 
-data class Spec(val spec: String, val router: Router, val routedService: RoutedService) {
+data class Spec(
+    val openApi: OpenApi,
+    val spec: String, val router: Router, val routedService: RoutedService) {
 
     fun writeDocsToStaticFolder(): Spec {
-        println(spec)
         with(HttpMethods) {
             with(Router(router.config, "")) {
                 routedService.service.registerMethod(GET("/docs").isHandledBy {

@@ -1,10 +1,11 @@
 package me.snitchon
 
-import com.snitch.*
-import com.snitch.HttpResponse.*
+import me.snitchon.http.HttpResponse.*
 import me.snitchon.documentation.Description
 import me.snitchon.documentation.Visibility
+import me.snitchon.http.Format
 import me.snitchon.http.Handler
+import me.snitchon.http.HttpResponse
 import me.snitchon.parameter.*
 import me.snitchon.path.Path
 import me.snitchon.router.Body
@@ -15,7 +16,6 @@ import me.snitchon.tests.SnitchTest
 import me.snitchon.types.Sealed
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.slf4j.LoggerFactory
 import java.text.SimpleDateFormat
 import java.util.*
 

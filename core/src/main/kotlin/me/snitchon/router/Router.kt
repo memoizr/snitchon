@@ -1,6 +1,6 @@
 package me.snitchon.router
 
-import com.snitch.HttpResponse
+import me.snitchon.http.HttpResponse
 import me.snitchon.config.Config
 import me.snitchon.endpoint.*
 import me.snitchon.http.Handler

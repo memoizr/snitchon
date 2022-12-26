@@ -1,9 +1,9 @@
 package me.snitchon.springboot
 
 import com.google.gson.GsonBuilder
-import com.snitch.Format
-import com.snitch.HttpResponse
-import com.snitch.HttpResponses
+import me.snitchon.http.Format
+import me.snitchon.http.HttpResponse
+import me.snitchon.http.HttpResponses
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import me.snitchon.config.Config

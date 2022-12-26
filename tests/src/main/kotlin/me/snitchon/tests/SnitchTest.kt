@@ -6,7 +6,7 @@ import java.net.URI
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.util.*
-import com.snitch.HttpResponses
+import me.snitchon.http.HttpResponses
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods

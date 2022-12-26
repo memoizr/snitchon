@@ -1,6 +1,6 @@
 package me.snitchon.syntax
 
-import com.snitch.HttpResponses
+import me.snitchon.http.HttpResponses
 import me.snitchon.endpoint.*
 import me.snitchon.http.*
 import me.snitchon.parameter.ParameterMarkupDecorator
@@ -9,7 +9,7 @@ import me.snitchon.router.HttpMethods
 import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
-import com.snitch.HttpResponse
+import me.snitchon.http.HttpResponse
 import me.snitchon.parsers.GsonJsonParser.jsonString
 
 class TestMarkup : ParameterMarkupDecorator {

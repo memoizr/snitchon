@@ -5,12 +5,11 @@ import me.snitchon.ValidationException
 import me.snitchon.config.Config
 import me.snitchon.endpoint.*
 import me.snitchon.http.RequestWrapper
-import me.snitchon.http.ResponseWrapper
 import me.snitchon.parsing.Parser
 import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods
-import com.snitch.HttpResponse
-import com.snitch.HttpResponses
+import me.snitchon.http.HttpResponse
+import me.snitchon.http.HttpResponses
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.router.SlashSyntax
 import me.snitchon.router.ensureLeadingSlash

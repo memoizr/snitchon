@@ -1,15 +1,5 @@
 package me.snitchon.endpoint
 
-import com.snitch.HttpResponse
-import me.snitchon.documentation.Visibility
-import me.snitchon.http.HTTPMethod
-import me.snitchon.http.Handler
-import me.snitchon.http.RequestWrapper
-import me.snitchon.router.Body
-import me.snitchon.router.HasBody
-import me.snitchon.router.Par
-import kotlin.reflect.KClass
-
 //@Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
 //data class Endpoint6<
 //        A : Par,

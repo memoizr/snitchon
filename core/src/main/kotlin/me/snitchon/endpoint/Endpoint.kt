@@ -5,7 +5,7 @@ import me.snitchon.http.HTTPMethod
 import me.snitchon.http.Handler
 import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
-import com.snitch.HttpResponse
+import me.snitchon.http.HttpResponse
 import kotlin.reflect.KClass
 
 interface Endpoint<R : Any> {

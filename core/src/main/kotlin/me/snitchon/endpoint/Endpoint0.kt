@@ -1,6 +1,6 @@
 package me.snitchon.endpoint
 
-import com.snitch.HttpResponse
+import me.snitchon.http.HttpResponse
 import me.snitchon.http.Handler
 import me.snitchon.http.RequestWrapper
 import me.snitchon.router.Body

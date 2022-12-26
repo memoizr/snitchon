@@ -1,6 +1,6 @@
-package com.snitch
+package me.snitchon.http
 
-import com.snitch.Format.*
+import me.snitchon.http.Format.*
 
 sealed class HttpResponse<T> {
     abstract val statusCode: Int
