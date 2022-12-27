@@ -28,7 +28,7 @@ interface SnitchService {
         Router.() -> Unit
     ): RoutedService
 
-    fun <T : Exception> handleException(exception: Class<T>, handler: (T, RequestWrapper) -> HttpResponse<*>)
+    fun <T : Exception> handleException(exception: Class<T>, handler: (T) -> HttpResponse<*>)
 
     fun onStart() {}
 }
@@ -46,14 +46,14 @@ data class RoutedService(val service: SnitchService, val router: Router) {
 
     context(Parser)
     fun handleInvalidParams() {
-        service.handleException(ValidationException::class.java) { e, req ->
+        service.handleException(ValidationException::class.java) { e ->
             HttpResponse.ErrorHttpResponse<Any, List<String>>(
                 400,
                 listOf(e.invalidValue)
             )
         }
 
-        service.handleException(MissingRequiredParameterException::class.java) { e, req ->
+        service.handleException(MissingRequiredParameterException::class.java) { e ->
             HttpResponse.ErrorHttpResponse<Any, List<String>>(
                 400,
                 listOf(e.message!!)

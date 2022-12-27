@@ -19,8 +19,6 @@ open class CustomTypeParameterResolver : ParameterResolver {
 
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean {
         val type = parameterContext.parameter.type
-        println(type)
-        println(type.toString().contains("Function1"))
         return type.toString().contains("Function1")
     }
 

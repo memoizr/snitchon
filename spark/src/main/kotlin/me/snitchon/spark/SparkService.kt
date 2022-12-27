@@ -9,7 +9,6 @@ import me.snitchon.config.Config
 import me.snitchon.endpoint.Endpoint
 import me.snitchon.http.BodyHandler
 import me.snitchon.http.HTTPMethod
-import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.parsing.Parser
 import me.snitchon.router.Router
@@ -38,10 +37,10 @@ class SparkService(override val config: Config = Config()) : SnitchService {
 
     override fun <T : Exception> handleException(
         exception: Class<T>,
-        handler: (T, RequestWrapper) -> HttpResponse<*>
+        handler: (T) -> HttpResponse<*>
     ) {
         http.exception(exception) { ex, request, response ->
-            handler(ex, SparkRequestWrapper(request)).also {
+            handler(ex).also {
                 response.status(it.statusCode)
                 when (it) {
                     is HttpResponse.SuccessfulHttpResponse<*> -> response.body(it.body?.jsonString)

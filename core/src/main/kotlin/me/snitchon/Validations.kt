@@ -8,7 +8,7 @@ data class ValidationException(
     val value: Any,
     val summary: String,
     val description: String
-) : Exception() {
+) : Exception("$summary is invalid, expecting $description, but got `$value`") {
     val invalidValue =
         "$summary is invalid, expecting $description, but got `$value`"
 }

@@ -41,7 +41,7 @@ class TestSnitchService : SnitchService {
 
     override fun <T : Exception> handleException(
         exception: Class<T>,
-        handler: (T, RequestWrapper) -> HttpResponse<*>
+        handler: (T) -> HttpResponse<*>
     ) {
         TODO("Not yet implemented")
     }
@@ -61,8 +61,6 @@ class TestSnitchService : SnitchService {
                 TODO("Not yet implemented")
             }
         }
-
-        println(testRequestWrapper)
 
         val result = func?.invoke(request.body?.let { BodyHandler(testRequestWrapper, response, it) }
             ?: NoBodyHandler(testRequestWrapper, response))

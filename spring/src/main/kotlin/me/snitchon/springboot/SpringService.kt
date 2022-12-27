@@ -51,7 +51,7 @@ class SpringMarkup : ParameterMarkupDecorator {
 }
 
 val route = RouterFunctions.route()
-val exceptions = mutableMapOf<Class<*>, (Exception, RequestWrapper) -> HttpResponse<*>>()
+val exceptions = mutableMapOf<Class<*>, (Exception) -> HttpResponse<*>>()
 
 context(Parser)
 open class SpringService(override val config: Config = Config()) : SnitchService {
@@ -63,9 +63,9 @@ open class SpringService(override val config: Config = Config()) : SnitchService
 
     override fun <T : Exception> handleException(
         exception: Class<T>,
-        handler: (T, RequestWrapper) -> HttpResponse<*>
+        handler: (T) -> HttpResponse<*>
     ) {
-        exceptions.put(exception, handler as (Exception, RequestWrapper) -> HttpResponse<*>)
+        exceptions.put(exception, handler as (Exception) -> HttpResponse<*>)
     }
 
     override fun withRoutes(
@@ -181,7 +181,7 @@ open class WebConfig : WebMvcConfigurer {
             ): ModelAndView? {
                 return with(parser) {
                     exceptions[ex::class.java]
-                        ?.invoke(ex, SpringServletRequestWrapper(request))
+                        ?.invoke(ex)
                         ?.let {
                             response.writer.print(it.jsonString)
                             ModelAndView()

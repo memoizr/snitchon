@@ -4,4 +4,5 @@ include("core",
     "tests",
     "spring",
     "spark",
+    "vertx",
 )

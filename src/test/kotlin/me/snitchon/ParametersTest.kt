@@ -207,7 +207,7 @@ open class ParametersTest(service: ServiceFactory) : SnitchTest(service) {
     fun `supports custom parsing`() {
         val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.ENGLISH)
         val date = "2018-06-30T02:59:51-00:00"
-        whenPerform Get "/customParsing?time=$date" expectBody DateResult(df.parse(date).also {println(it)}).jsonString.also{println(it)}
+        whenPerform Get "/customParsing?time=$date" expectBody DateResult(df.parse(date)).jsonString
     }
 
     data class IntTestResult(val result: Int)

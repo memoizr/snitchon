@@ -28,6 +28,7 @@ dependencies {
     testImplementation(project(":tests"))
     testImplementation(project(":spring"))
     testImplementation(project(":spark"))
+    testImplementation(project(":vertx"))
 
     testImplementation(kotlin("test"))
     testImplementation("com.dslplatform:dsl-json-java8:1.9.9")
