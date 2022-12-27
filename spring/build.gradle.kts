@@ -22,7 +22,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.22")
 
     implementation(project(":core"))
-    implementation(project(":gsonparser"))
 
     implementation("com.google.code.gson:gson:2.8.5")
 

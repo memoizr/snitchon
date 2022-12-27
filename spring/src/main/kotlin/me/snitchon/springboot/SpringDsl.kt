@@ -5,10 +5,8 @@ import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
 import me.snitchon.parameter.*
-import me.snitchon.parsers.GsonJsonParser.parseJson
 import me.snitchon.parsing.Parser
 import me.snitchon.path.Path
-import org.slf4j.LoggerFactory
 import org.springframework.web.servlet.function.ServerRequest
 import org.springframework.web.servlet.function.paramOrNull
 
@@ -32,6 +30,7 @@ class SpringRequestWrapper(val request: ServerRequest) : RequestWrapper {
 
 class SpringServletRequestWrapper(val request: HttpServletRequest) : RequestWrapper {
 
+    context(Parser)
     override fun <T : Any> body(body: Class<T>): T {
         val body1 = request.reader.readText().parseJson(body)
         return body1

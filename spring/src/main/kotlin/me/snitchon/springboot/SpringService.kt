@@ -1,6 +1,7 @@
 package me.snitchon.springboot
 
-import com.google.gson.GsonBuilder
+import com.google.gson.*
+import com.google.gson.reflect.TypeToken
 import me.snitchon.http.Format
 import me.snitchon.http.HttpResponse
 import me.snitchon.http.HttpResponses
@@ -12,18 +13,23 @@ import me.snitchon.http.BodyHandler
 import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.ParameterMarkupDecorator
-import me.snitchon.parsers.GsonJsonParser
-import me.snitchon.parsers.GsonJsonParser.builder
-import me.snitchon.parsers.GsonJsonParser.jsonString
+import me.snitchon.parsing.Parser
 import me.snitchon.router.HttpMethods
 import me.snitchon.router.Router
 import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
+import me.snitchon.types.Sealed
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.support.BeanDefinitionBuilder
+import org.springframework.beans.factory.support.BeanNameGenerator
+import org.springframework.beans.factory.support.DefaultListableBeanFactory
+import org.springframework.boot.ApplicationContextFactory
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.gson.GsonBuilderCustomizer
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
@@ -34,6 +40,7 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.function.*
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver
+import java.lang.reflect.Type
 
 @SpringBootApplication(exclude = [JacksonAutoConfiguration::class]) // Exclude the automatic configuration of JACKSON
 open class Application {
@@ -46,9 +53,13 @@ class SpringMarkup : ParameterMarkupDecorator {
 val route = RouterFunctions.route()
 val exceptions = mutableMapOf<Class<*>, (Exception, RequestWrapper) -> HttpResponse<*>>()
 
-class SpringService(override val config: Config = Config()) : SnitchService {
-    val http by lazy {
+context(Parser)
+open class SpringService(override val config: Config = Config()) : SnitchService {
+
+    init {
+        parser = this@Parser
     }
+
 
     override fun <T : Exception> handleException(
         exception: Class<T>,
@@ -77,64 +88,62 @@ class SpringService(override val config: Config = Config()) : SnitchService {
     }
 
     override fun registerMethod(bundle: Endpoint<*>, path: String) {
-        with(GsonJsonParser) {
-            val function: HandlerFunction<ServerResponse> = HandlerFunction { request: ServerRequest ->
-                val call = BodyHandler(
-                    SpringRequestWrapper(request),
-                    SpringResponseWrapper(),
-                    bundle.response
-                )
+        val function: HandlerFunction<ServerResponse> = HandlerFunction { request: ServerRequest ->
+            val call = BodyHandler(
+                SpringRequestWrapper(request),
+                SpringResponseWrapper(),
+                bundle.response
+            )
 
-                val result = bundle.invoke(call)
+            val result = bundle.invoke(call)
 
 //                response.status(result.statusCode)
 
-                when (result) {
-                    is HttpResponse.SuccessfulHttpResponse<*> -> {
-                        if (result._format == Format.Json)
-                            ServerResponse.status(result.statusCode)
-                                .contentType(MediaType.parseMediaType(Format.Json.type))
-                                .body(result.body)
-                        else
-                            ServerResponse.status(result.statusCode)
-                                .contentType(MediaType.parseMediaType(result._format.type))
-                                .body(result.body)
-                    }
+            when (result) {
+                is HttpResponse.SuccessfulHttpResponse<*> -> {
+                    if (result._format == Format.Json)
+                        ServerResponse.status(result.statusCode)
+                            .contentType(MediaType.parseMediaType(Format.Json.type))
+                            .body(result.body)
+                    else
+                        ServerResponse.status(result.statusCode)
+                            .contentType(MediaType.parseMediaType(result._format.type))
+                            .body(result.body)
+                }
 
-                    is HttpResponse.ErrorHttpResponse<*, *> -> {
-                        ServerResponse.status(result.statusCode).body(result.jsonString)
-                    }
+                is HttpResponse.ErrorHttpResponse<*, *> -> {
+                    ServerResponse.status(result.statusCode).body(result.jsonString)
                 }
             }
+        }
 
-            when (bundle.params.httpMethod) {
-                HTTPMethod.GET -> {
-                    route.GET(path, function)
-                }
+        when (bundle.params.httpMethod) {
+            HTTPMethod.GET -> {
+                route.GET(path, function)
+            }
 
-                HTTPMethod.PUT -> {
-                    route.PUT(path, function)
-                }
+            HTTPMethod.PUT -> {
+                route.PUT(path, function)
+            }
 
-                HTTPMethod.POST -> {
-                    route.POST(path, function)
-                }
+            HTTPMethod.POST -> {
+                route.POST(path, function)
+            }
 
-                HTTPMethod.PATCH -> {
-                    route.PATCH(path, function)
-                }
+            HTTPMethod.PATCH -> {
+                route.PATCH(path, function)
+            }
 
-                HTTPMethod.DELETE -> {
-                    route.DELETE(path, function)
-                }
+            HTTPMethod.DELETE -> {
+                route.DELETE(path, function)
+            }
 
-                HTTPMethod.OPTIONS -> {
-                    route.OPTIONS(path, function)
-                }
+            HTTPMethod.OPTIONS -> {
+                route.OPTIONS(path, function)
+            }
 
-                HTTPMethod.HEAD -> {
-                    route.HEAD(path, function)
-                }
+            HTTPMethod.HEAD -> {
+                route.HEAD(path, function)
             }
         }
     }
@@ -152,6 +161,8 @@ class SpringService(override val config: Config = Config()) : SnitchService {
     }
 }
 
+internal lateinit var parser: Parser
+
 @Configuration
 open class WebConfig : WebMvcConfigurer {
     @Bean
@@ -168,12 +179,14 @@ open class WebConfig : WebMvcConfigurer {
                 handler: Any?,
                 ex: java.lang.Exception
             ): ModelAndView? {
-                return exceptions[ex::class.java]
-                    ?.invoke(ex, SpringServletRequestWrapper(request))
-                    ?.let {
-                        response.writer.print(it.jsonString)
-                        ModelAndView()
-                    } ?: throw ex
+                return with(parser) {
+                    exceptions[ex::class.java]
+                        ?.invoke(ex, SpringServletRequestWrapper(request))
+                        ?.let {
+                            response.writer.print(it.jsonString)
+                            ModelAndView()
+                        } ?: throw ex
+                }
             }
         }
         r.setWarnLogCategory("logger")
@@ -186,6 +199,7 @@ open class WebConfig : WebMvcConfigurer {
             it.customize(builder)
         }
         return builder
+//        return Gson().newBuilder()
     }
 
     override fun configureMessageConverters(converters: List<HttpMessageConverter<*>>) {
@@ -200,3 +214,21 @@ open class WebConfig : WebMvcConfigurer {
         // configure view resolution for HTML rendering...
     }
 }
+
+class SealedAdapter : JsonDeserializer<Sealed> {
+    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Sealed {
+        val type = with(parser) { json?.asJsonObject?.get("type")?.jsonString }
+        val rawType = TypeToken.get(typeOfT).rawType
+
+        return rawType.kotlin.sealedSubclasses
+            .firstOrNull { it.simpleName == type?.replace("\"", "") }
+            ?.let {
+                Gson().fromJson(json, it.java) as Sealed
+            } ?: Gson().fromJson(json, rawType) as Sealed
+    }
+}
+
+
+internal val builder = GsonBuilder()
+    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+    .registerTypeHierarchyAdapter(Sealed::class.java, SealedAdapter())
