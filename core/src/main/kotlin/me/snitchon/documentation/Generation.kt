@@ -12,6 +12,7 @@ import me.snitchon.parsing.Parser
 import me.snitchon.router.Body
 import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods
+import me.snitchon.router.ensureLeadingSlash
 import me.snitchon.service.RoutedService
 import java.io.File
 import java.io.FileOutputStream
@@ -145,8 +146,8 @@ data class Spec(
     fun servePublicDocumenation(): Spec {
         with(HttpMethods) {
             with(Router(router.config, "")) {
-                val path = config.publicDocumentationPath
-                val docPath = "$path/spec.json"
+                val path = config.publicDocumentationPath.ensureLeadingSlash()
+                val docPath = "$path/spec.json".ensureLeadingSlash()
                 routedService.service.registerMethod(GET(path).isHandledBy {
                     index(docPath).ok.format(Format.TextHTML)
                 }, path)
@@ -162,8 +163,8 @@ data class Spec(
         with(HttpMethods) {
             with(Router(router.config, "")) {
 
-                val path = config.internalDocumentationPath
-                val docPath = "$path/spec.json"
+                val path = config.internalDocumentationPath.ensureLeadingSlash()
+                val docPath = "$path/spec.json".ensureLeadingSlash()
                 routedService.service.registerMethod(GET(path).isHandledBy {
                     index(docPath).ok.format(Format.TextHTML)
                 }, path)

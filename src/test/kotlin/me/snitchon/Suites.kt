@@ -1,5 +1,6 @@
 package me.snitchon
 
+import com.snitch.undertow.UndertowService
 import me.snitchon.parsers.GsonJsonParser
 import me.snitchon.spark.SparkService
 import me.snitchon.springboot.SpringService
@@ -23,6 +24,10 @@ open class Suite(val service: ServiceFactory) {
 
 open class SuiteOfSuites {
     @Nested
+    @DisplayName("Vertx")
+    inner class VertxSuite : Suite({ with(GsonJsonParser) { VertxService(config.copy(port = it)) } })
+
+    @Nested
     @DisplayName("Spring")
     inner class SpringSuite : Suite({ with(GsonJsonParser) { SpringService(config.copy(port = it)) } })
 
@@ -31,7 +36,7 @@ open class SuiteOfSuites {
     inner class SparkSuite : Suite({ with(GsonJsonParser) { SparkService(config.copy(port = it)) } })
 
     @Nested
-    @DisplayName("Vertx")
-    inner class VertxSuite : Suite({ with(GsonJsonParser) { VertxService(config.copy(port = it)) } })
+    @DisplayName("Undertow")
+    inner class UndertwoSuite : Suite({ with(GsonJsonParser) { UndertowService(config.copy(port = it)) } })
 }
 

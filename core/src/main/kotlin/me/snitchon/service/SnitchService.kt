@@ -4,7 +4,6 @@ import me.snitchon.MissingRequiredParameterException
 import me.snitchon.ValidationException
 import me.snitchon.config.Config
 import me.snitchon.endpoint.*
-import me.snitchon.http.RequestWrapper
 import me.snitchon.parsing.Parser
 import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods

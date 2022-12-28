@@ -5,4 +5,5 @@ include("core",
     "spring",
     "spark",
     "vertx",
+    "undertow",
 )
