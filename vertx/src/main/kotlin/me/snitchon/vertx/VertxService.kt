@@ -48,16 +48,15 @@ class Server(val port: Int) : AbstractVerticle() {
 private val exceptionHandler = mutableMapOf<Class<*>, (Exception) -> HttpResponse<*>>()
 
 context(me.snitchon.parsing.Parser)
-class VertxService(override val config: Config = Config()) : SnitchService {
+class VertxService(override val config: Config = Config()) : SnitchService<VertxRequestWrapper> {
     val service by lazy { Server(config.port) }
 
-    private inline val Endpoint<*>.func: (context: RoutingContext) -> Unit
+    private inline val Endpoint<VertxRequestWrapper, *>.func: (context: RoutingContext) -> Unit
         get() =
             { context ->
                 val res = this.invoke(
                     SnitchBodyHandler(
-                        VertxRequestWrapper(context),
-                        VertxResponseWrapper(),
+                        VertxRequestWrapper(context, this@Parser),
                         response
                     )
                 )
@@ -81,7 +80,7 @@ class VertxService(override val config: Config = Config()) : SnitchService {
         }
     }
 
-    override fun registerMethod(it: Endpoint<*>, path: String) {
+    override fun registerMethod(it: Endpoint<VertxRequestWrapper, *>, path: String) {
         addBodyHandler(it, path)
         when (it.params.httpMethod) {
             HTTPMethod.GET -> service.router.get(path).handler(it.func)
@@ -99,19 +98,19 @@ class VertxService(override val config: Config = Config()) : SnitchService {
         }
     }
 
-    private fun addBodyHandler(it: Endpoint<*>, path: String) {
+    private fun addBodyHandler(it: Endpoint<VertxRequestWrapper, *>, path: String) {
         if (it.bodyParam.klass != Nothing::class) {
             service.router.route(path).handler(BodyHandler.create())
         }
     }
 
-    override fun withRoutes(routerConfiguration: context(ParameterMarkupDecorator, HttpMethods, SlashSyntax, HttpResponses) Router.() -> Unit): RoutedService {
+    override fun withRoutes(routerConfiguration: context(ParameterMarkupDecorator, HttpMethods<VertxRequestWrapper>, SlashSyntax<VertxRequestWrapper>, HttpResponses) Router<VertxRequestWrapper>.() -> Unit): RoutedService<VertxRequestWrapper> {
         val tmpDir = File(System.getProperty("java.io.tmpdir") + "/swagger-ui/docs")
         if (!tmpDir.exists()) {
             tmpDir.mkdirs()
         }
-        val router = with(HttpMethods) { Router(config) }
-        routerConfiguration(VertxMarkup(), HttpMethods, SlashSyntax, HttpResponses, router)
+        val router: Router<VertxRequestWrapper> = with(HttpMethods<VertxRequestWrapper>()) { Router(config) }
+        routerConfiguration(VertxMarkup(), HttpMethods(), SlashSyntax(), HttpResponses, router)
         val routedService = RoutedService(this, router)
 
         return routedService

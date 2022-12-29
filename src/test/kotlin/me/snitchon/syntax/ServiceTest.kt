@@ -54,7 +54,7 @@ class ServiceTest {
     @Test
     fun `supports 0 path parameters`() {
 
-        val handler: context(Handler) () -> HttpResponse<SimpleResponse> = {
+        val handler: context(Handler<*>) () -> HttpResponse<SimpleResponse> = {
             SimpleResponse("foo response").ok
         }
 

@@ -14,11 +14,10 @@ import me.snitchon.path.Path
 import java.net.URLDecoder
 import java.util.concurrent.CountDownLatch
 
-class UndertowRequestWrapper(val exchange: HttpServerExchange) : RequestWrapper {
+class UndertowRequestWrapper(val exchange: HttpServerExchange, val parser: Parser) : RequestWrapper {
     private var b: Any? = null
 
-    context(Parser)
-    override fun <T: Any> body(body: Class<T>): T {
+    override  fun <T: Any> body(body: Class<T>): T {
         if (b != null) return b as T
         val l = CountDownLatch(1)
         var s = ""
@@ -28,7 +27,9 @@ class UndertowRequestWrapper(val exchange: HttpServerExchange) : RequestWrapper 
         }
 
         l.await()
-        b = s.parseJson(body)
+        with (parser) {
+            b = s.parseJson(body)
+        }
 
         return b as T
     }

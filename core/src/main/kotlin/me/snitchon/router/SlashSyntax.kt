@@ -1,12 +1,15 @@
 package me.snitchon.router
 
+import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.parameter.*
 import me.snitchon.path.Path
 
-object SlashSyntax {
-    context(Router, ParameterMarkupDecorator, HttpMethods)
-    operator fun String.div(block: context(ParametrizedPath0) Router.() -> Unit): Router {
+class SlashSyntax<W: RequestWrapper> {
+
+    context(Router<W>, ParameterMarkupDecorator, HttpMethods<W>)
+    @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+    operator fun String.div(block: context(ParametrizedPath0) Router<W>.() -> Unit): Router<W> {
         val router = Router(config, prefix + this.ensureLeadingSlash())
         block(ParametrizedPath0(prefix + this.ensureLeadingSlash()), router)
 
@@ -15,8 +18,9 @@ object SlashSyntax {
         return router
     }
 
-    context(Router, ParametrizedPath0, ParameterMarkupDecorator, HttpMethods)
-    operator fun <T : Path<T, *>> T.div(block: context(ParametrizedPath1<T>, T) Router.() -> Unit): Router {
+    context(Router<W>, ParametrizedPath0, ParameterMarkupDecorator, HttpMethods<W>)
+    @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
+    operator fun <T : Path<T, *>> T.div(block: context(ParametrizedPath1<T>, T) Router<W>.() -> Unit): Router<W> {
         val router = Router(config, prefix + this.markupName.ensureLeadingSlash())
         block(ParametrizedPath1(prefix + this.markupName.ensureLeadingSlash(), this), this, router)
 

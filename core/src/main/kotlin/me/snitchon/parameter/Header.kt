@@ -3,6 +3,7 @@ package me.snitchon.parameter
 import me.snitchon.Validator
 import me.snitchon.documentation.Visibility
 import me.snitchon.http.Handler
+import me.snitchon.http.RequestWrapper
 
 abstract class Header<T, PARSED>(
     override val pattern: Validator<String, PARSED>,
@@ -21,11 +22,11 @@ abstract class Header<T, PARSED>(
     override val required: Boolean = true
 
 
-    context(Handler, T)
+    context(Handler<RequestWrapper>, T)
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     operator fun invoke(): PARSED = parse()
 
-    context(Handler, T)
+    context(Handler<RequestWrapper>, T)
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     fun parse(): PARSED = request.parseParam(this)
 }

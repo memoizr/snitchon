@@ -4,13 +4,10 @@ import me.snitchon.http.HttpResponse.*
 import me.snitchon.documentation.Description
 import me.snitchon.documentation.Visibility
 import me.snitchon.http.Format
-import me.snitchon.http.Handler
-import me.snitchon.http.HttpResponse
+import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.*
 import me.snitchon.parsers.GsonJsonParser
 import me.snitchon.path.Path
-import me.snitchon.router.Body
-import me.snitchon.router.HasBody
 import me.snitchon.parsers.GsonJsonParser.jsonString
 import me.snitchon.tests.ServiceFactory
 import me.snitchon.tests.SnitchTest
@@ -20,7 +17,6 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.test.Ignore
 
 object stringParam : Path<stringParam, String>(
     _name = "stringParam",
@@ -29,6 +25,12 @@ object stringParam : Path<stringParam, String>(
 )
 
 object intparam : Path<intparam, Int>(
+    _name = "intParam",
+    description = "Description",
+    pattern = NonNegativeInt
+)
+
+object strparam : Path<strparam, Int>(
     _name = "intParam",
     description = "Description",
     pattern = NonNegativeInt
@@ -68,7 +70,7 @@ object DateValidator : Validator<String, Date> {
 }
 
 @Disabled
-open class ParametersTest(service: ServiceFactory) : SnitchTest(service) {
+open class ParametersTest<W: RequestWrapper>(service: ServiceFactory<W>) : SnitchTest<W>(service) {
     @BeforeEach
     fun before() {
         routes {
@@ -80,7 +82,8 @@ open class ParametersTest(service: ServiceFactory) : SnitchTest(service) {
             GET("queriespath").with(q).isHandledBy { TestResult(q()).ok }
 
             GET("queriespath2").with(int).isHandledBy { IntTestResult(int()).ok }
-            GET("queriespath3").with(offset).isHandledBy { IntTestResult(offset()).ok }
+            GET("queriespath3").with(offset).isHandledBy {
+                IntTestResult(offset()).ok }
             GET("queriespath4").with(limit).isHandledBy { NullableIntTestResult(limit()).ok }
 
             GET("headerspath").with(qHead).isHandledBy { TestResult(qHead()).ok }
@@ -92,7 +95,7 @@ open class ParametersTest(service: ServiceFactory) : SnitchTest(service) {
             GET("headerspath4").with(limitHead).isHandledBy { NullableIntTestResult(limitHead()).ok }
 
             GET("customParsing").with(time).isHandledBy { DateResult(time()).ok }
-                val function: context(Body<BodyParam>, HasBody, Handler) () -> HttpResponse<BodyTestResult> = {
+                POST("bodyparam").with(body<BodyParam>()).isHandledBy {
                     val sealed = body.sealed
                     BodyTestResult(
                         body.int, when (sealed) {
@@ -101,7 +104,6 @@ open class ParametersTest(service: ServiceFactory) : SnitchTest(service) {
                         }
                     ).ok
                 }
-            POST("bodyparam").with(body<BodyParam>()).isHandledBy(function)
             }
         }
     }

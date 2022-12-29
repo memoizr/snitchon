@@ -13,7 +13,6 @@ import org.springframework.web.servlet.function.paramOrNull
 class SpringRequestWrapper(val request: ServerRequest) : RequestWrapper {
     var bd: Any? = null
 
-    context(Parser)
     override fun <T : Any> body(body: Class<T>): T {
         return bd as? T ?: request.body(body).also { bd = it } as T
     }
@@ -28,23 +27,22 @@ class SpringRequestWrapper(val request: ServerRequest) : RequestWrapper {
     }
 }
 
-class SpringServletRequestWrapper(val request: HttpServletRequest) : RequestWrapper {
-
-    context(Parser)
-    override fun <T : Any> body(body: Class<T>): T {
-        val body1 = request.reader.readText().parseJson(body)
-        return body1
-    }
-
-    override fun method(): HTTPMethod = HTTPMethod.fromString(request.method)
-
-    override fun <RAW, PARSED : Any?> getParam(param: Parameter<RAW, PARSED>): String? = when (param) {
-        is Path<*, *> -> request.getParameter(param.name)
-        is Query<*, *> -> request.getParameter(param.name)
-        is Header<*, *> -> request.getHeader(param.name)
-        else -> TODO()
-    }
-}
+//class SpringServletRequestWrapper(val request: HttpServletRequest) : RequestWrapper {
+//
+//    override fun <T : Any> body(body: Class<T>): T {
+//        val body1 = request.reader.readText().parseJson(body)
+//        return body1
+//    }
+//
+//    override fun method(): HTTPMethod = HTTPMethod.fromString(request.method)
+//
+//    override fun <RAW, PARSED : Any?> getParam(param: Parameter<RAW, PARSED>): String? = when (param) {
+//        is Path<*, *> -> request.getParameter(param.name)
+//        is Query<*, *> -> request.getParameter(param.name)
+//        is Header<*, *> -> request.getHeader(param.name)
+//        else -> TODO()
+//    }
+//}
 
 class SpringResponseWrapper() : ResponseWrapper {
     override fun setBody(body: String) = TODO()

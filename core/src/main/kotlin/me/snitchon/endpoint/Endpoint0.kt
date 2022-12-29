@@ -7,15 +7,13 @@ import me.snitchon.router.Body
 import me.snitchon.router.HasBody
 import kotlin.reflect.KClass
 
-data class Endpoint0<RETURN : Any>(
+data class Endpoint0<W : RequestWrapper, RETURN : Any>(
     override var params: EndpointParameters,
-    override val before: (RequestWrapper) -> Unit = {},
-    override val after: After = { _, res -> res },
     override val response: KClass<RETURN>,
-    val func: (context(Handler) () -> HttpResponse<RETURN>)? = null,
-) : Endpoint<RETURN> {
+    val func: (context(Handler<W>) () -> HttpResponse<RETURN>)? = null,
+) : Endpoint<W, RETURN> {
 
-    override val invoke: (Handler) -> HttpResponse<RETURN> = {
+    override val invoke: (Handler<W>) -> HttpResponse<RETURN> = {
         func!!.invoke(it)
     }
 
@@ -26,28 +24,22 @@ data class Endpoint0<RETURN : Any>(
     override infix operator fun <T : QP> plus(t: T) = with(t)
 
     fun <A : QP> with(parameter: A) =
-        Endpoint1(
+        Endpoint1<_, W, _>(
             params,
-            before,
-            after,
             response,
             parameter
         )
 
     fun <A : HP> with(parameter: A) =
-        Endpoint1(
+        Endpoint1<_, W, _>(
             params,
-            before,
-            after,
             response,
             parameter
         )
 
     fun <A, BODY : Body<A>> with(body: BODY) =
-        Endpoint2(
+        Endpoint2<_, _, W,_>(
             params,
-            before,
-            after,
             response,
             body,
             HasBody

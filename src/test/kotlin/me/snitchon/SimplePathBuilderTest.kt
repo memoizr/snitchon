@@ -3,9 +3,11 @@ package me.snitchon
 import me.snitchon.http.HttpResponses.badRequest
 import me.snitchon.spark.SparkService
 import me.snitchon.config.Config
+import me.snitchon.http.RequestWrapper
 import me.snitchon.parsers.GsonJsonParser
 import me.snitchon.path.Path
 import me.snitchon.parsers.GsonJsonParser.jsonString
+import me.snitchon.spark.SparkRequestWrapper
 import me.snitchon.tests.ServiceFactory
 import me.snitchon.tests.SnitchTest
 import org.junit.jupiter.api.BeforeEach
@@ -25,14 +27,14 @@ open class CustomTypeParameterResolver : ParameterResolver {
     override fun resolveParameter(
         parameterContext: ParameterContext,
         extensionContext: ExtensionContext
-    ): ServiceFactory {
+    ): ServiceFactory<SparkRequestWrapper> {
         return { it -> with(GsonJsonParser) { SparkService(Config(port = it)) } }
     }
 }
 
 
 @ExtendWith(CustomTypeParameterResolver::class)
-open class SimplePathBuilderTest(service: ServiceFactory) : SnitchTest(service) {
+open class SimplePathBuilderTest<W: RequestWrapper>(service: ServiceFactory<W>) : SnitchTest<W>(service) {
     object clipId : Path<clipId, Int>(
         _name = "clipId",
         pattern = NonNegativeInt,

@@ -1,17 +1,14 @@
 package me.snitchon.http
 
-interface Handler {
-    val request: RequestWrapper
-    val response: ResponseWrapper
+interface Handler<out W: RequestWrapper> {
+    val request: W
 }
 
-data class NoBodyHandler(
-    override inline val request: RequestWrapper,
-    override inline val response: ResponseWrapper,
-): Handler
+data class NoBodyHandler<W: RequestWrapper>(
+    override inline val request: W,
+): Handler<W>
 
-data class BodyHandler<T>(
-    override inline val request: RequestWrapper,
-    override inline val response: ResponseWrapper,
+data class BodyHandler<T, W: RequestWrapper>(
+    override inline val request: W,
     inline val body: T
-): Handler
+): Handler<W>

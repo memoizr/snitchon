@@ -1,5 +1,6 @@
 package me.snitchon.endpoint
 
+import me.snitchon.http.HttpResponse
 import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
 import me.snitchon.parameter.Header
@@ -11,4 +12,4 @@ internal typealias QP = Query<*, *>
 object OnlyHeader
 object OnlyQuery
 
-typealias After = (RequestWrapper, ResponseWrapper) -> Unit
+typealias After<W, T> = (W) -> HttpResponse<T>

@@ -4,6 +4,7 @@ import me.snitchon.http.Format
 import me.snitchon.http.HttpResponses.format
 import me.snitchon.http.HttpResponses.ok
 import me.snitchon.endpoint.Endpoint
+import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.Header
 import me.snitchon.parameter.Parameter
 import me.snitchon.path.Path
@@ -20,25 +21,25 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.starProjectedType
 
 
-val <T : Any> Endpoint<T>.headerParams
+val <T : Any> Endpoint<*, T>.headerParams
     get() = this::class
         .memberProperties
         .map { it.call(this) as? Header<*, *> }
         .filterNotNull()
 
-val <T : Any> Endpoint<T>.pathParams
+val <T : Any> Endpoint<*, T>.pathParams
     get() = this::class
         .memberProperties
         .map { it.call(this) as? Path<*, *> }
         .filterNotNull()
 
-val <T : Any> Endpoint<T>.queryParams
+val <T : Any> Endpoint<*,T>.queryParams
     get() = this::class
         .memberProperties
         .map { it.call(this) as? Query<*, *> }
         .filterNotNull()
 
-val <T : Any> Endpoint<T>.bodyParam
+val <T : Any> Endpoint<*, T>.bodyParam
     get() = this::class
         .memberProperties
         .map { it.call(this) as? Body<*> }
@@ -54,7 +55,7 @@ fun <T> Visibility.visibleOrNull(visibility: Visibility, block: () -> T) =
 
 
 context(Parser)
-fun RoutedService.generateDocs(visibility: Visibility = Visibility.PUBLIC): OpenApi {
+fun RoutedService<*>.generateDocs(visibility: Visibility = Visibility.PUBLIC): OpenApi {
     val openApi = OpenApi(
         info = Info(router.config.title, "1.0"),
         servers = listOf(Server("${router.config.host}:${router.config.port}"))
@@ -63,7 +64,7 @@ fun RoutedService.generateDocs(visibility: Visibility = Visibility.PUBLIC): Open
     return router.endpoints
         .groupBy { it.params.url }
         .map { entry ->
-            entry.key to entry.value.foldRight(Path()) { bundle: Endpoint<*>, path ->
+            entry.key to entry.value.foldRight(Path()) { bundle: Endpoint<*,*>, path ->
                 visibility.visibleOrNull(bundle.params.visibility) {
                     path.withOperation(
                         bundle.params.httpMethod,
@@ -129,7 +130,7 @@ fun RoutedService.generateDocs(visibility: Visibility = Visibility.PUBLIC): Open
 }
 
 context(Parser)
-fun RoutedService.generateDocs(): Spec =
+fun <W: RequestWrapper> RoutedService<W>.generateDocs(): Spec<W> =
     Spec(
         generateDocs(Visibility.PUBLIC),
         generateDocs(Visibility.INTERNAL),
@@ -137,14 +138,14 @@ fun RoutedService.generateDocs(): Spec =
         this
     )
 
-data class Spec(
+data class Spec<W: RequestWrapper>(
     val publicApi: OpenApi,
     val internalApi: OpenApi,
-    val router: Router, val routedService: RoutedService
+    val router: Router<W>, val routedService: RoutedService<W>
 ) {
 
-    fun servePublicDocumenation(): Spec {
-        with(HttpMethods) {
+    fun servePublicDocumenation(): Spec<W> {
+        with(HttpMethods<W>()) {
             with(Router(router.config, "")) {
                 val path = config.publicDocumentationPath.ensureLeadingSlash()
                 val docPath = "$path/spec.json".ensureLeadingSlash()
@@ -159,8 +160,8 @@ data class Spec(
         return this
     }
 
-    fun serveInternalDocumenation(): Spec {
-        with(HttpMethods) {
+    fun serveInternalDocumenation(): Spec<W> {
+        with(HttpMethods<W>()) {
             with(Router(router.config, "")) {
 
                 val path = config.internalDocumentationPath.ensureLeadingSlash()

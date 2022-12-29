@@ -7,6 +7,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.util.*
 import me.snitchon.http.HttpResponses
+import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods
@@ -28,10 +29,10 @@ private fun <T> retry(block: () -> T): T {
     return go()
 }
 
-typealias ServiceFactory = (Int) -> SnitchService
+typealias ServiceFactory<W> = (Int) -> SnitchService<W>
 
-abstract class SnitchTest(
-    val service: ServiceFactory
+abstract class SnitchTest<W: RequestWrapper>(
+    val service: ServiceFactory<W>
 ) {
 
     protected val whenPerform = this
@@ -131,10 +132,10 @@ abstract class SnitchTest(
     fun routes(
         router: context(
         ParameterMarkupDecorator,
-        HttpMethods,
-        SlashSyntax,
+        HttpMethods<W>,
+        SlashSyntax<W>,
         HttpResponses
-        ) Router.() -> Unit
+        ) Router<W>.() -> Unit
     ) {
         retry {
             with(GsonJsonParser) {

@@ -1,6 +1,7 @@
 package me.snitchon
 
 import com.memoizr.assertk.expect
+import me.snitchon.http.RequestWrapper
 import me.snitchon.tests.ServiceFactory
 import me.snitchon.tests.SnitchTest
 import org.junit.jupiter.api.BeforeEach
@@ -8,7 +9,7 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 @Disabled
-open class FormatTest(service: ServiceFactory) : SnitchTest(service) {
+open class FormatTest<W: RequestWrapper>(service: ServiceFactory<W>) : SnitchTest<W>(service) {
     data class TheBody(val yo: String, val bar: Int)
     data class TheResponse(val value: String)
 

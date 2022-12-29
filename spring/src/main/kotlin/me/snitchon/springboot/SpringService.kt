@@ -54,7 +54,7 @@ val route = RouterFunctions.route()
 val exceptions = mutableMapOf<Class<*>, (Exception) -> HttpResponse<*>>()
 
 context(Parser)
-open class SpringService(override val config: Config = Config()) : SnitchService {
+open class SpringService(override val config: Config = Config()) : SnitchService<SpringRequestWrapper> {
 
     init {
         parser = this@Parser
@@ -71,14 +71,14 @@ open class SpringService(override val config: Config = Config()) : SnitchService
     override fun withRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        HttpMethods,
-        SlashSyntax,
+        HttpMethods<SpringRequestWrapper>,
+        SlashSyntax<SpringRequestWrapper>,
         HttpResponses
-        ) Router.() -> Unit
-    ): RoutedService {
-        val router = with(HttpMethods) { Router(config) }
+        ) Router<SpringRequestWrapper>.() -> Unit
+    ): RoutedService<SpringRequestWrapper> {
+        val router = with(HttpMethods<SpringRequestWrapper>()) { Router(config) }
 
-        routerConfiguration(SpringMarkup(), HttpMethods, SlashSyntax, HttpResponses, router)
+        routerConfiguration(SpringMarkup(), HttpMethods<SpringRequestWrapper>(), SlashSyntax<SpringRequestWrapper>(), HttpResponses, router)
 
 //        http.notFound { req, res ->
 //            res.type("application/json")
@@ -87,11 +87,10 @@ open class SpringService(override val config: Config = Config()) : SnitchService
         return RoutedService(this, router)
     }
 
-    override fun registerMethod(bundle: Endpoint<*>, path: String) {
+    override fun registerMethod(bundle: Endpoint<SpringRequestWrapper, *>, path: String) {
         val function: HandlerFunction<ServerResponse> = HandlerFunction { request: ServerRequest ->
             val call = BodyHandler(
                 SpringRequestWrapper(request),
-                SpringResponseWrapper(),
                 bundle.response
             )
 

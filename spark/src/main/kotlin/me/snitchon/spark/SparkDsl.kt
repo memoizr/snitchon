@@ -9,22 +9,20 @@ import me.snitchon.path.Path
 import spark.Request
 import spark.Response
 
-class SparkRequestWrapper(val request: Request) : RequestWrapper {
+class SparkRequestWrapper(val request: Request, val parser: Parser) : RequestWrapper {
 
-    context(Parser)
     override fun <T : Any> body(body: Class<T>): T {
         val body1 = request.body()
-        return body1.parseJson(body)
+        return with(parser) { body1.parseJson(body) }
     }
 
     override fun method(): HTTPMethod = HTTPMethod.fromString(request.requestMethod())
 
-    override fun <RAW, PARSED : Any?> getParam(param: Parameter<RAW, PARSED>): String?
-        = when (param) {
-            is Path<*, *> -> request.params(param.name)
-            is Query<*, *> -> request.queryParams(param.name)
-            is Header<*, *> -> request.headers(param.name)
-            else -> TODO()
+    override fun <RAW, PARSED : Any?> getParam(param: Parameter<RAW, PARSED>): String? = when (param) {
+        is Path<*, *> -> request.params(param.name)
+        is Query<*, *> -> request.queryParams(param.name)
+        is Header<*, *> -> request.headers(param.name)
+        else -> TODO()
     }
 }
 

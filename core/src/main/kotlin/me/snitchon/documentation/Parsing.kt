@@ -101,7 +101,8 @@ private fun objectSchema(klass: KClass<*>): Schemas.ObjectSchema {
 }
 
 private fun sealedSchema(klass: KClass<*>, type: KType): Schemas.ObjectSchema {
-    val subtypes = klass.nestedClasses.filter { it.isFinal && Sealed::class.java.isAssignableFrom(it.java) }.map { it.starProjectedType }
+    val subtypes = klass.nestedClasses.filter { it.isFinal && Sealed::class.java.isAssignableFrom(it.java) }
+        .map { it.starProjectedType }
     return Schemas.ObjectSchema(anyOf = subtypes.map { o ->
         toSchema(o).let {
             when (it) {
@@ -141,10 +142,12 @@ private fun getExample(type: KType): Any {
         klass.java.isEnum -> klass.java.enumConstants.map { it.toString() }.first()
         klass.objectInstance != null && Sealed::class.java.isAssignableFrom(klass.java) -> mapOf(Sealed::type.name to klass.simpleName)
         klass.isSealed && Sealed::class.java.isAssignableFrom(klass.java) -> {
-            val subclass = klass.nestedClasses.filter { it.isFinal && Sealed::class.java.isAssignableFrom(it.java) }.first()
+            val subclass =
+                klass.nestedClasses.filter { it.isFinal && Sealed::class.java.isAssignableFrom(it.java) }.first()
             val ex = getExample(subclass.starProjectedType) as Map<Any, Any>
             mapOf(Sealed::type.name to subclass.simpleName) + ex
         }
+
         else -> {
             val parameters = klass.primaryConstructor!!.parameters
             parameters.map { it.name!! to getExample(it.type) }.toMap()

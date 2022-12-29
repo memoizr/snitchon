@@ -3,6 +3,7 @@ package me.snitchon.path
 import me.snitchon.Validator
 import me.snitchon.documentation.Visibility
 import me.snitchon.http.Handler
+import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.parameter.Parameter
 
@@ -25,11 +26,11 @@ abstract class Path<T, PARSED>(
     override val type: Class<*>
         get() = String::class.java
 
-    context(Handler, T)
+    context(Handler<RequestWrapper>, T)
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     operator fun invoke() = parse()
 
-    context(Handler, T)
+    context(Handler<RequestWrapper>, T)
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     fun parse(): PARSED = request.parseParam(this)
 }

@@ -17,25 +17,25 @@ class TestMarkup : ParameterMarkupDecorator {
 }
 
 @Suppress("UNCHECKED_CAST")
-class TestSnitchService : SnitchService {
-    val service = mutableSetOf<Pair<TestRequest, context (Handler) () -> Any?>>()
+class TestSnitchService : SnitchService<TestRequestWrapper> {
+    val service = mutableSetOf<Pair<TestRequest, context (Handler<TestRequestWrapper>) () -> Any?>>()
 
     override fun withRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        HttpMethods,
-        SlashSyntax,
+        HttpMethods<TestRequestWrapper>,
+        SlashSyntax<TestRequestWrapper>,
         HttpResponses
-        ) Router.() -> Unit
-    ): RoutedService {
-        val router = with(HttpMethods) {
+        ) Router<TestRequestWrapper>.() -> Unit
+    ): RoutedService<TestRequestWrapper> {
+        val router = with(HttpMethods<TestRequestWrapper>()) {
             Router()
         }
-        routerConfiguration(TestMarkup(), HttpMethods, SlashSyntax, HttpResponses, router)
+        routerConfiguration(TestMarkup(), HttpMethods(), SlashSyntax(), HttpResponses, router)
         return RoutedService(this, router)
     }
 
-    override fun registerMethod(bundle: Endpoint<*>, path: String) {
+    override fun registerMethod(bundle: Endpoint<TestRequestWrapper,*>, path: String) {
         service.add(TestRequest(bundle.params.httpMethod, bundle.params.url) to bundle.invoke)
     }
 
@@ -52,18 +52,9 @@ class TestSnitchService : SnitchService {
 
         val func = requestFunction1Pair?.second
         val testRequestWrapper = TestRequestWrapper(request, requestFunction1Pair?.first?.path.orEmpty())
-        val response = object : ResponseWrapper {
-            override fun setStatus(code: Int) {
-                TODO("Not yet implemented")
-            }
 
-            override fun setBody(body: String) {
-                TODO("Not yet implemented")
-            }
-        }
-
-        val result = func?.invoke(request.body?.let { BodyHandler(testRequestWrapper, response, it) }
-            ?: NoBodyHandler(testRequestWrapper, response))
+        val result = func?.invoke(request.body?.let { BodyHandler(testRequestWrapper, it) }
+            ?: NoBodyHandler(testRequestWrapper))
 
         return when (result) {
             is HttpResponse.SuccessfulHttpResponse<*> -> result.body?.jsonString

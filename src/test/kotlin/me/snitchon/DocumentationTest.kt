@@ -13,6 +13,7 @@ import me.snitchon.router.Router
 import me.snitchon.router.SlashSyntax
 import me.snitchon.syntax.TestSnitchService
 import me.snitchon.http.HttpResponses
+import me.snitchon.syntax.TestRequestWrapper
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -23,10 +24,10 @@ class DocumentationTest {
     fun routes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        HttpMethods,
-        SlashSyntax,
+        HttpMethods<TestRequestWrapper>,
+        SlashSyntax<TestRequestWrapper>,
         HttpResponses
-        ) Router.() -> Unit
+        ) Router<TestRequestWrapper>.() -> Unit
     ) =
         with(GsonJsonParser) {
             TestSnitchService().withRoutes(routerConfiguration)
@@ -37,10 +38,10 @@ class DocumentationTest {
     fun publicRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        HttpMethods,
-        SlashSyntax,
+        HttpMethods<TestRequestWrapper>,
+        SlashSyntax<TestRequestWrapper>,
         HttpResponses
-        ) Router.() -> Unit
+        ) Router<TestRequestWrapper>.() -> Unit
     ) =
         with(GsonJsonParser) {
             TestSnitchService().withRoutes(routerConfiguration)

@@ -3,14 +3,15 @@ package me.snitchon.router
 import me.snitchon.documentation.Visibility
 import me.snitchon.endpoint.*
 import me.snitchon.http.HTTPMethod
+import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.*
 import me.snitchon.path.Path
 
 internal typealias PP<T> = Path<T, *>
 internal typealias Par = Parameter<*, *>
 
-object HttpMethods {
-    fun GET(path: String = "") = Endpoint0(
+class HttpMethods<W : RequestWrapper> {
+    fun GET(path: String = "") = Endpoint0<W, _>(
         EndpointParameters(
             HTTPMethod.GET,
             if (path.isEmpty()) "" else path.ensureLeadingSlash(),
@@ -21,7 +22,7 @@ object HttpMethods {
         response = Nothing::class
     )
 
-    fun PUT(path: String) = Endpoint0(
+    fun PUT(path: String) = Endpoint0<W, _>(
         EndpointParameters(
             HTTPMethod.PUT,
             path.ensureLeadingSlash(),
@@ -32,7 +33,7 @@ object HttpMethods {
         response = Nothing::class
     )
 
-    fun POST(path: String) = Endpoint0(
+    fun POST(path: String) = Endpoint0<W, _>(
         EndpointParameters(
             HTTPMethod.POST,
             path.ensureLeadingSlash(),
@@ -43,7 +44,7 @@ object HttpMethods {
         response = Nothing::class
     )
 
-    fun DELETE(path: String) = Endpoint0(
+    fun DELETE(path: String) = Endpoint0<W, _>(
         EndpointParameters(
             HTTPMethod.DELETE,
             path.ensureLeadingSlash(),
@@ -57,7 +58,7 @@ object HttpMethods {
     context(ParameterMarkupDecorator)
     fun <P1 : PP<P1>>
             GET(path: P1) =
-        Endpoint1(
+        Endpoint1<_,W,_>(
             EndpointParameters(
                 HTTPMethod.GET,
                 path.markupName,
@@ -65,15 +66,13 @@ object HttpMethods {
                 null,
                 Visibility.PUBLIC,
             ),
-            {},
-            { _, res -> res },
             Nothing::class,
             path
         )
 
     fun <P1 : PP<P1>>
             GET(path: ParametrizedPath1<P1>) =
-        Endpoint1(
+        Endpoint1<_, W, _>(
             EndpointParameters(
                 HTTPMethod.GET,
                 path.path,
@@ -81,15 +80,13 @@ object HttpMethods {
                 null,
                 Visibility.PUBLIC,
             ),
-            {},
-            { _, res -> res },
             Nothing::class,
             path.p1
         )
 
     fun <P1 : PP<P1>>
             PUT(path: ParametrizedPath1<P1>) =
-        Endpoint1(
+        Endpoint1<_, W, _>(
             EndpointParameters(
                 HTTPMethod.PUT,
                 path.path,
@@ -97,32 +94,26 @@ object HttpMethods {
                 null,
                 Visibility.PUBLIC,
             ),
-            {},
-            { _, res -> res },
             Nothing::class,
             path.p1
         )
 
     fun <A : PP<A>, B : PP<B>>
             GET(path: ParametrizedPath2<A, B>) =
-        Endpoint2(
+        Endpoint2<_, _, W, _>(
             EndpointParameters(
                 HTTPMethod.GET, path.path,
                 null,
                 null,
                 Visibility.PUBLIC,
             ),
-            {},
-            { _, res -> res },
             Nothing::class,
             path.p1, path.p2
         )
 
     fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>> GET(path: ParametrizedPath3<P1, P2, P3>) =
-        Endpoint3(
+        Endpoint3<_, _, _, W, _>(
             EndpointParameters(HTTPMethod.GET, path.path, null, null, Visibility.PUBLIC),
-            {},
-            { _, res -> res },
             Nothing::class,
             path.p1,
             path.p2,
@@ -130,10 +121,8 @@ object HttpMethods {
         )
 
     fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>> GET(path: ParametrizedPath4<P1, P2, P3, P4>) =
-        Endpoint4(
+        Endpoint4<_,_,_,_,W,_>(
             EndpointParameters(HTTPMethod.GET, path.path, null, null, Visibility.PUBLIC),
-            {},
-            { _, res -> res },
             Nothing::class,
             path.p1,
             path.p2,
@@ -142,10 +131,8 @@ object HttpMethods {
         )
 
     fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>> GET(path: ParametrizedPath5<P1, P2, P3, P4, P5>) =
-        Endpoint5(
+        Endpoint5<_,_,_,_,_,W,_>(
             EndpointParameters(HTTPMethod.GET, path.path, null, null, Visibility.PUBLIC),
-            {},
-            { _, res -> res },
             Nothing::class,
             path.p1,
             path.p2,
@@ -155,10 +142,8 @@ object HttpMethods {
         )
 
     fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>, P6 : PP<P6>> GET(path: ParametrizedPath6<P1, P2, P3, P4, P5, P6>) =
-        Endpoint6(
+        Endpoint6<_,_,_,_,_,_,W,_>(
             EndpointParameters(HTTPMethod.GET, path.path, null, null, Visibility.PUBLIC),
-            {},
-            { _, res -> res },
             Nothing::class,
             path.p1,
             path.p2,
@@ -169,10 +154,8 @@ object HttpMethods {
         )
 
     fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>, P6 : PP<P6>, P7 : PP<P7>> GET(path: ParametrizedPath7<P1, P2, P3, P4, P5, P6, P7>) =
-        Endpoint7(
+        Endpoint7<_,_,_,_,_,_,_,W,_>(
             EndpointParameters(HTTPMethod.GET, path.path, null, null, Visibility.PUBLIC),
-            {},
-            { _, res -> res },
             Nothing::class,
             path.p1,
             path.p2,
@@ -186,10 +169,8 @@ object HttpMethods {
     fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>, P6 : PP<P6>, P7 : PP<P7>, P8 : PP<P8>> GET(
         path: ParametrizedPath8<P1, P2, P3, P4, P5, P6, P7, P8>
     ) =
-        Endpoint8(
+        Endpoint8<_,_,_,_,_,_,_,_,W,_>(
             EndpointParameters(HTTPMethod.GET, path.path, null, null, Visibility.PUBLIC),
-            {},
-            { _, res -> res },
             Nothing::class,
             path.p1,
             path.p2,
@@ -204,10 +185,8 @@ object HttpMethods {
     fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>, P6 : PP<P6>, P7 : PP<P7>, P8 : PP<P8>, P9 : PP<P9>> GET(
         path: ParametrizedPath9<P1, P2, P3, P4, P5, P6, P7, P8, P9>
     ) =
-        Endpoint9(
+        Endpoint9<_,_,_,_,_,_,_,_,_,W,_>(
             EndpointParameters(HTTPMethod.GET, path.path, null, null, Visibility.PUBLIC),
-            {},
-            { _, res -> res },
             Nothing::class,
             path.p1,
             path.p2,
@@ -223,10 +202,8 @@ object HttpMethods {
     fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>, P6 : PP<P6>, P7 : PP<P7>, P8 : PP<P8>, P9 : PP<P9>, P10 : PP<P10>> GET(
         path: ParametrizedPath10<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10>
     ) =
-        Endpoint10(
+        Endpoint10<_,_,_,_,_,_,_,_,_,_,W,_>(
             EndpointParameters(HTTPMethod.GET, path.path, null, null, Visibility.PUBLIC),
-            {},
-            { _, res -> res },
             Nothing::class,
             path.p1,
             path.p2,
@@ -243,10 +220,8 @@ object HttpMethods {
     fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>, P6 : PP<P6>, P7 : PP<P7>, P8 : PP<P8>, P9 : PP<P9>, P10 : PP<P10>, P11 : PP<P11>> GET(
         path: ParametrizedPath11<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11>
     ) =
-        Endpoint11(
+        Endpoint11<_,_,_,_,_,_,_,_,_,_,_,W,_>(
             EndpointParameters(HTTPMethod.GET, path.path, null, null, Visibility.PUBLIC),
-            {},
-            { _, res -> res },
             Nothing::class,
             path.p1,
             path.p2,

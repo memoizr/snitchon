@@ -8,23 +8,21 @@ import me.snitchon.http.ResponseWrapper
 import me.snitchon.http.HttpResponse
 import kotlin.reflect.KClass
 
-interface Endpoint<R : Any> {
+interface Endpoint<W: RequestWrapper, R : Any> {
     var params: EndpointParameters
-    val invoke: (Handler) -> HttpResponse<R>
-    val before: (RequestWrapper) -> Unit
-    val after: (RequestWrapper, ResponseWrapper) -> Unit
+    val invoke: (Handler<W>) -> HttpResponse<R>
     val response: KClass<R>
 
     context(OnlyHeader)
-    infix operator fun <T : HP> plus(t: T): Endpoint<R>
+    infix operator fun <T : HP> plus(t: T): Endpoint<W, R>
 
     context(OnlyQuery)
-    infix operator fun <T : QP> plus(t: T): Endpoint<R>
+    infix operator fun <T : QP> plus(t: T): Endpoint<W, R>
 }
 
-fun <T : Any, E: Endpoint<T>> E.description(description: String) = apply { params = params.copy(description = description) }
-fun <T : Any, E: Endpoint<T>> E.summary(summary: String) = apply { params = params.copy(summary = summary) }
-fun <T : Any, E: Endpoint<T>> E.visibility(visibility: Visibility) = apply { params = params.copy(visibility = visibility) }
+fun <T : Any, W: RequestWrapper, E: Endpoint<W, T>> E.description(description: String) = apply { params = params.copy(description = description) }
+fun <T : Any, W: RequestWrapper, E: Endpoint<W, T>> E.summary(summary: String) = apply { params = params.copy(summary = summary) }
+fun <T : Any, W: RequestWrapper, E: Endpoint<T, W>> E.visibility(visibility: Visibility): E = apply { params = params.copy(visibility = visibility) }
 
 
 data class EndpointParameters(

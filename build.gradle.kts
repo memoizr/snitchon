@@ -30,7 +30,7 @@ dependencies {
     testImplementation(project(":spark"))
     testImplementation(project(":vertx"))
     testImplementation(project(":undertow"))
-
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     testImplementation(kotlin("test"))
     testImplementation("com.dslplatform:dsl-json-java8:1.9.9")
     testImplementation("com.github.memoizr:assertk-core:-SNAPSHOT")

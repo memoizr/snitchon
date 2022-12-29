@@ -27,7 +27,7 @@ class SparkMarkup : ParameterMarkupDecorator {
 }
 
 context(Parser)
-class SparkService(override val config: Config = Config()) : SnitchService {
+class SparkService(override val config: Config = Config()) : SnitchService<SparkRequestWrapper> {
     val http by lazy {
         val logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as Logger
         logger.level = Level.INFO
@@ -53,14 +53,15 @@ class SparkService(override val config: Config = Config()) : SnitchService {
     override fun withRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        HttpMethods,
-        SlashSyntax,
+        HttpMethods<SparkRequestWrapper>,
+        SlashSyntax<SparkRequestWrapper>,
         HttpResponses
-        ) Router.() -> Unit
-    ): RoutedService {
-        val router = with(HttpMethods) { Router() }
+        ) Router<SparkRequestWrapper>.() -> Unit
+    ): RoutedService<SparkRequestWrapper> {
+        val httpMethods = HttpMethods<SparkRequestWrapper>()
+        val router = with(httpMethods) { Router() }
 
-        routerConfiguration(SparkMarkup(), HttpMethods, SlashSyntax, HttpResponses, router)
+        routerConfiguration(SparkMarkup(), httpMethods, SlashSyntax(), HttpResponses, router)
 
         http.notFound { req, res ->
             res.type("application/json")
@@ -69,11 +70,10 @@ class SparkService(override val config: Config = Config()) : SnitchService {
         return RoutedService(this, router)
     }
 
-    override fun registerMethod(bundle: Endpoint<*>, path: String) {
+    override fun registerMethod(bundle: Endpoint<SparkRequestWrapper,*>, path: String) {
             val function: (request: Request, response: Response) -> String? = { request, response ->
                 val call = BodyHandler(
-                    SparkRequestWrapper(request),
-                    SparkResponseWrapper(response),
+                    SparkRequestWrapper(request, this@Parser),
                     bundle.response
                 )
 

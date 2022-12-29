@@ -21,7 +21,7 @@ import javax.swing.TransferHandler
 
 
 context(me.snitchon.parsing.Parser)
-class UndertowService(override val config: Config) : SnitchService {
+class UndertowService(override val config: Config = Config()) : SnitchService<UndertowRequestWrapper> {
     val routingHandler = RoutingHandler()
     val service: Undertow.Builder by lazy {
         Undertow
@@ -29,13 +29,12 @@ class UndertowService(override val config: Config) : SnitchService {
             .addHttpListener(config.port, "localhost")
     }
 
-    private val Endpoint<*>.func: (exchange: HttpServerExchange) -> Unit
+    private val Endpoint<UndertowRequestWrapper,*>.func: (exchange: HttpServerExchange) -> Unit
         get() {
             return { exchange: HttpServerExchange ->
                 val result = invoke(
                     BodyHandler(
-                        UndertowRequestWrapper(exchange),
-                        UTResponseWrapper(),
+                        UndertowRequestWrapper(exchange, this@Parser),
                         response,
                     )
                 )
@@ -59,7 +58,7 @@ class UndertowService(override val config: Config) : SnitchService {
             }
         }
 
-    override fun registerMethod(it: Endpoint<*>, path: String) {
+    override fun registerMethod(it: Endpoint<UndertowRequestWrapper,*>, path: String) {
         val handler: RoutingHandler =
             when (it.params.httpMethod) {
                 HTTPMethod.GET -> routingHandler.get(path, it.func)
@@ -74,7 +73,6 @@ class UndertowService(override val config: Config) : SnitchService {
         val x: ExceptionHandler = Handlers.exceptionHandler(handler)
             .also {
                 it.addExceptionHandler(Exception::class.java) {
-                    println("==============================")
                     val ex: Throwable = it.getAttachment(ExceptionHandler.THROWABLE)
                     exceptionHandler[ex::class.java]?.invoke(ex as Exception)?.addBodyHandler(it)
                 }
@@ -85,18 +83,18 @@ class UndertowService(override val config: Config) : SnitchService {
 
     private val handlers = mutableListOf<ExceptionHandler>()
 
-    override fun withRoutes(routerConfiguration: context(ParameterMarkupDecorator, HttpMethods, SlashSyntax, HttpResponses) Router.() -> Unit): RoutedService {
+    override fun withRoutes(routerConfiguration: context(ParameterMarkupDecorator, HttpMethods<UndertowRequestWrapper>, SlashSyntax<UndertowRequestWrapper>, HttpResponses) Router<UndertowRequestWrapper>.() -> Unit): RoutedService<UndertowRequestWrapper> {
         val tmpDir = File(System.getProperty("java.io.tmpdir") + "/swagger-ui/docs")
         if (!tmpDir.exists()) {
             tmpDir.mkdirs()
         }
 //        http.externalStaticFileLocation(tmpDir.absolutePath)
 
-        val router = with(HttpMethods) { Router(config) }
+        val router = with(HttpMethods<UndertowRequestWrapper>()) { Router(config) }
         routerConfiguration(
             UndertowMarkup(),
-            HttpMethods,
-            SlashSyntax,
+            HttpMethods<UndertowRequestWrapper>(),
+            SlashSyntax<UndertowRequestWrapper>(),
             HttpResponses,
             router
         )

@@ -9,31 +9,32 @@ import me.snitchon.router.Router
 import me.snitchon.router.HttpMethods
 import me.snitchon.http.HttpResponse
 import me.snitchon.http.HttpResponses
+import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.router.SlashSyntax
 import me.snitchon.router.ensureLeadingSlash
 
-interface SnitchService {
+interface SnitchService<W: RequestWrapper> {
     val config: Config get() = Config()
-    fun registerMethod(bundle: Endpoint<*>, path: String)
+    fun registerMethod(bundle: Endpoint<W,*>, path: String)
 
     fun withRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        HttpMethods,
-        SlashSyntax,
+        HttpMethods<W>,
+        SlashSyntax<W>,
         HttpResponses
         )
-        Router.() -> Unit
-    ): RoutedService
+        Router<W>.() -> Unit
+    ): RoutedService<W>
 
     fun <T : Exception> handleException(exception: Class<T>, handler: (T) -> HttpResponse<*>)
 
     fun onStart() {}
 }
 
-data class RoutedService(val service: SnitchService, val router: Router) {
-    fun startListening(): RoutedService {
+data class RoutedService<W: RequestWrapper>(val service: SnitchService<W>, val router: Router<W>) {
+    fun startListening(): RoutedService<W> {
         router.endpoints.forEach {
             service.registerMethod(it, it.params.url.ensureLeadingSlash())
         }

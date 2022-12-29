@@ -5,12 +5,10 @@ import me.snitchon.parameter.Parameter
 import me.snitchon.path.Path
 import me.snitchon.parameter.Header
 import me.snitchon.parameter.Query
-import me.snitchon.parsing.Parser
 import me.snitchon.router.Body
 
 
 interface RequestWrapper {
-    context(Parser)
     fun <T : Any> body(c: Class<T>): T
 
     fun method(): HTTPMethod
