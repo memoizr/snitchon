@@ -42,7 +42,11 @@ class SlashSyntax<W: RequestWrapper> {
         return this.copy(this.path + path.ensureLeadingSlash())
     }
 
-    operator fun <P1 : PP<P1>, P2 : PP<P2>> ParametrizedPath2<P1, P2>.div(path: String): ParametrizedPath2<P1, P2> {
+    operator fun <
+            P1P,
+            P1 : Path<P1, P1P>,
+            P2P,
+            P2 : Path<P2, P2P>> ParametrizedPath2<P1P, P1, P2P, P2>.div(path: String): ParametrizedPath2<P1P, P1, P2P, P2> {
         return this.copy(this.path + path.ensureLeadingSlash())
     }
 

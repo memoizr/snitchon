@@ -102,7 +102,7 @@ class HttpMethods<W : RequestWrapper> {
 
     fun <P1 : PP<P1>>
             PUT(path: ParametrizedPath1<P1>) =
-        Endpoint<W,_, _, _>(
+        Endpoint<W, _, _, _>(
             EndpointMeta(
                 HTTPMethod.PUT,
                 path.path,
@@ -116,9 +116,9 @@ class HttpMethods<W : RequestWrapper> {
             response = Nothing::class,
         )
 
-    fun <A : PP<A>, B : PP<B>>
-            GET(path: ParametrizedPath2<A, B>) =
-        Endpoint<W,_, _, _>(
+    fun <AP, A : Path<A, AP>, BP, B : Path<B, BP>>
+            GET(path: ParametrizedPath2<AP, A, BP, B>) =
+        Endpoint<W, _, _, _>(
             EndpointMeta(
                 HTTPMethod.GET, path.path,
                 null,
@@ -257,12 +257,23 @@ class HttpMethods<W : RequestWrapper> {
 //        )
 
     context(ParameterMarkupDecorator)
-    operator fun <P1 : PP<P1>, P2 : PP<P2>> ParametrizedPath1<P1>.div(path: P2): ParametrizedPath2<P1, P2> {
+    operator fun <
+            P1P,
+            P1 : Path<P1, P1P>,
+            P2P,
+            P2 : Path<P2, P2P>,
+            > ParametrizedPath1<P1>.div(path: P2): ParametrizedPath2<P1P, P1, P2P, P2> {
         return ParametrizedPath2(this.path + path.markupName.ensureLeadingSlash(), this.p1, path)
     }
 
     context(ParameterMarkupDecorator)
-    operator fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>> ParametrizedPath2<P1, P2>.div(path: P3): ParametrizedPath3<P1, P2, P3> =
+    operator fun <
+            P1P,
+            P1 : Path<P1, P1P>,
+            P2P,
+            P2 : Path<P2, P2P>,
+            P3P,
+            P3 : Path<P3, P3P>> ParametrizedPath2<P1P, P1, P2P, P2>.div(path: P3): ParametrizedPath3<P1, P2, P3> =
         ParametrizedPath3(this.path + path.markupName.ensureLeadingSlash(), p1, p2, path)
 
     context(ParameterMarkupDecorator)

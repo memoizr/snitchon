@@ -1,17 +1,16 @@
 package me.snitchon.syntax
 
-import me.snitchon.http.HttpResponse
 import me.snitchon.http.HttpResponses.ok
 import me.snitchon.NonEmptyString
 import me.snitchon.endpoint.with
 import me.snitchon.endpoint.withBody
-import me.snitchon.http.HTTPMethod
-import me.snitchon.http.body
+import me.snitchon.http.*
 import me.snitchon.parameter.Header
 import me.snitchon.path.Path
 import me.snitchon.parameter.Query
 import me.snitchon.parsers.GsonJsonParser
 import me.snitchon.parsers.GsonJsonParser.jsonString
+import me.snitchon.router.BodyMarker
 import me.snitchon.router.marker
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -102,13 +101,44 @@ class ServiceTest {
         assertEquals("param value is also: good".jsonString, response2)
     }
 
+    fun <
+            P1P, P1 : Param<P1P>, P2P, P2 : Param<P2P>, P3P, P3 : Param<P3P>, B : Any?
+            > handler(
+        p1: P1,
+        p2: P2,
+        p3: P3,
+        block: context(
+        Group3<P1P, P1, P2P, P2, P3P, P3>,
+        BodyMarker<B>,
+        Handler<TestRequestWrapper>
+        ) Container<B>.() -> HttpResponse<String>
+    ) = { g: Group3<P1P, P1, P2P, P2, P3P, P3>, b: BodyMarker<B>, h: Handler<TestRequestWrapper> ->
+        block(g,b,h, Container<B>())}
+
+
+    class Container<B : Any?> {
+        var body: BodyMarker<B>? = null
+    }
+
     @Test
     fun `supports 2 path parameters and header`() {
         service.withRoutes {
+            val handler1: context(Group3<Any?, path1, Any?, path2, String, TokenHeader>, BodyMarker<Nothing>, Handler<TestRequestWrapper>) () -> HttpResponse<String> =
+                {
+                    "foo.${request[path1]}.${request[path2]}:token:${request[TokenHeader]}".ok
+                }
+
+            val handle = handler(path1, path2, TokenHeader) {
+                body = marker<MyBody>()
+                val x: String = request[path1]
+                "foo.${request[path1]}.${request[path2]}:token:${request[TokenHeader]}".ok
+            }
+
             GET("foo" / path1 / path2)
                 .with(TokenHeader)
-                .isHandledBy {
-                    "foo.${request[path1]}.${request[path2]}:token:${request[TokenHeader]}".ok }
+                .withBody(marker<MyBody>())
+                .isHandledBy(handle)
+
         }.startListening()
 
         assertEquals(""""foo.one.two:token:valid"""", get("/foo/one/two", mapOf("token" to "valid")))
@@ -231,7 +261,7 @@ class ServiceTest {
                 .with(TokenHeader)
                 .withBody(marker<MyBody>())
                 .isHandledBy {
-                        "param value: ${request[path1]}, body: ${request.body.myChoice}, header: ${request[TokenHeader]}".ok
+                    "param value: ${request[path1]}, body: ${request.body.myChoice}, header: ${request[TokenHeader]}".ok
                 }
 
         }.startListening()

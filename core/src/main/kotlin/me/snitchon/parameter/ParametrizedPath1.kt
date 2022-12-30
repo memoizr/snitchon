@@ -11,8 +11,10 @@ data class ParametrizedPath1<
         >(val path: String, val p1: P1)
 
 data class ParametrizedPath2<
-        P1 : Path<P1, *>,
-        P2 : Path<P2, *>
+        P1P,
+        P1 : Path<P1, P1P>,
+        P2P,
+        P2 : Path<P2, P2P>
         >(val path: String, val p1: P1, val p2: P2)
 
 data class ParametrizedPath3<

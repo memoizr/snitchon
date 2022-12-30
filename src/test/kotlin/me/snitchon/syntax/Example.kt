@@ -36,7 +36,7 @@ fun main() {
             val x = GET("hello" / stringParam)
                 x.isHandledBy {
                     println("printing")
-                    println(request.get(stringParam))
+                    println(request[stringParam])
                     println("done")
                     "".ok
                 }
