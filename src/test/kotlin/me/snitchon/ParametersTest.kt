@@ -76,49 +76,46 @@ open class ParametersTest<W : RequestWrapper>(service: ServiceFactory<W>) : Snit
     @BeforeEach
     fun before() {
         routes {
-            with(GsonJsonParser) {
-                GET("stringpath" / stringParam)
-                    .isHandledBy { TestResult(request.get(stringParam)).ok }
-                GET("intpath" / intparam).isHandledBy { IntTestResult(request[intparam]).ok }
-                GET("intpath2" / intparam / "end")
-                    .with(q)
-                    .isHandledBy {
-                        request[intparam]
-                        IntTestResult(request[intparam]).ok
-                    }
+            GET("stringpath" / stringParam)
+                .isHandledBy { TestResult(request.get(stringParam)).ok }
+            GET("intpath" / intparam).isHandledBy { IntTestResult(request[intparam]).ok }
+            GET("intpath2" / intparam / "end")
+                .with(q)
+                .isHandledBy {
+                    request[intparam]
+                    IntTestResult(request[intparam]).ok
+                }
 
-                GET("queriespath").with(q).isHandledBy { TestResult(request[q]).ok }
+            GET("queriespath").with(q).isHandledBy { TestResult(request[q]).ok }
 
-                GET("queriespath2").with(int).isHandledBy { IntTestResult(request[int]).ok }
-                GET("queriespath3").with(offset).isHandledBy({ IntTestResult(request[offset]).ok })
-                GET("queriespath4").with(limit).isHandledBy { NullableIntTestResult(request[limit]).ok }
+            GET("queriespath2").with(int).isHandledBy { IntTestResult(request[int]).ok }
+            GET("queriespath3").with(offset).isHandledBy { IntTestResult(request[offset]).ok }
+            GET("queriespath4").with(limit).isHandledBy { NullableIntTestResult(request[limit]).ok }
 
-                GET("headerspath").with(qHead).isHandledBy { TestResult(request[qHead]).ok }
-                GET("headerspath2").with(intHead).isHandledBy {
-                    IntTestResult(
-                        request[intHead]
+            GET("headerspath").with(qHead).isHandledBy { TestResult(request[qHead]).ok }
+            GET("headerspath2").with(intHead).isHandledBy {
+                IntTestResult(
+                    request[intHead]
+                ).ok
+            }
+            GET("headerspath3").with(offsetHead).isHandledBy {
+                val result = request[offsetHead]
+                NullableIntTestResult(result).ok
+            }
+            GET("headerspath4").with(limitHead).isHandledBy { NullableIntTestResult(request[limitHead]).ok }
+
+            GET("customParsing").with(time).isHandledBy { DateResult(request[time]).ok }
+            POST("bodyparam")
+                .withBody(marker<BodyParam>())
+                .isHandledBy {
+                    val sealed = request.body.sealed
+                    BodyTestResult(
+                        request.body.int, when (sealed) {
+                            is SealedClass.One -> sealed.oneInt
+                            is SealedClass.Two -> 2
+                        }
                     ).ok
                 }
-                GET("headerspath3").with(offsetHead).isHandledBy {
-                    val result = request[offsetHead]
-                    NullableIntTestResult(result).ok
-                }
-                GET("headerspath4").with(limitHead).isHandledBy { NullableIntTestResult(request[limitHead]).ok }
-
-                GET("customParsing").with(time).isHandledBy { DateResult(request[time]).ok }
-//                POST("bodyparam").with(time).isHandledBy { }
-                POST("bodyparam")
-                    .withBody(marker<BodyParam>())
-                    .isHandledBy {
-                        val sealed = request.body.sealed
-                        BodyTestResult(
-                            request.body.int, when (sealed) {
-                                is SealedClass.One -> sealed.oneInt
-                                is SealedClass.Two -> 2
-                            }
-                        ).ok
-                    }
-            }
         }
     }
 

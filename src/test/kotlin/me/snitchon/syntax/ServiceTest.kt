@@ -4,13 +4,15 @@ import me.snitchon.http.HttpResponse
 import me.snitchon.http.HttpResponses.ok
 import me.snitchon.NonEmptyString
 import me.snitchon.endpoint.with
-import me.snitchon.http.Handler
+import me.snitchon.endpoint.withBody
 import me.snitchon.http.HTTPMethod
+import me.snitchon.http.body
 import me.snitchon.parameter.Header
 import me.snitchon.path.Path
 import me.snitchon.parameter.Query
 import me.snitchon.parsers.GsonJsonParser
 import me.snitchon.parsers.GsonJsonParser.jsonString
+import me.snitchon.router.marker
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -20,6 +22,7 @@ class ServiceTest {
 
     val service = TestSnitchService()
 
+    object path0 : Path<path0, String>("userId", pattern = NonEmptyString)
     object path1 : Path<path1, String>("userId", pattern = NonEmptyString)
     object path2 : Path<path2, String>(pattern = NonEmptyString)
     object path3 : Path<path3, String>(pattern = NonEmptyString)
@@ -51,6 +54,9 @@ class ServiceTest {
 
     data class MyResponse(val greeting: String, val counter: Int, val options: List<String>)
     data class SimpleResponse(val message: String)
+
+    fun get(path: String, headers: Map<String, String> = mapOf()) =
+        service.makeRequest(TestRequest(HTTPMethod.GET, path, headers = headers))
 
     @Test
     fun `supports 0 path parameters`() {
@@ -96,17 +102,19 @@ class ServiceTest {
         assertEquals("param value is also: good".jsonString, response2)
     }
 
-//    @Test
-//    fun `supports 2 path parameters`() {
-//        service.withRoutes {
-//            GET("foo" / path1 / path2).isHandledBy { "foo.${path1()}.${path2()}".ok }
-//        }.startListening()
-//
-//        assertEquals(""""foo.one.two"""", get("/foo/one/two"))
-//    }
-//
-//    fun get(path: String) = service.makeRequest(TestRequest(HTTPMethod.GET, path))
-//
+    @Test
+    fun `supports 2 path parameters and header`() {
+        service.withRoutes {
+            GET("foo" / path1 / path2)
+                .with(TokenHeader)
+                .isHandledBy {
+                    "foo.${request[path1]}.${request[path2]}:token:${request[TokenHeader]}".ok }
+        }.startListening()
+
+        assertEquals(""""foo.one.two:token:valid"""", get("/foo/one/two", mapOf("token" to "valid")))
+    }
+
+
 //    @Test
 //    fun `supports 3 path parameters`() {
 //        service.withRoutes {
@@ -200,13 +208,12 @@ class ServiceTest {
 
     @Test
     fun `supports 1 path parameter and body`() {
-        with (GsonJsonParser) {
+        with(GsonJsonParser) {
             service.withRoutes {
                 GET("foo" / path1)
-                    .with(body<MyBody>())
+                    .withBody(marker<MyBody>())
                     .isHandledBy {
-//                        "param value: ${request[path1]}, body: ${body.myChoice}".ok
-                        "".ok
+                        "param value: ${request[path1]}, body: ${request.body.myChoice}".ok
                     }
 
             }.startListening()
@@ -219,18 +226,15 @@ class ServiceTest {
 
     @Test
     fun `supports 1 path parameter 1 header and body`() {
-        with (GsonJsonParser) {
-            service.withRoutes {
-                GET("foo" / path1)
-                    .with(TokenHeader)
-                    .with(body<MyBody>())
-                    .isHandledBy {
-//                        "param value: ${path1.parse()}, body: ${body.myChoice}, header: ${TokenHeader.parse()}".ok
-                        "".ok
-                    }
+        service.withRoutes {
+            GET("foo" / path1)
+                .with(TokenHeader)
+                .withBody(marker<MyBody>())
+                .isHandledBy {
+                        "param value: ${request[path1]}, body: ${request.body.myChoice}, header: ${request[TokenHeader]}".ok
+                }
 
-            }.startListening()
-        }
+        }.startListening()
 
         val response1 = service.makeRequest(
             TestRequest(

@@ -28,9 +28,6 @@ open class Suite<W: RequestWrapper>(val service: ServiceFactory<W>) {
 }
 
 open class SuiteOfSuites {
-    @Nested
-    @DisplayName("Vertx")
-    inner class VertxSuite : Suite<VertxRequestWrapper>({ with(GsonJsonParser) { VertxService(config.copy(port = it)) } })
 
     @Nested
     @DisplayName("Spring")
@@ -43,5 +40,9 @@ open class SuiteOfSuites {
     @Nested
     @DisplayName("Undertow")
     inner class UndertwoSuite : Suite<UndertowRequestWrapper>({ with(GsonJsonParser) { UndertowService(config.copy(port = it)) } })
+
+    @Nested
+    @DisplayName("Vertx")
+    inner class VertxSuite : Suite<VertxRequestWrapper>({ with(GsonJsonParser) { VertxService(config.copy(port = it)) } })
 }
 

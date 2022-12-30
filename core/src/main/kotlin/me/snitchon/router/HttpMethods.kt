@@ -265,9 +265,9 @@ class HttpMethods<W : RequestWrapper> {
     operator fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>> ParametrizedPath2<P1, P2>.div(path: P3): ParametrizedPath3<P1, P2, P3> =
         ParametrizedPath3(this.path + path.markupName.ensureLeadingSlash(), p1, p2, path)
 
-//    context(ParameterMarkupDecorator)
-//    operator fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>> ParametrizedPath3<P1, P2, P3>.div(path: P4): ParametrizedPath4<P1, P2, P3, P4> =
-//        ParametrizedPath4(this.path + path.markupName.ensureLeadingSlash(), p1, p2, p3, path)
+    context(ParameterMarkupDecorator)
+    operator fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>> ParametrizedPath3<P1, P2, P3>.div(path: P4): ParametrizedPath4<P1, P2, P3, P4> =
+        ParametrizedPath4(this.path + path.markupName.ensureLeadingSlash(), p1, p2, p3, path)
 
     context(ParameterMarkupDecorator)
     operator fun <P1 : PP<P1>, P2 : PP<P2>, P3 : PP<P3>, P4 : PP<P4>, P5 : PP<P5>> ParametrizedPath4<P1, P2, P3, P4>.div(

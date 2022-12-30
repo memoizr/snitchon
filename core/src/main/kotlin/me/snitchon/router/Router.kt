@@ -34,5 +34,4 @@ data class Router<W : RequestWrapper>(val config: Config = Config(), val prefix:
         body,
         RETURN::class,
     ).also { addEndpoint(it as Endpoint<W, Group, *, *>) }
-
 }

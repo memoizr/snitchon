@@ -62,6 +62,19 @@ fun <P1P, P1 : Param<P1P>,
         response
     )
 
+@JvmName("two")
+fun <P1P, P1 : Param<P1P>,
+        P2P, P2 : Param<P2P>,
+        PP, P : Param<PP>,
+        W : RequestWrapper> Endpoint<W, Group2<P1P, P1, P2P, P2>, Nothing, Nothing>.with(p: P) =
+    Endpoint<W, _, _, _>(
+        meta,
+        null,
+        group.with(p),
+        body,
+        response
+    )
+
 
 
 fun <G : Group, B : Any?, R : Any, W : RequestWrapper, E : Endpoint<W, G, B, R>> E.description(description: String) =
@@ -83,15 +96,3 @@ data class EndpointMeta(
 )
 
 
-@JvmName("two")
-fun <P1P, P1 : Param<P1P>,
-        P2P, P2 : Param<P2P>,
-        PP, P : Param<PP>,
-        W : RequestWrapper> Endpoint<W, Group2<P1P, P1, P2P, P2>, Nothing, Nothing>.with(p: P) =
-    Endpoint<W, _, _, _>(
-        meta,
-        null,
-        group.with(p),
-        body,
-        response
-    )
