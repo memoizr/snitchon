@@ -13,7 +13,7 @@ import org.springframework.web.servlet.function.paramOrNull
 class SpringRequestWrapper(val request: ServerRequest) : RequestWrapper {
     var bd: Any? = null
 
-    override fun <T : Any> body(body: Class<T>): T {
+    override fun <T : Any?> myBody(body: Class<T>): T {
         return bd as? T ?: request.body(body).also { bd = it } as T
     }
 

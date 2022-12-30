@@ -2,13 +2,9 @@ package me.snitchon.spark
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
-import me.snitchon.http.Format
-import me.snitchon.http.HttpResponse
-import me.snitchon.http.HttpResponses
 import me.snitchon.config.Config
 import me.snitchon.endpoint.Endpoint
-import me.snitchon.http.BodyHandler
-import me.snitchon.http.HTTPMethod
+import me.snitchon.http.*
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.parsing.Parser
 import me.snitchon.router.Router
@@ -70,14 +66,14 @@ class SparkService(override val config: Config = Config()) : SnitchService<Spark
         return RoutedService(this, router)
     }
 
-    override fun registerMethod(bundle: Endpoint<SparkRequestWrapper,*>, path: String) {
+    override fun registerMethod(bundle: Endpoint<SparkRequestWrapper, Group, Any?, *>, path: String) {
             val function: (request: Request, response: Response) -> String? = { request, response ->
                 val call = BodyHandler(
                     SparkRequestWrapper(request, this@Parser),
                     bundle.response
                 )
 
-                val result = bundle.invoke(call)
+                val result = bundle.invoke?.invoke(bundle.group, bundle.body, call)!!
 
                 response.status(result.statusCode)
 
@@ -98,7 +94,7 @@ class SparkService(override val config: Config = Config()) : SnitchService<Spark
                 }
             }
 
-            when (bundle.params.httpMethod) {
+            when (bundle.meta.httpMethod) {
                 HTTPMethod.GET -> {
                     http.get(path, function)
                 }

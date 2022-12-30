@@ -2,16 +2,11 @@ package me.snitchon.springboot
 
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
-import me.snitchon.http.Format
-import me.snitchon.http.HttpResponse
-import me.snitchon.http.HttpResponses
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import me.snitchon.config.Config
 import me.snitchon.endpoint.Endpoint
-import me.snitchon.http.BodyHandler
-import me.snitchon.http.HTTPMethod
-import me.snitchon.http.RequestWrapper
+import me.snitchon.http.*
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.parsing.Parser
 import me.snitchon.router.HttpMethods
@@ -20,16 +15,10 @@ import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
 import me.snitchon.types.Sealed
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.support.BeanDefinitionBuilder
-import org.springframework.beans.factory.support.BeanNameGenerator
-import org.springframework.beans.factory.support.DefaultListableBeanFactory
-import org.springframework.boot.ApplicationContextFactory
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.gson.GsonBuilderCustomizer
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
-import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
@@ -87,14 +76,14 @@ open class SpringService(override val config: Config = Config()) : SnitchService
         return RoutedService(this, router)
     }
 
-    override fun registerMethod(bundle: Endpoint<SpringRequestWrapper, *>, path: String) {
+    override fun registerMethod(bundle: Endpoint<SpringRequestWrapper, Group, Any?, *>, path: String) {
         val function: HandlerFunction<ServerResponse> = HandlerFunction { request: ServerRequest ->
             val call = BodyHandler(
                 SpringRequestWrapper(request),
                 bundle.response
             )
 
-            val result = bundle.invoke(call)
+            val result = bundle.invoke?.invoke(bundle.group, bundle.body, call)
 
 //                response.status(result.statusCode)
 
@@ -113,10 +102,12 @@ open class SpringService(override val config: Config = Config()) : SnitchService
                 is HttpResponse.ErrorHttpResponse<*, *> -> {
                     ServerResponse.status(result.statusCode).body(result.jsonString)
                 }
+                else ->
+                    TODO()
             }
         }
 
-        when (bundle.params.httpMethod) {
+        when (bundle.meta.httpMethod) {
             HTTPMethod.GET -> {
                 route.GET(path, function)
             }

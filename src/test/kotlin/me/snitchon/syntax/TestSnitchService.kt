@@ -11,6 +11,7 @@ import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
 import me.snitchon.http.HttpResponse
 import me.snitchon.parsers.GsonJsonParser.jsonString
+import me.snitchon.router.BodyMarker
 
 class TestMarkup : ParameterMarkupDecorator {
     override fun decorate(name: String): String = ":$name"
@@ -18,7 +19,7 @@ class TestMarkup : ParameterMarkupDecorator {
 
 @Suppress("UNCHECKED_CAST")
 class TestSnitchService : SnitchService<TestRequestWrapper> {
-    val service = mutableSetOf<Pair<TestRequest, context (Handler<TestRequestWrapper>) () -> Any?>>()
+    val service = mutableSetOf<Pair<TestRequest, (context (Group, BodyMarker<Any?>, Handler<TestRequestWrapper>) () -> HttpResponse<out Any>)?>>()
 
     override fun withRoutes(
         routerConfiguration: context(
@@ -35,8 +36,8 @@ class TestSnitchService : SnitchService<TestRequestWrapper> {
         return RoutedService(this, router)
     }
 
-    override fun registerMethod(bundle: Endpoint<TestRequestWrapper,*>, path: String) {
-        service.add(TestRequest(bundle.params.httpMethod, bundle.params.url) to bundle.invoke)
+    override fun registerMethod(bundle: Endpoint<TestRequestWrapper, Group, Any?, *>, path: String) {
+        service.add(TestRequest(bundle.meta.httpMethod, bundle.meta.url) to bundle.invoke)
     }
 
     override fun <T : Exception> handleException(
@@ -53,7 +54,7 @@ class TestSnitchService : SnitchService<TestRequestWrapper> {
         val func = requestFunction1Pair?.second
         val testRequestWrapper = TestRequestWrapper(request, requestFunction1Pair?.first?.path.orEmpty())
 
-        val result = func?.invoke(request.body?.let { BodyHandler(testRequestWrapper, it) }
+        val result = func?.invoke(null as Group, null as BodyMarker<Any?>, request.body?.let { BodyHandler(testRequestWrapper, it) }
             ?: NoBodyHandler(testRequestWrapper))
 
         return when (result) {

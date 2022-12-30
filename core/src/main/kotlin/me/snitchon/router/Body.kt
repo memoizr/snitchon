@@ -6,7 +6,10 @@ import me.snitchon.endpoint.*
 import me.snitchon.parameter.*
 import me.snitchon.http.Handler
 import me.snitchon.http.RequestWrapper
-import me.snitchon.parsing.Parser
+
+class BodyMarker<T: Any?>(val t: Class<T>)
+
+inline fun <reified T: Any?> marker() = BodyMarker(T::class.java)
 
 data class Body<T : Any>(val klass: KClass<T>) : Bodied<T, Body<T>> {
     override val type: Class<*>
@@ -47,5 +50,5 @@ interface Bodied<T : Any, out A : Body<T>> : Parameter<Any, T> {
     context (Handler<RequestWrapper>, A)
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     val body: T
-        get() = request.body(type) as T
+        get() = request.myBody(type) as T
 }

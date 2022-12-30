@@ -4,6 +4,7 @@ import me.snitchon.http.Format
 import me.snitchon.http.HttpResponses.format
 import me.snitchon.http.HttpResponses.ok
 import me.snitchon.endpoint.Endpoint
+import me.snitchon.http.Group
 import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.Header
 import me.snitchon.parameter.Parameter
@@ -21,25 +22,25 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.starProjectedType
 
 
-val <T : Any> Endpoint<*, T>.headerParams
+val <T : Any> Endpoint<*, *, *, T>.headerParams
     get() = this::class
         .memberProperties
         .map { it.call(this) as? Header<*, *> }
         .filterNotNull()
 
-val <T : Any> Endpoint<*, T>.pathParams
+val <T : Any> Endpoint<*, *, *, T>.pathParams
     get() = this::class
         .memberProperties
         .map { it.call(this) as? Path<*, *> }
         .filterNotNull()
 
-val <T : Any> Endpoint<*,T>.queryParams
+val <T : Any> Endpoint<*, *, *, T>.queryParams
     get() = this::class
         .memberProperties
         .map { it.call(this) as? Query<*, *> }
         .filterNotNull()
 
-val <T : Any> Endpoint<*, T>.bodyParam
+val <T : Any> Endpoint<*, *, *, T>.bodyParam
     get() = this::class
         .memberProperties
         .map { it.call(this) as? Body<*> }
@@ -62,18 +63,18 @@ fun RoutedService<*>.generateDocs(visibility: Visibility = Visibility.PUBLIC): O
     )
 
     return router.endpoints
-        .groupBy { it.params.url }
+        .groupBy { it.meta.url }
         .map { entry ->
-            entry.key to entry.value.foldRight(Path()) { bundle: Endpoint<*,*>, path ->
-                visibility.visibleOrNull(bundle.params.visibility) {
+            entry.key to entry.value.foldRight(Path()) { bundle: Endpoint<*, *, *, *>, path ->
+                visibility.visibleOrNull(bundle.meta.visibility) {
                     path.withOperation(
-                        bundle.params.httpMethod,
+                        bundle.meta.httpMethod,
                         Operation(
-                            tags = bundle.params.url.split("/").drop(1).firstOrNull()?.let { listOf(it) },
-                            summary = bundle.params.summary,
-                            description = bundle.params.description,
+                            tags = bundle.meta.url.split("/").drop(1).firstOrNull()?.let { listOf(it) },
+                            summary = bundle.meta.summary,
+                            description = bundle.meta.description,
                             responses = emptyMap(),
-                            visibility = bundle.params.visibility
+                            visibility = bundle.meta.visibility
                         )
                             .withResponse(ContentType.APPLICATION_JSON, bundle.response, "200")
                             .let {
@@ -130,7 +131,7 @@ fun RoutedService<*>.generateDocs(visibility: Visibility = Visibility.PUBLIC): O
 }
 
 context(Parser)
-fun <W: RequestWrapper> RoutedService<W>.generateDocs(): Spec<W> =
+fun <W : RequestWrapper> RoutedService<W>.generateDocs(): Spec<W> =
     Spec(
         generateDocs(Visibility.PUBLIC),
         generateDocs(Visibility.INTERNAL),
@@ -138,7 +139,7 @@ fun <W: RequestWrapper> RoutedService<W>.generateDocs(): Spec<W> =
         this
     )
 
-data class Spec<W: RequestWrapper>(
+data class Spec<W : RequestWrapper>(
     val publicApi: OpenApi,
     val internalApi: OpenApi,
     val router: Router<W>, val routedService: RoutedService<W>
@@ -149,12 +150,15 @@ data class Spec<W: RequestWrapper>(
             with(Router(router.config, "")) {
                 val path = config.publicDocumentationPath.ensureLeadingSlash()
                 val docPath = "$path/spec.json".ensureLeadingSlash()
-                routedService.service.registerMethod(GET(path).isHandledBy {
-                    index(docPath).ok.format(Format.TextHTML)
-                }, path)
+                routedService.service.registerMethod(
+                    GET(path)
+                        .isHandledBy {
+                            index(docPath).ok.format(Format.TextHTML)
+                        } as Endpoint<W, Group, Any?, *>, path
+                )
                 routedService.service.registerMethod(GET(docPath).isHandledBy {
                     publicApi.ok.format(Format.Json)
-                }, docPath)
+                }as Endpoint<W, Group, Any?, *>, docPath)
             }
         }
         return this
@@ -168,10 +172,10 @@ data class Spec<W: RequestWrapper>(
                 val docPath = "$path/spec.json".ensureLeadingSlash()
                 routedService.service.registerMethod(GET(path).isHandledBy {
                     index(docPath).ok.format(Format.TextHTML)
-                }, path)
+                }as Endpoint<W, Group, Any?, *>, path)
                 routedService.service.registerMethod(GET(docPath).isHandledBy {
                     internalApi.ok.format(Format.Json)
-                }, docPath)
+                }as Endpoint<W, Group, Any?, *>, docPath)
             }
         }
         return this

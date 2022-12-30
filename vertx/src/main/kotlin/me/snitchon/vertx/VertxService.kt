@@ -3,7 +3,6 @@ package me.snitchon.vertx
 
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Vertx
-import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.BodyHandler
 import me.snitchon.config.Config
@@ -51,15 +50,17 @@ context(me.snitchon.parsing.Parser)
 class VertxService(override val config: Config = Config()) : SnitchService<VertxRequestWrapper> {
     val service by lazy { Server(config.port) }
 
-    private inline val Endpoint<VertxRequestWrapper, *>.func: (context: RoutingContext) -> Unit
+    private inline val Endpoint<VertxRequestWrapper, Group, Any?, *>.func: (context: RoutingContext) -> Unit
         get() =
             { context ->
-                val res = this.invoke(
+                val res = this.invoke?.invoke(
+                    group,
+                    body,
                     SnitchBodyHandler(
                         VertxRequestWrapper(context, this@Parser),
                         response
                     )
-                )
+                )!!
 
                 res.addBodyHandler(context)
             }
@@ -80,9 +81,9 @@ class VertxService(override val config: Config = Config()) : SnitchService<Vertx
         }
     }
 
-    override fun registerMethod(it: Endpoint<VertxRequestWrapper, *>, path: String) {
+    override fun registerMethod(it: Endpoint<VertxRequestWrapper, Group, Any?, *>, path: String) {
         addBodyHandler(it, path)
-        when (it.params.httpMethod) {
+        when (it.meta.httpMethod) {
             HTTPMethod.GET -> service.router.get(path).handler(it.func)
             HTTPMethod.POST -> service.router.post(path).handler(it.func)
 
@@ -98,7 +99,7 @@ class VertxService(override val config: Config = Config()) : SnitchService<Vertx
         }
     }
 
-    private fun addBodyHandler(it: Endpoint<VertxRequestWrapper, *>, path: String) {
+    private fun addBodyHandler(it: Endpoint<VertxRequestWrapper, Group,*, *>, path: String) {
         if (it.bodyParam.klass != Nothing::class) {
             service.router.route(path).handler(BodyHandler.create())
         }

@@ -17,7 +17,7 @@ import java.util.concurrent.CountDownLatch
 class UndertowRequestWrapper(val exchange: HttpServerExchange, val parser: Parser) : RequestWrapper {
     private var b: Any? = null
 
-    override  fun <T: Any> body(body: Class<T>): T {
+    override  fun <T: Any?> myBody(body: Class<T>): T {
         if (b != null) return b as T
         val l = CountDownLatch(1)
         var s = ""

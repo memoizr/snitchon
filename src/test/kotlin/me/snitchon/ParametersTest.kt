@@ -3,13 +3,15 @@ package me.snitchon
 import me.snitchon.http.HttpResponse.*
 import me.snitchon.documentation.Description
 import me.snitchon.documentation.Visibility
-import me.snitchon.http.Format
-import me.snitchon.http.RequestWrapper
+import me.snitchon.http.*
 import me.snitchon.parameter.*
 import me.snitchon.parsers.GsonJsonParser
 import me.snitchon.path.Path
 import me.snitchon.parsers.GsonJsonParser.jsonString
+import me.snitchon.router.marker
 import me.snitchon.tests.ServiceFactory
+import me.snitchon.endpoint.with
+import me.snitchon.endpoint.withBody
 import me.snitchon.tests.SnitchTest
 import me.snitchon.types.Sealed
 import org.junit.jupiter.api.BeforeEach
@@ -31,7 +33,7 @@ object intparam : Path<intparam, Int>(
 )
 
 object strparam : Path<strparam, Int>(
-    _name = "intParam",
+    _name = "strParam",
     description = "Description",
     pattern = NonNegativeInt
 )
@@ -70,40 +72,52 @@ object DateValidator : Validator<String, Date> {
 }
 
 @Disabled
-open class ParametersTest<W: RequestWrapper>(service: ServiceFactory<W>) : SnitchTest<W>(service) {
+open class ParametersTest<W : RequestWrapper>(service: ServiceFactory<W>) : SnitchTest<W>(service) {
     @BeforeEach
     fun before() {
         routes {
-            with (GsonJsonParser) {
-            GET("stringpath" / stringParam).isHandledBy { TestResult(stringParam()).ok }
-            GET("intpath" / intparam).isHandledBy { IntTestResult(intparam()).ok }
-            GET("intpath2" / intparam / "end").isHandledBy { IntTestResult(intparam()).ok }
+            with(GsonJsonParser) {
+                GET("stringpath" / stringParam)
+                    .isHandledBy { TestResult(request.get(stringParam)).ok }
+                GET("intpath" / intparam).isHandledBy { IntTestResult(request[intparam]).ok }
+                GET("intpath2" / intparam / "end")
+                    .with(q)
+                    .isHandledBy {
+                        request[intparam]
+                        IntTestResult(request[intparam]).ok
+                    }
 
-            GET("queriespath").with(q).isHandledBy { TestResult(q()).ok }
+                GET("queriespath").with(q).isHandledBy { TestResult(request[q]).ok }
 
-            GET("queriespath2").with(int).isHandledBy { IntTestResult(int()).ok }
-            GET("queriespath3").with(offset).isHandledBy {
-                IntTestResult(offset()).ok }
-            GET("queriespath4").with(limit).isHandledBy { NullableIntTestResult(limit()).ok }
+                GET("queriespath2").with(int).isHandledBy { IntTestResult(request[int]).ok }
+                GET("queriespath3").with(offset).isHandledBy({ IntTestResult(request[offset]).ok })
+                GET("queriespath4").with(limit).isHandledBy { NullableIntTestResult(request[limit]).ok }
 
-            GET("headerspath").with(qHead).isHandledBy { TestResult(qHead()).ok }
-            GET("headerspath2").with(intHead).isHandledBy { IntTestResult(intHead()).ok }
-            GET("headerspath3").with(offsetHead).isHandledBy {
-                val result = offsetHead.invoke()
-                NullableIntTestResult(result).ok
-            }
-            GET("headerspath4").with(limitHead).isHandledBy { NullableIntTestResult(limitHead()).ok }
-
-            GET("customParsing").with(time).isHandledBy { DateResult(time()).ok }
-                POST("bodyparam").with(body<BodyParam>()).isHandledBy {
-                    val sealed = body.sealed
-                    BodyTestResult(
-                        body.int, when (sealed) {
-                            is SealedClass.One -> sealed.oneInt
-                            is SealedClass.Two -> 2
-                        }
+                GET("headerspath").with(qHead).isHandledBy { TestResult(request[qHead]).ok }
+                GET("headerspath2").with(intHead).isHandledBy {
+                    IntTestResult(
+                        request[intHead]
                     ).ok
                 }
+                GET("headerspath3").with(offsetHead).isHandledBy {
+                    val result = request[offsetHead]
+                    NullableIntTestResult(result).ok
+                }
+                GET("headerspath4").with(limitHead).isHandledBy { NullableIntTestResult(request[limitHead]).ok }
+
+                GET("customParsing").with(time).isHandledBy { DateResult(request[time]).ok }
+//                POST("bodyparam").with(time).isHandledBy { }
+                POST("bodyparam")
+                    .withBody(marker<BodyParam>())
+                    .isHandledBy {
+                        val sealed = request.body.sealed
+                        BodyTestResult(
+                            request.body.int, when (sealed) {
+                                is SealedClass.One -> sealed.oneInt
+                                is SealedClass.Two -> 2
+                            }
+                        ).ok
+                    }
             }
         }
     }
@@ -194,7 +208,9 @@ open class ParametersTest<W: RequestWrapper>(service: ServiceFactory<W>) : Snitc
         whenPerform Get "/headerspath3" expectBody IntTestResult(666).jsonString
 
         whenPerform Get "/headerspath4" withHeaders mapOf(limitHead.name to 42) expectBody NullableIntTestResult(42).jsonString
-        whenPerform Get "/headerspath4" withHeaders mapOf(limitHead.name to "") expectBodyJson NullableIntTestResult(null)
+        whenPerform Get "/headerspath4" withHeaders mapOf(limitHead.name to "") expectBodyJson NullableIntTestResult(
+            null
+        )
         whenPerform Get "/headerspath4" expectBodyJson NullableIntTestResult(null)
     }
 
@@ -202,7 +218,10 @@ open class ParametersTest<W: RequestWrapper>(service: ServiceFactory<W>) : Snitc
 
     @Test
     fun `supports body parameter`() {
-        whenPerform Post "/bodyparam" withBody bodyParam withHeaders mapOf("Content-Type" to Format.Json.type) expectBodyJson BodyTestResult(42, 33)
+        whenPerform Post "/bodyparam" withBody bodyParam withHeaders mapOf("Content-Type" to Format.Json.type) expectBodyJson BodyTestResult(
+            42,
+            33
+        )
     }
 
     @Test

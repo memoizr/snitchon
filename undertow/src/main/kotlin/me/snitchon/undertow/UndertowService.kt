@@ -2,7 +2,6 @@ package com.snitch.undertow
 
 import io.undertow.Handlers
 import io.undertow.Undertow
-import io.undertow.server.HttpHandler
 import io.undertow.server.HttpServerExchange
 import io.undertow.server.RoutingHandler
 import io.undertow.server.handlers.ExceptionHandler
@@ -17,7 +16,6 @@ import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
 import java.io.File
-import javax.swing.TransferHandler
 
 
 context(me.snitchon.parsing.Parser)
@@ -29,10 +27,13 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
             .addHttpListener(config.port, "localhost")
     }
 
-    private val Endpoint<UndertowRequestWrapper,*>.func: (exchange: HttpServerExchange) -> Unit
+    private val Endpoint<UndertowRequestWrapper, Group, Any?,*>.func: (exchange: HttpServerExchange) -> Unit
         get() {
             return { exchange: HttpServerExchange ->
-                val result = invoke(
+
+                val result = invoke!!.invoke(
+                    group,
+                    body,
                     BodyHandler(
                         UndertowRequestWrapper(exchange, this@Parser),
                         response,
@@ -58,9 +59,9 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
             }
         }
 
-    override fun registerMethod(it: Endpoint<UndertowRequestWrapper,*>, path: String) {
+    override fun registerMethod(it: Endpoint<UndertowRequestWrapper, Group, Any?, *>, path: String) {
         val handler: RoutingHandler =
-            when (it.params.httpMethod) {
+            when (it.meta.httpMethod) {
                 HTTPMethod.GET -> routingHandler.get(path, it.func)
                 HTTPMethod.POST -> routingHandler.post(path, it.func)
                 HTTPMethod.PUT -> routingHandler.put(path, it.func)

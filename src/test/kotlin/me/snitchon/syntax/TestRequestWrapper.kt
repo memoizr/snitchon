@@ -12,7 +12,7 @@ data class TestRequestWrapper(
     val testRequest: TestRequest,
     val path: String
 ) : RequestWrapper {
-    override fun <T : Any> body(body: Class<T>): T = testRequest.body as T
+    override fun <T : Any?> myBody(body: Class<T>): T = testRequest.body as T
 
     override fun method(): HTTPMethod = HTTPMethod.fromString("PUT")
 

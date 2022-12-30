@@ -7,7 +7,7 @@ data class ParametrizedPath0
     (val path: String)
 
 data class ParametrizedPath1<
-        P1 : Path<P1, *>
+        P1 : Path<P1,*>
         >(val path: String, val p1: P1)
 
 data class ParametrizedPath2<

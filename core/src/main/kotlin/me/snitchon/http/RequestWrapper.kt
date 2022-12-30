@@ -9,7 +9,7 @@ import me.snitchon.router.Body
 
 
 interface RequestWrapper {
-    fun <T : Any> body(c: Class<T>): T
+    fun <T : Any?> myBody(c: Class<T>): T
 
     fun method(): HTTPMethod
 

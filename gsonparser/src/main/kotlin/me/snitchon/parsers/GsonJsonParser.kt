@@ -38,7 +38,7 @@ object GsonJsonParser : Parser {
     override val Any.jsonByteArray: ByteArray
         get() = TODO("Not yet implemented")
 
-    override fun <T : Any> String.parseJson(klass: Class<T>): T {
+    override fun <T : Any?> String.parseJson(klass: Class<T>): T {
         return gson.fromJson(this, klass)
     }
 

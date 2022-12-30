@@ -8,10 +8,10 @@ import me.snitchon.parsing.Parser
 import me.snitchon.path.Path
 
 class VertxRequestWrapper(val context: RoutingContext, val parser: Parser) : RequestWrapper {
-    private lateinit var b: Any
+    private var b: Any? = null
 
-    override fun <T : Any> body(body: Class<T>): T {
-        if (!this::b.isInitialized) b = with(parser) { context.body().asString().parseJson(body) }
+    override fun <T : Any?> myBody(body: Class<T>): T {
+        if (b == null) b = with(parser) { context.body().asString().parseJson(body) }
         return b as T
     }
 

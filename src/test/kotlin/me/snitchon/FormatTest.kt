@@ -1,7 +1,9 @@
 package me.snitchon
 
 import com.memoizr.assertk.expect
+import me.snitchon.endpoint.withBody
 import me.snitchon.http.RequestWrapper
+import me.snitchon.router.marker
 import me.snitchon.tests.ServiceFactory
 import me.snitchon.tests.SnitchTest
 import org.junit.jupiter.api.BeforeEach
@@ -17,7 +19,7 @@ open class FormatTest<W: RequestWrapper>(service: ServiceFactory<W>) : SnitchTes
     fun before() {
         routes {
             PUT("json")
-                .with(body<TheBody>())
+                .withBody(marker<TheBody>())
                 .isHandledBy {
                     TheResponse("ok, body: noo").ok
                 }

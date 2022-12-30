@@ -42,22 +42,3 @@ suspend fun hey(): Int {
     }
 }
 
-
-object DslJsonParser: Parser {
-    private val dslJson = DslJson(Settings.withRuntime<Any>().includeServiceLoader())
-    override val Any.jsonString
-        get() = ByteArrayOutputStream().apply {
-            dslJson.serialize(this@Any, this@apply)
-        }.toString()
-
-    override val Any.jsonByteArray: ByteArray
-        get() = TODO("Not yet implemented")
-
-    override fun <T : Any> String.parseJson(klass: Class<T>): T = byteInputStream()
-        .run {
-            dslJson.deserialize(klass, this)
-        }!!
-
-    override fun <T : Any> ByteArray.parseJson(klass: Class<T>): T = dslJson.deserialize(klass, this.inputStream())!!
-}
-

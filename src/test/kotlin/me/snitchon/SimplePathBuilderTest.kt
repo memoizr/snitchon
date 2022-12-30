@@ -94,9 +94,9 @@ open class SimplePathBuilderTest<W: RequestWrapper>(service: ServiceFactory<W>) 
                 GET("one" / clipId).isHandledBy { TestResult("get value").ok }
             }
 
-            GET("params1" / clipId / "params2" / otherPathParam).isHandledBy { TestResult("${clipId()}${otherPathParam()}").ok }
+            GET("params1" / clipId / "params2" / otherPathParam).isHandledBy { TestResult("${request[clipId]}${request[otherPathParam]}").ok }
 
-            GET("params3" / clipId / "params4" / otherPathParam).isHandledBy { TestResult("${clipId()}${otherPathParam()}").ok }
+            GET("params3" / clipId / "params4" / otherPathParam).isHandledBy { TestResult("${request[clipId]}${request[otherPathParam]}").ok }
 
             GET().isHandledBy { TestResult("get value").ok }
 

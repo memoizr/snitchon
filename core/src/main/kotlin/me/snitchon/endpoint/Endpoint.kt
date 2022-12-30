@@ -1,34 +1,97 @@
 package me.snitchon.endpoint
 
 import me.snitchon.documentation.Visibility
-import me.snitchon.http.HTTPMethod
-import me.snitchon.http.Handler
-import me.snitchon.http.RequestWrapper
-import me.snitchon.http.ResponseWrapper
-import me.snitchon.http.HttpResponse
+import me.snitchon.http.*
+import me.snitchon.router.Body
+import me.snitchon.router.BodyMarker
+import me.snitchon.router.Param
 import kotlin.reflect.KClass
 
-interface Endpoint<W: RequestWrapper, R : Any> {
-    var params: EndpointParameters
-    val invoke: (Handler<W>) -> HttpResponse<R>
-    val response: KClass<R>
+data class Endpoint<
+        W : RequestWrapper,
+        G : Group,
+        B : Any?,
+        R : Any>(
+    val meta: EndpointMeta,
+    val invoke: (context(G, BodyMarker<B>, Handler<W>) () -> HttpResponse<R>)? = null,
+    val group: G,
+    val body: BodyMarker<B>,
+    val response: KClass<R>,
+) {
+//    context(OnlyHeader)
+//    infix operator fun <T : HP> plus(t: T): Endpoint<W, R>
+//
+//    context(OnlyQuery)
+//    infix operator fun <T : QP> plus(t: T): Endpoint<W, R>
 
-    context(OnlyHeader)
-    infix operator fun <T : HP> plus(t: T): Endpoint<W, R>
-
-    context(OnlyQuery)
-    infix operator fun <T : QP> plus(t: T): Endpoint<W, R>
 }
 
-fun <T : Any, W: RequestWrapper, E: Endpoint<W, T>> E.description(description: String) = apply { params = params.copy(description = description) }
-fun <T : Any, W: RequestWrapper, E: Endpoint<W, T>> E.summary(summary: String) = apply { params = params.copy(summary = summary) }
-fun <T : Any, W: RequestWrapper, E: Endpoint<T, W>> E.visibility(visibility: Visibility): E = apply { params = params.copy(visibility = visibility) }
+fun <W : RequestWrapper,
+        G : Group,
+        R : Any,
+        T : Any?
+        > Endpoint<W, G, Nothing, R>.withBody(body: BodyMarker<T>) =
+    Endpoint<W, G, T, R>(
+        meta,
+        null,
+        group,
+        body,
+        response
+    )
+
+@JvmName("zero")
+fun < PP, P : Param<PP>,
+        W : RequestWrapper> Endpoint<W, Group0, Nothing, Nothing>.with(p: P) =
+    Endpoint<W, _, Nothing, Nothing>(
+        meta,
+        null,
+        group.with(p),
+        body,
+        response
+    )
+
+@JvmName("one")
+fun <P1P, P1 : Param<P1P>,
+        PP, P : Param<PP>,
+        W : RequestWrapper> Endpoint<W, Group1<P1P, P1>, Nothing, Nothing>.with(p: P) =
+    Endpoint<W, _, Nothing, Nothing>(
+        meta,
+        null,
+        group.with(p),
+        body,
+        response
+    )
 
 
-data class EndpointParameters(
+
+fun <G : Group, B : Any?, R : Any, W : RequestWrapper, E : Endpoint<W, G, B, R>> E.description(description: String) =
+    copy(meta.copy(description = description))
+
+fun <G : Group, B : Any?, R : Any, W : RequestWrapper, E : Endpoint<W, G, B, R>> E.summary(summary: String) =
+    copy(meta.copy(summary = summary))
+
+fun <G : Group, B : Any?, R : Any, W : RequestWrapper, E : Endpoint<W, G, B, R>> E.visibility(visibility: Visibility) =
+    copy(meta.copy(visibility = visibility))
+
+
+data class EndpointMeta(
     val httpMethod: HTTPMethod,
     val url: String,
     val summary: String?,
     val description: String?,
     val visibility: Visibility,
 )
+
+
+@JvmName("two")
+fun <P1P, P1 : Param<P1P>,
+        P2P, P2 : Param<P2P>,
+        PP, P : Param<PP>,
+        W : RequestWrapper> Endpoint<W, Group2<P1P, P1, P2P, P2>, Nothing, Nothing>.with(p: P) =
+    Endpoint<W, _, _, _>(
+        meta,
+        null,
+        group.with(p),
+        body,
+        response
+    )
