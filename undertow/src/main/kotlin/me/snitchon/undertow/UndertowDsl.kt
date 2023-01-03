@@ -38,7 +38,7 @@ class UndertowRequestWrapper(val exchange: HttpServerExchange, val parser: Parse
 
     override fun <RAW, PARSED : Any?> getParam(param: Parameter<RAW, PARSED>): String? {
         return when (param) {
-            is Path<*, *> -> {
+            is Path<*> -> {
                 val params = exchange.getAttachment(PathTemplateMatch.ATTACHMENT_KEY)
                 URLDecoder.decode(params.parameters.get(param.name))
             }

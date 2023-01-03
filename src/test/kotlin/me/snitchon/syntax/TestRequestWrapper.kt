@@ -27,7 +27,7 @@ data class TestRequestWrapper(
                 .let { param.pattern.parse(it as String, param.name) } as String
             is Header<*, *> -> testRequest.headers[param.name]
                 .let { param.pattern.parse(it as String, param.name) } as String
-            is Path<*, *> -> {
+            is Path< *> -> {
                 path.parse(testRequest.path)[param.name]
             }
             else -> TODO()

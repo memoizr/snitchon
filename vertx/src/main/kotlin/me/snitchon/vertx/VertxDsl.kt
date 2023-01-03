@@ -20,7 +20,7 @@ class VertxRequestWrapper(val context: RoutingContext, val parser: Parser) : Req
     override fun method(): HTTPMethod = HTTPMethod.fromString("PUT")
 
     override fun <RAW, PARSED : Any?> getParam(param: Parameter<RAW, PARSED>): String? = when (param) {
-        is Path<*, *> -> context.pathParam(param.name)
+        is Path<*> -> context.pathParam(param.name)
         is Query<*, *> -> context.queryParam(param.name).firstOrNull()
         is Header<*, *> -> context.request().getHeader(param.name)
         else -> TODO()

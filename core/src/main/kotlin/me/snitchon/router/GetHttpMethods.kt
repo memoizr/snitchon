@@ -6,8 +6,6 @@ import me.snitchon.http.*
 import me.snitchon.parameter.*
 import me.snitchon.path.Path
 
-internal typealias PP<T> = Path<T, *>
-internal typealias Par = Parameter<*, *>
 internal typealias Param<T> = Parameter<*, T>
 
 class GetHttpMethods<W : RequestWrapper> {
@@ -22,7 +20,7 @@ class GetHttpMethods<W : RequestWrapper> {
     fun <
             W : RequestWrapper,
             P1,
-            P1P : Path<P1P, P1>,
+            P1P : Path<P1>,
             > Router<W, ParametrizedPath0>.GET(p: P1P) =
         getEndpoint<_, W>(prefix.group.with(p), p.markupName)
 
@@ -31,7 +29,7 @@ class GetHttpMethods<W : RequestWrapper> {
     fun <
             W : RequestWrapper,
             P1,
-            P1P : Path<P1P, P1>,
+            P1P : Path<P1>,
             P : ParametrizedPath1<P1, P1P>
             > Router<W, ParametrizedPath0>.GET(p: P) =
         getEndpoint<_, W>(prefix.group.with(p.group.p1), p.path)
@@ -41,9 +39,9 @@ class GetHttpMethods<W : RequestWrapper> {
     fun <
             W : RequestWrapper,
             P1,
-            P1P : Path<P1P, P1>,
+            P1P : Path<P1>,
             P2,
-            P2P : Path<P2P, P2>,
+            P2P : Path<P2>,
             P : ParametrizedPath2<P1, P1P, P2, P2P>
             > Router<W, ParametrizedPath0>.GET(p: P) =
         getEndpoint<_, W>(prefix.group.with(p.group.p1).with(p.group.p2), p.path)
@@ -53,11 +51,11 @@ class GetHttpMethods<W : RequestWrapper> {
     fun <
             W : RequestWrapper,
             P1,
-            P1P : Path<P1P, P1>,
+            P1P : Path<P1>,
             P2,
-            P2P : Path<P2P, P2>,
+            P2P : Path<P2>,
             P3,
-            P3P : Path<P3P, P3>,
+            P3P : Path<P3>,
             P : ParametrizedPath3<P1, P1P, P2, P2P, P3, P3P>
             > Router<W, ParametrizedPath0>.GET(p: P) =
         getEndpoint<_, W>(prefix.group.with(p.group.p1).with(p.group.p2).with(p.group.p3), p.path)
@@ -67,9 +65,9 @@ class GetHttpMethods<W : RequestWrapper> {
     fun <
             W : RequestWrapper,
             P1P,
-            P1 : Path<P1, P1P>,
+            P1 : Path<P1P>,
             PP,
-            Ph : Path<Ph, PP>,
+            Ph : Path<PP>,
             t : ParametrizedPath1<P1P, P1>,
             P : ParametrizedPath1<PP, Ph>> Router<W, t>.GET(p: P) =
         getEndpoint<_, W>(prefix.group.with(p.group.p1), p.path)
@@ -79,11 +77,11 @@ class GetHttpMethods<W : RequestWrapper> {
     fun <
             W : RequestWrapper,
             P1P,
-            P1 : Path<P1, P1P>,
+            P1 : Path<P1P>,
             P2P,
-            P2 : Path<P2, P2P>,
+            P2 : Path<P2P>,
             PP,
-            Ph : Path<Ph, PP>,
+            Ph : Path<PP>,
             t : ParametrizedPath2<P1P, P1, P2P, P2>,
             P : ParametrizedPath1<PP, Ph>> Router<W, t>.GET(p: P) =
         getEndpoint<_, W>(prefix.group.with(p.group.p1), p.path)
@@ -93,11 +91,11 @@ class GetHttpMethods<W : RequestWrapper> {
     fun <
             W : RequestWrapper,
             P1P,
-            P1 : Path<P1, P1P>,
+            P1 : Path<P1P>,
             PP,
-            Ph : Path<Ph, PP>,
+            Ph : Path<PP>,
             PP2,
-            Ph2 : Path<Ph2, PP2>,
+            Ph2 : Path<PP2>,
             t : ParametrizedPath1<P1P, P1>,
             P : ParametrizedPath2<PP, Ph, PP2, Ph2>> Router<W, t>.GET(p: P) =
         getEndpoint<_, W>(prefix.group.with(p.group.p1).with(p.group.p2), p.path)

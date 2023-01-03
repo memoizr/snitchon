@@ -19,7 +19,7 @@ class SparkRequestWrapper(val request: Request, val parser: Parser) : RequestWra
     override fun method(): HTTPMethod = HTTPMethod.fromString(request.requestMethod())
 
     override fun <RAW, PARSED : Any?> getParam(param: Parameter<RAW, PARSED>): String? = when (param) {
-        is Path<*, *> -> request.params(param.name)
+        is Path<*> -> request.params(param.name)
         is Query<*, *> -> request.queryParams(param.name)
         is Header<*, *> -> request.headers(param.name)
         else -> TODO()

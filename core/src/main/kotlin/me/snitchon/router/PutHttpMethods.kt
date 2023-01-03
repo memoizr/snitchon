@@ -18,7 +18,7 @@ object PutHttpMethods {
     fun <
             W : RequestWrapper,
             P1,
-            P1P : Path<P1P, P1>,
+            P1P : Path<P1>,
             P : ParametrizedPath1<P1, P1P>
             > Router<W, ParametrizedPath0>.PUT(p: P) =
         putEndpoint<_, W>(prefix.group.with(p.group.p1), p.path)
@@ -28,9 +28,9 @@ object PutHttpMethods {
     fun <
             W : RequestWrapper,
             P1P,
-            P1 : Path<P1, P1P>,
+            P1 : Path<P1P>,
             PP,
-            Ph : Path<Ph, PP>,
+            Ph : Path<PP>,
             t : ParametrizedPath1<P1P, P1>,
             P : ParametrizedPath1<PP, Ph>> Router<W, t>.PUT(p: P) =
         putEndpoint<_, W>(prefix.group.with(p.group.p1), p.path)
@@ -40,11 +40,11 @@ object PutHttpMethods {
     fun <
             W : RequestWrapper,
             P1P,
-            P1 : Path<P1, P1P>,
+            P1 : Path<P1P>,
             P2P,
-            P2 : Path<P2, P2P>,
+            P2 : Path<P2P>,
             PP,
-            Ph : Path<Ph, PP>,
+            Ph : Path<PP>,
             t : ParametrizedPath2<P1P, P1, P2P, P2>,
             P : ParametrizedPath1<PP, Ph>> Router<W, t>.PUT(p: P) =
         putEndpoint<_, W>(prefix.group.with(p.group.p1), p.path)
@@ -54,11 +54,11 @@ object PutHttpMethods {
     fun <
             W : RequestWrapper,
             P1P,
-            P1 : Path<P1, P1P>,
+            P1 : Path<P1P>,
             PP,
-            Ph : Path<Ph, PP>,
+            Ph : Path<PP>,
             PP2,
-            Ph2 : Path<Ph2, PP2>,
+            Ph2 : Path<PP2>,
             t : ParametrizedPath1<P1P, P1>,
             P : ParametrizedPath2<PP, Ph, PP2, Ph2>> Router<W, t>.PUT(p: P) =
         putEndpoint<_, W>(prefix.group.with(p.group.p1).with(p.group.p2), p.path)

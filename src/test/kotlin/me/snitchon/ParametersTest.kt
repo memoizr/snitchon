@@ -21,19 +21,19 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.test.Ignore
 
-object stringParam : Path<stringParam, String>(
+object stringParam : Path<String>(
     _name = "stringParam",
     description = "Description",
     pattern = NonEmptyString
 )
 
-object intparam : Path<intparam, Int>(
+object intparam : Path<Int>(
     _name = "intParam",
     description = "Description",
     pattern = NonNegativeInt
 )
 
-object otherIntParam     : Path<otherIntParam, Int>(
+object otherIntParam     : Path<Int>(
     _name = "strParam",
     description = "Description",
     pattern = NonNegativeInt

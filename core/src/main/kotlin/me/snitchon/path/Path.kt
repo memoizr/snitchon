@@ -8,7 +8,7 @@ import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.parameter.Parameter
 
 
-abstract class Path<T, PARSED>(
+abstract class Path<PARSED>(
     inline val _name: String? = null,
     override inline val description: String = "description",
     override val pattern: Validator<String, PARSED>,

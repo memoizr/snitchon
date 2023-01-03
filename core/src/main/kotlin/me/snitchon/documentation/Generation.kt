@@ -26,7 +26,7 @@ val <T : Any> Endpoint<*, *, *, T>.headerParams
 val <T : Any> Endpoint<*, *, *, T>.pathParams
     get() = this::class
         .memberProperties
-        .map { it.call(this) as? Path<*, *> }
+        .map { it.call(this) as? Path<*> }
         .filterNotNull()
 
 val <T : Any> Endpoint<*, *, *, T>.queryParams

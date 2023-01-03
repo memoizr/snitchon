@@ -29,7 +29,7 @@ interface RequestWrapper {
 
     private val <RAW : Any?, PARSED : Any?> Parameter<RAW, PARSED>.kind
         get() = when (this) {
-            is Path<*, *> -> "Path"
+            is Path<*> -> "Path"
             is Header<*, *> -> "Header"
             is Query<*, *> -> "Query"
             is Body<*> -> "Body"

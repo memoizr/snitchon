@@ -20,7 +20,7 @@ class SpringRequestWrapper(val request: ServerRequest) : RequestWrapper {
     override fun method(): HTTPMethod = HTTPMethod.fromString(request.methodName())
 
     override fun <RAW, PARSED : Any?> getParam(param: Parameter<RAW, PARSED>): String? = when (param) {
-        is Path<*, *> -> request.pathVariable(param.name)
+        is Path< *> -> request.pathVariable(param.name)
         is Query<*, *> -> request.paramOrNull(param.name)
         is Header<*, *> -> request.headers().firstHeader(param.name)
         else -> TODO()

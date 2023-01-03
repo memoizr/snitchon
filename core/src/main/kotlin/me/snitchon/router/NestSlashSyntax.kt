@@ -11,7 +11,7 @@ object NestSlashSyntax {
     operator fun <
             W : RequestWrapper,
             P1,
-            P1P : Path<P1P, P1>,
+            P1P : Path<P1>,
             P : ParametrizedPath1<P1, P1P>
             > Router<W, P>.div(
         block: Router<W, P>.() -> Unit
@@ -27,9 +27,9 @@ object NestSlashSyntax {
     operator fun <
             W : RequestWrapper,
             P1,
-            P1P : Path<P1P, P1>,
+            P1P : Path<P1>,
             P2,
-            P2P : Path<P2P, P2>,
+            P2P : Path<P2>,
             P : ParametrizedPath2<P1, P1P, P2, P2P>
             > Router<W, P>.div(
         block: Router<W, P>.() -> Unit

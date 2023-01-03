@@ -22,7 +22,7 @@ class SlashSyntax<W : RequestWrapper> {
 
     context(Router<W, ParametrizedPath0>, ParameterMarkupDecorator)
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    operator fun <PP, P : Path<P, PP>> P.div(block: Router<W, ParametrizedPath1<PP, P>>.() -> Unit): Router<W, ParametrizedPath1<PP, P>> {
+    operator fun <PP, P : Path<PP>> P.div(block: Router<W, ParametrizedPath1<PP, P>>.() -> Unit): Router<W, ParametrizedPath1<PP, P>> {
         val router = Router<W, _>(config, prefix / this)
         block(router)
 
@@ -35,8 +35,8 @@ class SlashSyntax<W : RequestWrapper> {
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     operator fun <
             P1P,
-            P1: Path<P1, P1P>,
-            PP, P : Path<P, PP>> P.div(block: Router<W, ParametrizedPath2<P1P, P1, PP, P>>.() -> Unit): Router<W, ParametrizedPath2<P1P, P1, PP, P>> {
+            P1: Path<P1P>,
+            PP, P : Path<PP>> P.div(block: Router<W, ParametrizedPath2<P1P, P1, PP, P>>.() -> Unit): Router<W, ParametrizedPath2<P1P, P1, PP, P>> {
         val router = Router<W, _>(config, prefix / this)
         block(router)
 
@@ -50,7 +50,7 @@ class SlashSyntax<W : RequestWrapper> {
     }
 
     context(ParameterMarkupDecorator)
-    operator fun <P1P, P1 : Path<P1, P1P>> String.div(path: P1)
+    operator fun <P1P, P1 : Path<P1P>> String.div(path: P1)
             : ParametrizedPath1<P1P, P1> {
         return ParametrizedPath1(this + path.markupName.ensureLeadingSlash(), path)
     }
@@ -61,8 +61,8 @@ class SlashSyntax<W : RequestWrapper> {
 
     context(ParameterMarkupDecorator)
     operator fun <
-            P1P, P1 : Path<P1, P1P>,
-            PP, P : Path<P, PP>
+            P1P, P1 : Path<P1P>,
+            PP, P : Path<PP>
             > ParametrizedPath1<P1P,P1>.div(path: P)
             : ParametrizedPath2<P1P, P1, PP, P> {
         return ParametrizedPath2(this.path + path.markupName.ensureLeadingSlash(), p1, path)
@@ -70,7 +70,7 @@ class SlashSyntax<W : RequestWrapper> {
 
     context(ParameterMarkupDecorator)
     operator fun <
-            P1P, P1 : Path<P1, P1P>,
+            P1P, P1 : Path<P1P>,
             > ParametrizedPath1<P1P,P1>.div(path: String)
             : ParametrizedPath1<P1P, P1> {
         return ParametrizedPath1(this.path + path.ensureLeadingSlash(), p1)

@@ -41,19 +41,19 @@ open class CustomTypeParameterResolver : ParameterResolver {
 
 @ExtendWith(CustomTypeParameterResolver::class)
 open class SimplePathBuilderTest<W: RequestWrapper>(service: ServiceFactory<W>) : SnitchTest<W>(service) {
-    object clipId : Path<clipId, Int>(
+    object clipId : Path<Int>(
         _name = "clipId",
         pattern = NonNegativeInt,
         description = "The clip id"
     )
 
-    object otherPathParam : Path<otherPathParam, Int>(
+    object otherPathParam : Path<Int>(
         _name = "otherPathParam",
         pattern = NonNegativeInt,
         description = "The clip id"
     )
 
-    object thirdPathParam : Path<thirdPathParam, Int>(
+    object thirdPathParam : Path<Int>(
         _name = "thirdPathParam",
         pattern = NonNegativeInt,
         description = "The clip id"

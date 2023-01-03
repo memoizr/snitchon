@@ -16,7 +16,7 @@ interface ParametrizedPath<
     val group: G
 
     context(ParameterMarkupDecorator)
-    operator fun <T, P: Path<P,T>> div(p: P): NextParametrizedPath
+    operator fun <T, P: Path<T>> div(p: P): NextParametrizedPath
 }
 
 class ParametrizedPath0
@@ -24,27 +24,27 @@ class ParametrizedPath0
     override val group: Group0 = Group0
 
     context(ParameterMarkupDecorator)
-    override operator fun <T, P: Path<P,T>> div(p: P): ParametrizedPath1<T, P> =
+    override operator fun <T, P: Path<T>> div(p: P): ParametrizedPath1<T, P> =
         ParametrizedPath1(this.path + p.markupName.ensureLeadingSlash(), p)
 }
 
 class ParametrizedPath1<
         P1P,
-        P1 : Path<P1, P1P>
+        P1 : Path<P1P>
         >(override val path: String, val p1: P1) : ParametrizedPath<Group1<P1P, P1>,
         ParametrizedPath2<*,*,*,*>> {
     override val group = Group1(p1)
 
     context(ParameterMarkupDecorator)
-    override operator fun <T, P: Path<P,T>> div(p: P): ParametrizedPath2<P1P, P1, T, P> =
+    override operator fun <T, P: Path<T>> div(p: P): ParametrizedPath2<P1P, P1, T, P> =
         ParametrizedPath2(this.path + p.markupName.ensureLeadingSlash(), p1, p)
 }
 
 class ParametrizedPath2<
         P1P,
-        P1 : Path<P1, P1P>,
+        P1 : Path<P1P>,
         P2P,
-        P2 : Path<P2, P2P>
+        P2 : Path<P2P>
         >(
     override val path: String,
     val p1: P1,
@@ -53,17 +53,17 @@ class ParametrizedPath2<
     override val group = Group2(p1, p2)
 
     context(ParameterMarkupDecorator)
-    override operator fun <T, P: Path<P,T>> div(p: P) =
+    override operator fun <T, P: Path<T>> div(p: P) =
             ParametrizedPath3(this.path + p.markupName.ensureLeadingSlash(), p1, p2, p)
 }
 
 class ParametrizedPath3<
         P1P,
-        P1 : Path<P1, P1P>,
+        P1 : Path<P1P>,
         P2P,
-        P2 : Path<P2, P2P>,
+        P2 : Path<P2P>,
         P3P,
-        P3 : Path<P3, P3P>,
+        P3 : Path<P3P>,
         >(
     override val path: String,
     val p1: P1,
@@ -73,6 +73,6 @@ class ParametrizedPath3<
     override val group = Group3(p1, p2, p3)
 
     context(ParameterMarkupDecorator)
-    override operator fun <T, P: Path<P,T>> div(p: P) = TODO()
+    override operator fun <T, P: Path<T>> div(p: P) = TODO()
 }
 
