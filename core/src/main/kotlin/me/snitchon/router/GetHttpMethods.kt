@@ -49,6 +49,20 @@ class GetHttpMethods<W : RequestWrapper> {
         getEndpoint<_, W>(prefix.group.with(p.group.p1).with(p.group.p2), p.path)
 
     context(ParameterMarkupDecorator)
+    @JvmName("get:0:3")
+    fun <
+            W : RequestWrapper,
+            P1,
+            P1P : Path<P1P, P1>,
+            P2,
+            P2P : Path<P2P, P2>,
+            P3,
+            P3P : Path<P3P, P3>,
+            P : ParametrizedPath3<P1, P1P, P2, P2P, P3, P3P>
+            > Router<W, ParametrizedPath0>.GET(p: P) =
+        getEndpoint<_, W>(prefix.group.with(p.group.p1).with(p.group.p2).with(p.group.p3), p.path)
+
+    context(ParameterMarkupDecorator)
     @JvmName("get:1:1")
     fun <
             W : RequestWrapper,

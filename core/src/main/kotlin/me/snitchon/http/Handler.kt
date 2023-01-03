@@ -69,9 +69,9 @@ class Group3<
         P3P,
         P3 : Param<P3P>,
         >(
-    private val p1: P1,
-    private val p2: P2,
-    private val p3: P3
+    val p1: P1,
+    val p2: P2,
+    val p3: P3
 ) : Group {
 
     override fun <PP, P : Param<PP>> with(p: P): Group = TODO()//

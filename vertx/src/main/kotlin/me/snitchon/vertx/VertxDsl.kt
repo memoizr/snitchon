@@ -11,11 +11,9 @@ class VertxRequestWrapper(val context: RoutingContext, val parser: Parser) : Req
     private var b: Any? = null
 
     override fun <T : Any?> myBody(body: Class<T>): T {
-        println(b)
         if (b == null) {
             b = with(parser) { context.body().asString().parseJson(body) }
         }
-        println(b)
         return b as T
     }
 

@@ -57,49 +57,40 @@ class ServiceTest {
     fun get(path: String, headers: Map<String, String> = mapOf()) =
         service.makeRequest(TestRequest(HTTPMethod.GET, path, headers = headers))
 
-//    @Test
-//    fun `supports 0 path parameters`() {
+    @Test
+    fun `supports 0 path parameters`() {
+        service.withRoutes {
+            GET("foo").isHandledBy { SimpleResponse("foo response").ok }
+            GET("foo" / "bar").isHandledBy { MyResponse("hello world", 33, listOf("one", "two", "three")).ok }
+        }.startListening()
 
-//        val handler: context(Handler<*>) () -> HttpResponse<SimpleResponse> = {
-//            SimpleResponse("foo response").ok
-//        }
+        val fooResponse = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo"))
+        val barResponse = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo/bar"))
 
-//        service.withRoutes { GET("foo")
-//                .isHandledBy {
-//                    SimpleResponse("foo response").ok
-//                }
-//            GET("foo" / "bar")
-//                .isHandledBy {
-//                    MyResponse("hello world", 33, listOf("one", "two", "three")).ok
-//                }
-//        }.startListening()
-//
-//        val fooResponse = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo"))
-//        val barResponse = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo/bar"))
-//
-//        assertEquals(SimpleResponse("foo response").jsonString, fooResponse)
-//        assertEquals(MyResponse("hello world", 33, listOf("one", "two", "three")).jsonString, barResponse)
-//    }
-//
-//    @Test
-//    fun `supports 1 path parameter`() {
-//        service.withRoutes {
-//            GET("foo" / path1)
-//                .isHandledBy {
-//                    SimpleResponse("foo${request[path1]}").ok
-//                }
-////            GET("foo" / path1 / "bar")
-////                .isHandledBy { "param value is also: ${request[path1]}".ok }
-//        }.startListening()
-//
-//
-//        val response1 = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo/good"))
-//        val response2 = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo/good/bar"))
-//
-//        assertEquals(SimpleResponse("foogood").jsonString, response1)
-//        assertEquals("param value is also: good".jsonString, response2)
-//    }
-//
+        assertEquals(SimpleResponse("foo response").jsonString, fooResponse)
+        assertEquals(MyResponse("hello world", 33, listOf("one", "two", "three")).jsonString, barResponse)
+    }
+
+    @Test
+    fun `supports 1 path parameter`() {
+        service.withRoutes {
+            GET("foo" / path1)
+                .isHandledBy {
+                    SimpleResponse("foo${request[path1]}").ok
+                }
+            GET("foo" / path1 / "bar")
+                .isHandledBy { "param value is also: ${request[path1]}".ok }
+        }.startListening()
+
+
+        val response1 = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo/good"))
+        val response2 = service.makeRequest(TestRequest(HTTPMethod.GET, "/foo/good/bar"))
+
+        assertEquals(SimpleResponse("foogood").jsonString, response1)
+        assertEquals("param value is also: good".jsonString, response2)
+    }
+
+    //
 //    fun <
 //            P1P, P1 : Param<P1P>, P2P, P2 : Param<P2P>, P3P, P3 : Param<P3P>, B : Any?
 //            > handler(
@@ -119,40 +110,30 @@ class ServiceTest {
 //        var body: BodyMarker<B>? = null
 //    }
 //
-//    @Test
-//    fun `supports 2 path parameters and header`() {
-//        service.withRoutes {
-//            val handler1: context(Group3<Any?, path1, Any?, path2, String, TokenHeader>, BodyMarker<Nothing>, Handler<TestRequestWrapper>) () -> HttpResponse<String> =
-//                {
-//                    "foo.${request[path1]}.${request[path2]}:token:${request[TokenHeader]}".ok
-//                }
-//
-//            val handle = handler(path1, path2, TokenHeader) {
-//                body = marker<MyBody>()
-//                val x: String = request[path1]
-//                "foo.${request[path1]}.${request[path2]}:token:${request[TokenHeader]}".ok
-//            }
-//
-//            GET("foo" / path1 / path2)
-//                .with(TokenHeader)
-//                .withBody(marker<MyBody>())
-//                .isHandledBy(handle)
-//
-//        }.startListening()
-//
-//        assertEquals(""""foo.one.two:token:valid"""", get("/foo/one/two", mapOf("token" to "valid")))
-//    }
-//
+    @Test
+    fun `supports 2 path parameters and header`() {
+        service.withRoutes {
+            GET("foo" / path1 / path2)
+                .with(TokenHeader)
+                .isHandledBy {
+                    "foo.${request[path1]}.${request[path2]}:token:${request[TokenHeader]}".ok
+                }
 
-//    @Test
-//    fun `supports 3 path parameters`() {
-//        service.withRoutes {
-//            GET("foo" / path1 / path2 / path3)
-//                .isHandledBy { "get.foo.${path1()}.${path2()}.${path3()}".ok }
-//        }.startListening()
-//
-//        assertEquals(""""get.foo.one.two.three"""", get("/foo/one/two/three"))
-//    }
+        }.startListening()
+
+        assertEquals(""""foo.one.two:token:valid"""", get("/foo/one/two", mapOf("token" to "valid")))
+    }
+
+
+    @Test
+    fun `supports 3 path parameters`() {
+        service.withRoutes {
+            GET("foo" / path1 / path2 / path3)
+                .isHandledBy { "get.foo.${request[path1]}.${request[path2]}.${request[path3]}".ok }
+        }.startListening()
+
+        assertEquals(""""get.foo.one.two.three"""", get("/foo/one/two/three"))
+    }
 //
 //    @Test
 //    fun `supports 4 path parameters`() {
@@ -327,5 +308,5 @@ fun <A, B, C> context(a: A, b: B, c: C, x: context(A, B, C) () -> Unit) {
     "SUBTYPING_BETWEEN_CONTEXT_RECEIVERS"
 )
 fun <A, B, C, D> context(a: A, b: B, c: C, d: D, x: context(A, B, C, D) () -> Unit) {
-    x(a, b, c,d)
+    x(a, b, c, d)
 }
