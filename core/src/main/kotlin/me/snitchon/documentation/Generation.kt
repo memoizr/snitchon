@@ -6,15 +6,10 @@ import me.snitchon.http.HttpResponses.ok
 import me.snitchon.endpoint.Endpoint
 import me.snitchon.http.Group
 import me.snitchon.http.RequestWrapper
-import me.snitchon.parameter.Header
-import me.snitchon.parameter.Parameter
+import me.snitchon.parameter.*
 import me.snitchon.path.Path
-import me.snitchon.parameter.Query
 import me.snitchon.parsing.Parser
-import me.snitchon.router.Body
-import me.snitchon.router.Router
-import me.snitchon.router.HttpMethods
-import me.snitchon.router.ensureLeadingSlash
+import me.snitchon.router.*
 import me.snitchon.service.RoutedService
 import java.io.File
 import java.io.FileOutputStream
@@ -142,12 +137,12 @@ fun <W : RequestWrapper> RoutedService<W>.generateDocs(): Spec<W> =
 data class Spec<W : RequestWrapper>(
     val publicApi: OpenApi,
     val internalApi: OpenApi,
-    val router: Router<W>, val routedService: RoutedService<W>
+    val router: Router<W, ParametrizedPath0>, val routedService: RoutedService<W>
 ) {
 
     fun servePublicDocumenation(): Spec<W> {
-        with(HttpMethods<W>()) {
-            with(Router(router.config, "")) {
+        with(GetHttpMethods<W>()) {
+            with(Router<W, ParametrizedPath0>(router.config, ParametrizedPath0(""))) {
                 val path = config.publicDocumentationPath.ensureLeadingSlash()
                 val docPath = "$path/spec.json".ensureLeadingSlash()
                 routedService.service.registerMethod(
@@ -165,8 +160,8 @@ data class Spec<W : RequestWrapper>(
     }
 
     fun serveInternalDocumenation(): Spec<W> {
-        with(HttpMethods<W>()) {
-            with(Router(router.config, "")) {
+        with(GetHttpMethods<W>()) {
+            with(Router<W, _>(router.config, ParametrizedPath0(""))) {
 
                 val path = config.internalDocumentationPath.ensureLeadingSlash()
                 val docPath = "$path/spec.json".ensureLeadingSlash()

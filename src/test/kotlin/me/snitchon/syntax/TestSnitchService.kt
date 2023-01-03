@@ -5,11 +5,12 @@ import me.snitchon.endpoint.*
 import me.snitchon.http.*
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.router.Router
-import me.snitchon.router.HttpMethods
+import me.snitchon.router.GetHttpMethods
 import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
 import me.snitchon.http.HttpResponse
+import me.snitchon.parameter.ParametrizedPath0
 import me.snitchon.parsers.GsonJsonParser.jsonString
 
 class TestMarkup : ParameterMarkupDecorator {
@@ -23,15 +24,15 @@ class TestSnitchService : SnitchService<TestRequestWrapper> {
     override fun withRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        HttpMethods<TestRequestWrapper>,
+        GetHttpMethods<TestRequestWrapper>,
         SlashSyntax<TestRequestWrapper>,
         HttpResponses
-        ) Router<TestRequestWrapper>.() -> Unit
+        ) Router<TestRequestWrapper, ParametrizedPath0>.() -> Unit
     ): RoutedService<TestRequestWrapper> {
-        val router = with(HttpMethods<TestRequestWrapper>()) {
-            Router()
+        val router = with(GetHttpMethods<TestRequestWrapper>()) {
+            Router<TestRequestWrapper,ParametrizedPath0>(config, ParametrizedPath0(""))
         }
-        routerConfiguration(TestMarkup(), HttpMethods(), SlashSyntax(), HttpResponses, router)
+        routerConfiguration(TestMarkup(), GetHttpMethods(), SlashSyntax(), HttpResponses, router)
         return RoutedService(this, router)
     }
 

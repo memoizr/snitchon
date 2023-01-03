@@ -10,6 +10,7 @@ import me.snitchon.http.HttpResponse
 import me.snitchon.http.HttpResponses
 import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.ParameterMarkupDecorator
+import me.snitchon.parameter.ParametrizedPath0
 import me.snitchon.router.*
 
 interface SnitchService<W: RequestWrapper> {
@@ -19,11 +20,11 @@ interface SnitchService<W: RequestWrapper> {
     fun withRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        HttpMethods<W>,
+        GetHttpMethods<W>,
         SlashSyntax<W>,
         HttpResponses
         )
-        Router<W>.() -> Unit
+        Router<W, ParametrizedPath0>.() -> Unit
     ): RoutedService<W>
 
     fun <T : Exception> handleException(exception: Class<T>, handler: (T) -> HttpResponse<*>)
@@ -31,7 +32,7 @@ interface SnitchService<W: RequestWrapper> {
     fun onStart() {}
 }
 
-data class RoutedService<W: RequestWrapper>(val service: SnitchService<W>, val router: Router<W>) {
+data class RoutedService<W: RequestWrapper>(val service: SnitchService<W>, val router: Router<W, ParametrizedPath0>) {
     fun startListening(): RoutedService<W> {
         router.endpoints.forEach {
             service.registerMethod(it, it.meta.url.ensureLeadingSlash())

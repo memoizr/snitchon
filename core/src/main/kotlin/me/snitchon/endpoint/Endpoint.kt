@@ -76,7 +76,6 @@ fun <P1P, P1 : Param<P1P>,
     )
 
 
-
 fun <G : Group, B : Any?, R : Any, W : RequestWrapper, E : Endpoint<W, G, B, R>> E.description(description: String) =
     copy(meta.copy(description = description))
 

@@ -10,7 +10,8 @@ import me.snitchon.config.Config
 import me.snitchon.endpoint.Endpoint
 import me.snitchon.http.*
 import me.snitchon.parameter.ParameterMarkupDecorator
-import me.snitchon.router.HttpMethods
+import me.snitchon.parameter.ParametrizedPath0
+import me.snitchon.router.GetHttpMethods
 import me.snitchon.router.Router
 import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
@@ -27,7 +28,7 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
             .addHttpListener(config.port, "localhost")
     }
 
-    private val Endpoint<UndertowRequestWrapper, Group, Any?,*>.func: (exchange: HttpServerExchange) -> Unit
+    private val Endpoint<UndertowRequestWrapper, Group, Any?, *>.func: (exchange: HttpServerExchange) -> Unit
         get() {
             return { exchange: HttpServerExchange ->
 
@@ -84,17 +85,22 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
 
     private val handlers = mutableListOf<ExceptionHandler>()
 
-    override fun withRoutes(routerConfiguration: context(ParameterMarkupDecorator, HttpMethods<UndertowRequestWrapper>, SlashSyntax<UndertowRequestWrapper>, HttpResponses) Router<UndertowRequestWrapper>.() -> Unit): RoutedService<UndertowRequestWrapper> {
+    override fun withRoutes(
+        routerConfiguration: context(ParameterMarkupDecorator,
+        GetHttpMethods<UndertowRequestWrapper>,
+        SlashSyntax<UndertowRequestWrapper>,
+        HttpResponses) Router<UndertowRequestWrapper, ParametrizedPath0>.() -> Unit
+    ): RoutedService<UndertowRequestWrapper> {
         val tmpDir = File(System.getProperty("java.io.tmpdir") + "/swagger-ui/docs")
         if (!tmpDir.exists()) {
             tmpDir.mkdirs()
         }
 //        http.externalStaticFileLocation(tmpDir.absolutePath)
 
-        val router = with(HttpMethods<UndertowRequestWrapper>()) { Router(config) }
+        val router = with(GetHttpMethods<UndertowRequestWrapper>()) { Router<UndertowRequestWrapper, _>(config, ParametrizedPath0("")) }
         routerConfiguration(
             UndertowMarkup(),
-            HttpMethods<UndertowRequestWrapper>(),
+            GetHttpMethods<UndertowRequestWrapper>(),
             SlashSyntax<UndertowRequestWrapper>(),
             HttpResponses,
             router

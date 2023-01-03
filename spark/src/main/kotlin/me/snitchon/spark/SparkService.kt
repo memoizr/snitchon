@@ -6,9 +6,10 @@ import me.snitchon.config.Config
 import me.snitchon.endpoint.Endpoint
 import me.snitchon.http.*
 import me.snitchon.parameter.ParameterMarkupDecorator
+import me.snitchon.parameter.ParametrizedPath0
 import me.snitchon.parsing.Parser
 import me.snitchon.router.Router
-import me.snitchon.router.HttpMethods
+import me.snitchon.router.GetHttpMethods
 import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
@@ -49,15 +50,16 @@ class SparkService(override val config: Config = Config()) : SnitchService<Spark
     override fun withRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        HttpMethods<SparkRequestWrapper>,
+        GetHttpMethods<SparkRequestWrapper>,
         SlashSyntax<SparkRequestWrapper>,
         HttpResponses
-        ) Router<SparkRequestWrapper>.() -> Unit
+        ) Router<SparkRequestWrapper, ParametrizedPath0>.() -> Unit
     ): RoutedService<SparkRequestWrapper> {
-        val httpMethods = HttpMethods<SparkRequestWrapper>()
-        val router = with(httpMethods) { Router() }
+        val httpMethods = GetHttpMethods<SparkRequestWrapper>()
+        val router = Router<SparkRequestWrapper,_>(config, ParametrizedPath0(""))
 
         routerConfiguration(SparkMarkup(), httpMethods, SlashSyntax(), HttpResponses, router)
+        println(router.endpoints)
 
         http.notFound { req, res ->
             res.type("application/json")

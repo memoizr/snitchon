@@ -8,11 +8,12 @@ import me.snitchon.endpoint.summary
 import me.snitchon.endpoint.visibility
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.parsers.GsonJsonParser
-import me.snitchon.router.HttpMethods
+import me.snitchon.router.GetHttpMethods
 import me.snitchon.router.Router
 import me.snitchon.router.SlashSyntax
 import me.snitchon.syntax.TestSnitchService
 import me.snitchon.http.HttpResponses
+import me.snitchon.parameter.ParametrizedPath0
 import me.snitchon.syntax.TestRequestWrapper
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -24,10 +25,10 @@ class DocumentationTest {
     fun routes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        HttpMethods<TestRequestWrapper>,
+        GetHttpMethods<TestRequestWrapper>,
         SlashSyntax<TestRequestWrapper>,
         HttpResponses
-        ) Router<TestRequestWrapper>.() -> Unit
+        ) Router<TestRequestWrapper, ParametrizedPath0>.() -> Unit
     ) =
         with(GsonJsonParser) {
             TestSnitchService().withRoutes(routerConfiguration)
@@ -38,10 +39,10 @@ class DocumentationTest {
     fun publicRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        HttpMethods<TestRequestWrapper>,
+        GetHttpMethods<TestRequestWrapper>,
         SlashSyntax<TestRequestWrapper>,
         HttpResponses
-        ) Router<TestRequestWrapper>.() -> Unit
+        ) Router<TestRequestWrapper, ParametrizedPath0>.() -> Unit
     ) =
         with(GsonJsonParser) {
             TestSnitchService().withRoutes(routerConfiguration)

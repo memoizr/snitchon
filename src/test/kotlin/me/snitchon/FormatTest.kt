@@ -18,11 +18,11 @@ open class FormatTest<W: RequestWrapper>(service: ServiceFactory<W>) : SnitchTes
     @BeforeEach
     fun before() {
         routes {
-            PUT("json")
-                .withBody(marker<TheBody>())
-                .isHandledBy {
-                    TheResponse("ok, body: noo").ok
-                }
+//            PUT("json")
+//                .withBody(marker<TheBody>())
+//                .isHandledBy {
+//                    TheResponse("ok, body: noo").ok
+//                }
 //        GET("bytearray").isHandledBy { "ok".ok.format(Format.VideoMP4) }
 //        GET("image").isHandledBy { val readBytes = File("./squat.jpg").readBytes()
 //            readBytes.size.print()

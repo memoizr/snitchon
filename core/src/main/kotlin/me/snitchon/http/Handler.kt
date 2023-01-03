@@ -8,20 +8,21 @@ interface Handler<out W : RequestWrapper> {
 }
 
 context(BodyMarker<T>, Handler<W>)
-val <T: Any?, W: RequestWrapper> RequestWrapper.body get(): T = request.myBody(t)
+val <T : Any?, W : RequestWrapper> RequestWrapper.body
+    get(): T = request.myBody(t)
 
 data class NoBodyHandler<W : RequestWrapper>(
     override inline val request: W,
 ) : Handler<W>
 
-data class BodyHandler<W : RequestWrapper, T: Any>(
+data class BodyHandler<W : RequestWrapper, T : Any>(
     override inline val request: W,
     inline val body: T
 ) : Handler<W>
 
 
 interface Group {
-    fun <PP, P: Param<PP>> with(p: P): Group
+    fun <PP, P : Param<PP>> with(p: P): Group
 }
 
 object Group0 : Group {
@@ -30,11 +31,13 @@ object Group0 : Group {
 
 class Group1<
         P1P,
-        P1 : Param<P1P>>(private val p1: P1) : Group {
+        P1 : Param<P1P>>(val p1: P1) : Group {
+
     context(Handler<W>)
     operator fun <W : RequestWrapper> W.get(p1: P1) = parseParam(p1)
 
     override fun <PP, P : Param<PP>> with(p: P) = Group2(p1, p)
+
 }
 
 class Group2<
@@ -42,8 +45,9 @@ class Group2<
         P1 : Param<P1P>,
         P2P,
         P2 : Param<P2P>>(
-    private val p1: P1,
-    private val p2: P2) : Group {
+    val p1: P1,
+    val p2: P2
+) : Group {
 
     override fun <PP, P : Param<PP>> with(p: P) = Group3(p1, p2, p)
 
@@ -68,7 +72,7 @@ class Group3<
     private val p1: P1,
     private val p2: P2,
     private val p3: P3
-        ) : Group {
+) : Group {
 
     override fun <PP, P : Param<PP>> with(p: P): Group = TODO()//
 

@@ -8,8 +8,9 @@ import me.snitchon.config.Config
 import me.snitchon.endpoint.Endpoint
 import me.snitchon.http.*
 import me.snitchon.parameter.ParameterMarkupDecorator
+import me.snitchon.parameter.ParametrizedPath0
 import me.snitchon.parsing.Parser
-import me.snitchon.router.HttpMethods
+import me.snitchon.router.GetHttpMethods
 import me.snitchon.router.Router
 import me.snitchon.router.SlashSyntax
 import me.snitchon.service.RoutedService
@@ -60,14 +61,14 @@ open class SpringService(override val config: Config = Config()) : SnitchService
     override fun withRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        HttpMethods<SpringRequestWrapper>,
+        GetHttpMethods<SpringRequestWrapper>,
         SlashSyntax<SpringRequestWrapper>,
         HttpResponses
-        ) Router<SpringRequestWrapper>.() -> Unit
+        ) Router<SpringRequestWrapper, ParametrizedPath0>.() -> Unit
     ): RoutedService<SpringRequestWrapper> {
-        val router = with(HttpMethods<SpringRequestWrapper>()) { Router(config) }
+        val router = Router<SpringRequestWrapper,_>(config, ParametrizedPath0(""))
 
-        routerConfiguration(SpringMarkup(), HttpMethods<SpringRequestWrapper>(), SlashSyntax<SpringRequestWrapper>(), HttpResponses, router)
+        routerConfiguration(SpringMarkup(), GetHttpMethods<SpringRequestWrapper>(), SlashSyntax<SpringRequestWrapper>(), HttpResponses, router)
 
 //        http.notFound { req, res ->
 //            res.type("application/json")

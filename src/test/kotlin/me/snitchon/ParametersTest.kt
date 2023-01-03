@@ -5,13 +5,13 @@ import me.snitchon.documentation.Description
 import me.snitchon.documentation.Visibility
 import me.snitchon.http.*
 import me.snitchon.parameter.*
-import me.snitchon.parsers.GsonJsonParser
 import me.snitchon.path.Path
 import me.snitchon.parsers.GsonJsonParser.jsonString
-import me.snitchon.router.marker
 import me.snitchon.tests.ServiceFactory
 import me.snitchon.endpoint.with
 import me.snitchon.endpoint.withBody
+import me.snitchon.router.PostHttpMethods.POST
+import me.snitchon.router.marker
 import me.snitchon.tests.SnitchTest
 import me.snitchon.types.Sealed
 import org.junit.jupiter.api.BeforeEach
@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.test.Ignore
 
 object stringParam : Path<stringParam, String>(
     _name = "stringParam",
@@ -32,7 +33,7 @@ object intparam : Path<intparam, Int>(
     pattern = NonNegativeInt
 )
 
-object strparam : Path<strparam, Int>(
+object otherIntParam     : Path<otherIntParam, Int>(
     _name = "strParam",
     description = "Description",
     pattern = NonNegativeInt

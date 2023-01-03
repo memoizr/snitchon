@@ -7,7 +7,13 @@ import me.snitchon.http.RequestWrapper
 import me.snitchon.parsers.GsonJsonParser
 import me.snitchon.path.Path
 import me.snitchon.parsers.GsonJsonParser.jsonString
+import me.snitchon.router.DeleteHttpMethods
+import me.snitchon.router.NestSlashSyntax
+import me.snitchon.router.NestSyntax.nest
+import me.snitchon.router.PostHttpMethods
+import me.snitchon.router.PutHttpMethods
 import me.snitchon.spark.SparkRequestWrapper
+import me.snitchon.syntax.context
 import me.snitchon.tests.ServiceFactory
 import me.snitchon.tests.SnitchTest
 import org.junit.jupiter.api.BeforeEach
@@ -55,11 +61,14 @@ open class SimplePathBuilderTest<W: RequestWrapper>(service: ServiceFactory<W>) 
 
     @BeforeEach
     fun before() {
+        context (PutHttpMethods, PostHttpMethods,  DeleteHttpMethods, NestSlashSyntax) {
         routes {
             GET("foo")
-                .isHandledBy { TestResult("get value").ok }
+                .isHandledBy {
+                    TestResult("get value").ok
+                }
 
-            PUT("/foo").isHandledBy { TestResult("put value").created }
+            PUT("foo").isHandledBy { TestResult("put value").created }
             POST("/foo").isHandledBy { TestResult("post value").created }
             DELETE("/foo").isHandledBy { TestResult("delete value").ok }
 
@@ -76,46 +85,49 @@ open class SimplePathBuilderTest<W: RequestWrapper>(service: ServiceFactory<W>) 
             POST("infixslash" / "bar").isHandledBy { TestResult("success").ok }
             DELETE("infixslash" / "bar").isHandledBy { TestResult("success").ok }
 
-            "one" / {
+            nest("one") / {
                 GET("/a").isHandledBy { TestResult("get value").ok }
                 GET("/b").isHandledBy { TestResult("get value").ok }
-                "two" / {
+                nest("two") / {
                     GET("/c").isHandledBy { TestResult("get value").ok }
                 }
             }
 
-            "hey" / "there" / {
-                GET("/a").isHandledBy { TestResult("get value there a").ok }
+            nest("hey" / "there") / {
+                GET("/a")
+                    .isHandledBy {
+                        TestResult("get value there a").ok }
             }
 
-            "v1" / {
+            nest("v1") / {
                 GET().isHandledBy { TestResult("get value").ok }
                 GET(clipId).isHandledBy { TestResult("get value").ok }
                 GET("one" / clipId).isHandledBy { TestResult("get value").ok }
             }
 
             GET("params1" / clipId / "params2" / otherPathParam).isHandledBy { TestResult("${request[clipId]}${request[otherPathParam]}").ok }
-
+//
             GET("params3" / clipId / "params4" / otherPathParam).isHandledBy { TestResult("${request[clipId]}${request[otherPathParam]}").ok }
 
             GET().isHandledBy { TestResult("get value").ok }
 
-            "hey" / {
-                clipId / {
+            nest("hey") / {
+                nest(clipId) / {
                     GET("/a").isHandledBy {
                         TestResult("get value").ok
                     }
-                    "level2" / {
-                        otherPathParam / {
-                            "nope" / {
+                    nest("level2") / {
+                        nest(otherPathParam) / {
+                            nest("nope") / {
                                 GET().isHandledBy {
-                                    TestResult("get ${clipId()} ${otherPathParam()}").ok
+                                    TestResult("get ${request[clipId]} ${request[otherPathParam]}").ok
                                 }
                             }
                         }
                     }
                 }
             }
+        }
         }
     }
 

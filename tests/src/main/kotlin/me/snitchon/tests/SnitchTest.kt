@@ -9,8 +9,9 @@ import java.util.*
 import me.snitchon.http.HttpResponses
 import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.ParameterMarkupDecorator
+import me.snitchon.parameter.ParametrizedPath0
 import me.snitchon.router.Router
-import me.snitchon.router.HttpMethods
+import me.snitchon.router.GetHttpMethods
 import me.snitchon.router.SlashSyntax
 import me.snitchon.service.SnitchService
 import java.net.BindException
@@ -132,10 +133,10 @@ abstract class SnitchTest<W: RequestWrapper>(
     fun routes(
         router: context(
         ParameterMarkupDecorator,
-        HttpMethods<W>,
+        GetHttpMethods<W>,
         SlashSyntax<W>,
         HttpResponses
-        ) Router<W>.() -> Unit
+        ) Router<W, ParametrizedPath0>.() -> Unit
     ) {
         retry {
             with(GsonJsonParser) {

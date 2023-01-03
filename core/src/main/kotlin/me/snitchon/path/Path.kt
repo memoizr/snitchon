@@ -25,14 +25,6 @@ abstract class Path<T, PARSED>(
 
     override val type: Class<*>
         get() = String::class.java
-
-    context(Handler<RequestWrapper>, T)
-    @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    operator fun invoke() = parse()
-
-    context(Handler<RequestWrapper>, T)
-    @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    fun parse(): PARSED = request.parseParam(this)
 }
 
 
