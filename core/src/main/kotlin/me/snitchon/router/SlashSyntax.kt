@@ -7,13 +7,12 @@ import me.snitchon.path.Path
 
 class SlashSyntax<W : RequestWrapper> {
 
-    context(Router<W, ParametrizedPath0>, ParameterMarkupDecorator, GetHttpMethods<W>)
-
+    context(Router<W, ParametrizedPath0>, ParameterMarkupDecorator, GetHttpMethods)
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
-    operator fun String.div(block: context(ParametrizedPath0) Router<W, ParametrizedPath0>.() -> Unit): Router<W, ParametrizedPath0> {
+    operator fun String.div(block: Router<W, ParametrizedPath0>.() -> Unit): Router<W, ParametrizedPath0> {
         val prefix1 = prefix / this.ensureLeadingSlash()
         val router = Router<W, ParametrizedPath0>(config, prefix1)
-        block(prefix1, router)
+        block(router)
 
         endpoints.addAll(router.endpoints)
 
@@ -31,7 +30,7 @@ class SlashSyntax<W : RequestWrapper> {
         return router
     }
 
-    context(Router<W, ParametrizedPath1<P1P, P1>>, ParameterMarkupDecorator, GetHttpMethods<W>)
+    context(Router<W, ParametrizedPath1<P1P, P1>>, ParameterMarkupDecorator, GetHttpMethods)
     @Suppress("SUBTYPING_BETWEEN_CONTEXT_RECEIVERS")
     operator fun <
             P1P,

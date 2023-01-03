@@ -141,7 +141,7 @@ data class Spec<W : RequestWrapper>(
 ) {
 
     fun servePublicDocumenation(): Spec<W> {
-        with(GetHttpMethods<W>()) {
+        with(GetHttpMethods) {
             with(Router<W, ParametrizedPath0>(router.config, ParametrizedPath0(""))) {
                 val path = config.publicDocumentationPath.ensureLeadingSlash()
                 val docPath = "$path/spec.json".ensureLeadingSlash()
@@ -160,7 +160,7 @@ data class Spec<W : RequestWrapper>(
     }
 
     fun serveInternalDocumenation(): Spec<W> {
-        with(GetHttpMethods<W>()) {
+        with(GetHttpMethods) {
             with(Router<W, _>(router.config, ParametrizedPath0(""))) {
 
                 val path = config.internalDocumentationPath.ensureLeadingSlash()

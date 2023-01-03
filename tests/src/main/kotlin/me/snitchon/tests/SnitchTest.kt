@@ -133,7 +133,7 @@ abstract class SnitchTest<W: RequestWrapper>(
     fun routes(
         router: context(
         ParameterMarkupDecorator,
-        GetHttpMethods<W>,
+        GetHttpMethods,
         SlashSyntax<W>,
         HttpResponses
         ) Router<W, ParametrizedPath0>.() -> Unit

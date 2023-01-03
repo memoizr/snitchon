@@ -38,18 +38,24 @@ fun main() {
                 nest("hello") / {
                     nest(otherIntParam) / {
                         "hello" / otherIntParam
-                        GET("hello" / stringParam).isHandledBy {
-                            println("printing")
-                            println(request[stringParam])
-                            println(request[stringParam])
-                            println("done")
-                            ServiceTest.SimpleResponse("${request[intparam]}, ${request[otherIntParam]}, ${request[stringParam]}").ok
-                            mapOf("hello" to 1, "lol" to "indeed").ok
-                        }
+                        extracted()
                     }
                 }
             }
         }.startListening()
+    }
+}
+
+context(GetHttpMethods, SlashSyntax<UndertowRequestWrapper>, ParameterMarkupDecorator)
+private fun Router<UndertowRequestWrapper, ParametrizedPath2<Int, intparam, Int, otherIntParam>>.extracted() {
+
+    GET("hello" / stringParam).isHandledBy {
+        println("printing")
+        println(request[stringParam])
+        println(request[stringParam])
+        println("done")
+        ServiceTest.SimpleResponse("${request[intparam]}, ${request[otherIntParam]}, ${request[stringParam]}").ok
+        mapOf("hello" to 1, "lol" to "indeed").ok
     }
 }
 

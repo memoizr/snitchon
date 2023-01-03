@@ -25,7 +25,7 @@ class DocumentationTest {
     fun routes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        GetHttpMethods<TestRequestWrapper>,
+        GetHttpMethods,
         SlashSyntax<TestRequestWrapper>,
         HttpResponses
         ) Router<TestRequestWrapper, ParametrizedPath0>.() -> Unit
@@ -39,7 +39,7 @@ class DocumentationTest {
     fun publicRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        GetHttpMethods<TestRequestWrapper>,
+        GetHttpMethods,
         SlashSyntax<TestRequestWrapper>,
         HttpResponses
         ) Router<TestRequestWrapper, ParametrizedPath0>.() -> Unit

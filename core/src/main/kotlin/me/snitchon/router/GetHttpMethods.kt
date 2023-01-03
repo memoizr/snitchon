@@ -8,7 +8,7 @@ import me.snitchon.path.Path
 
 internal typealias Param<T> = Parameter<*, T>
 
-class GetHttpMethods<W : RequestWrapper> {
+object GetHttpMethods {
     fun <W : RequestWrapper,
             G : Group,
             P : ParametrizedPath<G, *>
@@ -24,7 +24,6 @@ class GetHttpMethods<W : RequestWrapper> {
             > Router<W, ParametrizedPath0>.GET(p: P1P) =
         getEndpoint<_, W>(prefix.group.with(p), p.markupName)
 
-    context(ParameterMarkupDecorator)
     @JvmName("get:0:1")
     fun <
             W : RequestWrapper,
@@ -34,7 +33,6 @@ class GetHttpMethods<W : RequestWrapper> {
             > Router<W, ParametrizedPath0>.GET(p: P) =
         getEndpoint<_, W>(prefix.group.with(p.group.p1), p.path)
 
-    context(ParameterMarkupDecorator)
     @JvmName("get:0:2")
     fun <
             W : RequestWrapper,
@@ -46,7 +44,6 @@ class GetHttpMethods<W : RequestWrapper> {
             > Router<W, ParametrizedPath0>.GET(p: P) =
         getEndpoint<_, W>(prefix.group.with(p.group.p1).with(p.group.p2), p.path)
 
-    context(ParameterMarkupDecorator)
     @JvmName("get:0:3")
     fun <
             W : RequestWrapper,
@@ -60,7 +57,6 @@ class GetHttpMethods<W : RequestWrapper> {
             > Router<W, ParametrizedPath0>.GET(p: P) =
         getEndpoint<_, W>(prefix.group.with(p.group.p1).with(p.group.p2).with(p.group.p3), p.path)
 
-    context(ParameterMarkupDecorator)
     @JvmName("get:1:1")
     fun <
             W : RequestWrapper,
@@ -72,7 +68,6 @@ class GetHttpMethods<W : RequestWrapper> {
             P : ParametrizedPath1<PP, Ph>> Router<W, t>.GET(p: P) =
         getEndpoint<_, W>(prefix.group.with(p.group.p1), p.path)
 
-    context(ParameterMarkupDecorator)
     @JvmName("get:2:1")
     fun <
             W : RequestWrapper,
@@ -86,7 +81,6 @@ class GetHttpMethods<W : RequestWrapper> {
             P : ParametrizedPath1<PP, Ph>> Router<W, t>.GET(p: P) =
         getEndpoint<_, W>(prefix.group.with(p.group.p1), p.path)
 
-    context(ParameterMarkupDecorator)
     @JvmName("get:1:2")
     fun <
             W : RequestWrapper,

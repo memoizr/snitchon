@@ -107,15 +107,15 @@ class VertxService(override val config: Config = Config()) : SnitchService<Vertx
     }
 
     override fun withRoutes(routerConfiguration: context(ParameterMarkupDecorator,
-    GetHttpMethods<VertxRequestWrapper>,
+    GetHttpMethods,
     SlashSyntax<VertxRequestWrapper>,
     HttpResponses) Router<VertxRequestWrapper, ParametrizedPath0>.() -> Unit): RoutedService<VertxRequestWrapper> {
         val tmpDir = File(System.getProperty("java.io.tmpdir") + "/swagger-ui/docs")
         if (!tmpDir.exists()) {
             tmpDir.mkdirs()
         }
-        val router: Router<VertxRequestWrapper, ParametrizedPath0> = with(GetHttpMethods<VertxRequestWrapper>()) { Router(config, ParametrizedPath0("")) }
-        routerConfiguration(VertxMarkup(), GetHttpMethods(), SlashSyntax(), HttpResponses, router)
+        val router: Router<VertxRequestWrapper, ParametrizedPath0> = with(GetHttpMethods) { Router(config, ParametrizedPath0("")) }
+        routerConfiguration(VertxMarkup(), GetHttpMethods, SlashSyntax(), HttpResponses, router)
         val routedService = RoutedService(this, router)
 
         return routedService

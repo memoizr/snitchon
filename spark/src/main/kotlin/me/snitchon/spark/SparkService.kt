@@ -50,12 +50,12 @@ class SparkService(override val config: Config = Config()) : SnitchService<Spark
     override fun withRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        GetHttpMethods<SparkRequestWrapper>,
+        GetHttpMethods,
         SlashSyntax<SparkRequestWrapper>,
         HttpResponses
         ) Router<SparkRequestWrapper, ParametrizedPath0>.() -> Unit
     ): RoutedService<SparkRequestWrapper> {
-        val httpMethods = GetHttpMethods<SparkRequestWrapper>()
+        val httpMethods = GetHttpMethods
         val router = Router<SparkRequestWrapper,_>(config, ParametrizedPath0(""))
 
         routerConfiguration(SparkMarkup(), httpMethods, SlashSyntax(), HttpResponses, router)

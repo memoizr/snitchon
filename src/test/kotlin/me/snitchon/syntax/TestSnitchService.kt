@@ -24,15 +24,15 @@ class TestSnitchService : SnitchService<TestRequestWrapper> {
     override fun withRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        GetHttpMethods<TestRequestWrapper>,
+        GetHttpMethods,
         SlashSyntax<TestRequestWrapper>,
         HttpResponses
         ) Router<TestRequestWrapper, ParametrizedPath0>.() -> Unit
     ): RoutedService<TestRequestWrapper> {
-        val router = with(GetHttpMethods<TestRequestWrapper>()) {
+        val router = with(GetHttpMethods) {
             Router<TestRequestWrapper,ParametrizedPath0>(config, ParametrizedPath0(""))
         }
-        routerConfiguration(TestMarkup(), GetHttpMethods(), SlashSyntax(), HttpResponses, router)
+        routerConfiguration(TestMarkup(), GetHttpMethods, SlashSyntax(), HttpResponses, router)
         return RoutedService(this, router)
     }
 

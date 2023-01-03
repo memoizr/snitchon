@@ -61,14 +61,14 @@ open class SpringService(override val config: Config = Config()) : SnitchService
     override fun withRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        GetHttpMethods<SpringRequestWrapper>,
+        GetHttpMethods,
         SlashSyntax<SpringRequestWrapper>,
         HttpResponses
         ) Router<SpringRequestWrapper, ParametrizedPath0>.() -> Unit
     ): RoutedService<SpringRequestWrapper> {
         val router = Router<SpringRequestWrapper,_>(config, ParametrizedPath0(""))
 
-        routerConfiguration(SpringMarkup(), GetHttpMethods<SpringRequestWrapper>(), SlashSyntax<SpringRequestWrapper>(), HttpResponses, router)
+        routerConfiguration(SpringMarkup(), GetHttpMethods, SlashSyntax<SpringRequestWrapper>(), HttpResponses, router)
 
 //        http.notFound { req, res ->
 //            res.type("application/json")

@@ -87,7 +87,7 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
 
     override fun withRoutes(
         routerConfiguration: context(ParameterMarkupDecorator,
-        GetHttpMethods<UndertowRequestWrapper>,
+        GetHttpMethods,
         SlashSyntax<UndertowRequestWrapper>,
         HttpResponses) Router<UndertowRequestWrapper, ParametrizedPath0>.() -> Unit
     ): RoutedService<UndertowRequestWrapper> {
@@ -97,10 +97,10 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
         }
 //        http.externalStaticFileLocation(tmpDir.absolutePath)
 
-        val router = with(GetHttpMethods<UndertowRequestWrapper>()) { Router<UndertowRequestWrapper, _>(config, ParametrizedPath0("")) }
+        val router = with(GetHttpMethods) { Router<UndertowRequestWrapper, _>(config, ParametrizedPath0("")) }
         routerConfiguration(
             UndertowMarkup(),
-            GetHttpMethods<UndertowRequestWrapper>(),
+            GetHttpMethods,
             SlashSyntax<UndertowRequestWrapper>(),
             HttpResponses,
             router

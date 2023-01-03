@@ -20,7 +20,7 @@ interface SnitchService<W: RequestWrapper> {
     fun withRoutes(
         routerConfiguration: context(
         ParameterMarkupDecorator,
-        GetHttpMethods<W>,
+        GetHttpMethods,
         SlashSyntax<W>,
         HttpResponses
         )
