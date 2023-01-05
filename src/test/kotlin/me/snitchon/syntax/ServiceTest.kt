@@ -21,8 +21,8 @@ class ServiceTest {
 
     val service = TestSnitchService()
 
-    object path0 : Path<String>("userId", pattern = NonEmptyString)
-    object path1 : Path<String>("userId", pattern = NonEmptyString)
+    object path0 : Path<String>(pattern = NonEmptyString)
+    object path1 : Path<String>(pattern = NonEmptyString)
     object path2 : Path<String>(pattern = NonEmptyString)
     object path3 : Path<String>(pattern = NonEmptyString)
     object path4 : Path<String>(pattern = NonEmptyString)
@@ -107,8 +107,7 @@ class ServiceTest {
 //
 //
 //    class Container<B : Any?> {
-//        var body: BodyMarker<B>? = null
-//    }
+//        var body: BodyMarker<B>? = null //    }
 //
     @Test
     fun `supports 2 path parameters and header`() {

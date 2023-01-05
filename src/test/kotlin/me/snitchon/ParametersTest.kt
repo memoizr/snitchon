@@ -19,25 +19,12 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.test.Ignore
 
-object stringParam : Path<String>(
-    _name = "stringParam",
-    description = "Description",
-    pattern = NonEmptyString
-)
+object stringParam : Path<String>(pattern = NonEmptyString)
 
-object intparam : Path<Int>(
-    _name = "intParam",
-    description = "Description",
-    pattern = NonNegativeInt
-)
+object intparam : Path<Int>(pattern = NonNegativeInt)
 
-object otherIntParam     : Path<Int>(
-    _name = "strParam",
-    description = "Description",
-    pattern = NonNegativeInt
-)
+object otherIntParam : Path<Int>(pattern = NonNegativeInt)
 
 object q : Query<q, String>(NonEmptyString)
 
@@ -131,7 +118,7 @@ open class ParametersTest<W : RequestWrapper>(service: ServiceFactory<W>) : Snit
         whenPerform Get "/intpath2/4545/end" expectBodyJson IntTestResult(4545)
         whenPerform Get "/intpath2/hello/end" expectBodyJson ErrorHttpResponse<TestResult, List<String>>(
             400,
-            listOf("Path parameter `intParam` is invalid, expecting non negative integer, but got `hello`")
+            listOf("Path parameter `intparam` is invalid, expecting non negative integer, but got `hello`")
         )
     }
 
