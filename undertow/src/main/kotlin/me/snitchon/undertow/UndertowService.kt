@@ -18,7 +18,6 @@ import me.snitchon.service.RoutedService
 import me.snitchon.service.SnitchService
 import java.io.File
 
-
 context(me.snitchon.parsing.Parser)
 class UndertowService(override val config: Config = Config()) : SnitchService<UndertowRequestWrapper> {
     val routingHandler = RoutingHandler()
@@ -28,35 +27,31 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
             .addHttpListener(config.port, "localhost")
     }
 
+    private inline fun Endpoint<UndertowRequestWrapper, Group, Any?, *>.function(
+        exchange: HttpServerExchange,
+        b: Any?
+    ) {
+        val result = invoke!!.invoke(
+            group,
+            body,
+            BodyHandler(
+                UndertowRequestWrapper(exchange, b),
+                response,
+            )
+        )
+        result.addBodyHandler(exchange)
+    }
+
     private val Endpoint<UndertowRequestWrapper, Group, Any?, *>.func: (exchange: HttpServerExchange) -> Unit
-        get() {
-            return { exchange: HttpServerExchange ->
-
-                val result = invoke!!.invoke(
-                    group,
-                    body,
-                    BodyHandler(
-                        UndertowRequestWrapper(exchange, this@Parser),
-                        response,
-                    )
-                )
-
-                result.addBodyHandler(exchange)
-//                when (result) {
-//                    is HttpResponse.SuccessfulHttpResponse<*> -> {
-//                        //                        exchange.responseCode = result.statusCode
-//                        exchange.setStatusCode(result.statusCode)
-//                        exchange.responseHeaders.put(HttpString("Content-Type"), result._format.type)
-//                        exchange.responseSender.send(result.body?.jsonString)
-//                    }
-//
-//                    is HttpResponse.ErrorHttpResponse<*, *> -> {
-//                        //                        exchange.responseCode = result.statusCode
-//                        exchange.setStatusCode(result.statusCode)
-//                        exchange.responseHeaders.put(HttpString("Content-Type"), Format.Json.type)
-//                        exchange.responseSender.send(result.jsonString)
-//                    }
-//                }
+        get() = { exchange: HttpServerExchange ->
+            if (body.t == Nothing::class.java) {
+                println("here")
+                function(exchange, null)
+            } else {
+                println("there")
+                exchange.requestReceiver.receiveFullString { ex, msg ->
+                    function(exchange, msg.parseJson(body.t))
+                }
             }
         }
 
@@ -95,13 +90,12 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
         if (!tmpDir.exists()) {
             tmpDir.mkdirs()
         }
-//        http.externalStaticFileLocation(tmpDir.absolutePath)
 
         val router = with(GetHttpMethods) { Router<UndertowRequestWrapper, _>(config, ParametrizedPath0()) }
         routerConfiguration(
             UndertowMarkup(),
             GetHttpMethods,
-            SlashSyntax<UndertowRequestWrapper>(),
+            SlashSyntax(),
             HttpResponses,
             router
         )
@@ -126,7 +120,7 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
         exceptionHandler.put(exception, handler as (Exception) -> HttpResponse<*>)
     }
 
-    private fun HttpResponse<*>.addBodyHandler(exchange: HttpServerExchange) {
+    private inline fun HttpResponse<*>.addBodyHandler(exchange: HttpServerExchange) {
         when (this) {
             is HttpResponse.SuccessfulHttpResponse<*> -> {
                 exchange.setStatusCode(this.statusCode)

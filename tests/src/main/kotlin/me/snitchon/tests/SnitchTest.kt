@@ -14,6 +14,10 @@ import me.snitchon.router.Router
 import me.snitchon.router.GetHttpMethods
 import me.snitchon.router.SlashSyntax
 import me.snitchon.service.SnitchService
+import me.snitchon.tests.SnitchTest.HttpClient.delete
+import me.snitchon.tests.SnitchTest.HttpClient.get
+import me.snitchon.tests.SnitchTest.HttpClient.post
+import me.snitchon.tests.SnitchTest.HttpClient.put
 import java.net.BindException
 import java.net.ConnectException
 
@@ -59,13 +63,7 @@ abstract class SnitchTest<W: RequestWrapper>(
         POST, GET, PUT, DELETE;
     }
 
-    data class Expectation(
-        val port: Int,
-        private val method: HttpMethod,
-        private val endpoint: String,
-        private val headers: Map<String, String> = emptyMap(),
-        private val body: Any? = null
-    ) {
+    object HttpClient {
 
         fun call(
             url: String,
@@ -94,6 +92,16 @@ abstract class SnitchTest<W: RequestWrapper>(
             call(url, headers) { PUT(HttpRequest.BodyPublishers.ofString(body.orEmpty())) }
 
         fun delete(url: String, headers: Map<String, String>) = call(url, headers) { DELETE() }
+    }
+
+    data class Expectation(
+        val port: Int,
+        private val method: HttpMethod,
+        private val endpoint: String,
+        private val headers: Map<String, String> = emptyMap(),
+        private val body: Any? = null
+    ) {
+
 
         val response: HttpResponse<String> by lazy {
             with(GsonJsonParser) {

@@ -42,7 +42,6 @@ open class SuiteOfSuites {
     inner class UndertwoSuite : Suite<UndertowRequestWrapper>({ with(GsonJsonParser) { UndertowService(config.copy(port = it)) } })
 
     @Nested
-    @Disabled
     @DisplayName("Vertx")
     inner class VertxSuite : Suite<VertxRequestWrapper>({ with(GsonJsonParser) { VertxService(config.copy(port = it)) } })
 }

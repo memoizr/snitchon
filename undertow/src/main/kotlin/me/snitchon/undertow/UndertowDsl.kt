@@ -1,37 +1,22 @@
 package com.snitch.undertow
 
-import com.snitch.*
+import io.undertow.server.BlockingHttpExchange
 import io.undertow.server.HttpServerExchange
-import io.undertow.server.handlers.PathTemplateHandler
 import io.undertow.util.PathTemplateMatch
-import me.snitchon.http.Format
 import me.snitchon.http.HTTPMethod
 import me.snitchon.http.RequestWrapper
 import me.snitchon.http.ResponseWrapper
 import me.snitchon.parameter.*
 import me.snitchon.parsing.Parser
 import me.snitchon.path.Path
+import me.snitchon.router.BodyMarker
 import java.net.URLDecoder
 import java.util.concurrent.CountDownLatch
 
-class UndertowRequestWrapper(val exchange: HttpServerExchange, val parser: Parser) : RequestWrapper {
-    private var b: Any? = null
+class UndertowRequestWrapper(val exchange: HttpServerExchange, private val body: Any?) : RequestWrapper {
+    override  fun <T: Any?> myBody(c: Class<T>): T {
 
-    override  fun <T: Any?> myBody(body: Class<T>): T {
-        if (b != null) return b as T
-        val l = CountDownLatch(1)
-        var s = ""
-        exchange.requestReceiver.receiveFullString { e, m ->
-            s = m
-            l.countDown()
-        }
-
-        l.await()
-        with (parser) {
-            b = s.parseJson(body)
-        }
-
-        return b as T
+        return body as T
     }
 
     override fun method(): HTTPMethod = HTTPMethod.fromString(exchange.requestMethod.toString())
@@ -48,6 +33,19 @@ class UndertowRequestWrapper(val exchange: HttpServerExchange, val parser: Parse
         }
     }
 }
+
+inline fun RequestWrapper.undertow() = this as UndertowRequestWrapper
+
+//inline fun <T> RequestWrapper.bodyAsString(crossinline block: (String) -> T) = this.undertow().exchange.requestReceiver.receiveFullString { exchange, message ->
+//    block(message)
+//}
+
+//context(BodyMarker<T>)
+//inline fun <T, R> RequestWrapper.parsedBody(crossinline block: (T) -> R) = this.undertow().exchange.requestReceiver.receiveFullString { exchange, message ->
+//    with (this.undertow().parser) {
+//        block(message.parseJson(t))
+//    }
+//}
 
 
 class UTResponseWrapper : ResponseWrapper {

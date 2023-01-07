@@ -35,9 +35,9 @@ class Server(val port: Int) : AbstractVerticle() {
         router.route().handler(BodyHandler.create())
         vertx
             .createHttpServer()
-            .exceptionHandler {
-                exceptionHandler[it::class.java]?.invoke(it as Exception)
-            }
+//            .exceptionHandler {
+//                exceptionHandler[it::class.java]?.invoke(it as Exception)
+//            }
             .requestHandler(router)
             .listen(port, "localhost")
 
@@ -54,16 +54,23 @@ class VertxService(override val config: Config = Config()) : SnitchService<Vertx
     private inline val Endpoint<VertxRequestWrapper, Group, Any?, *>.func: (context: RoutingContext) -> Unit
         get() =
             { context ->
-                val res = this.invoke?.invoke(
-                    group,
-                    body,
-                    SnitchBodyHandler(
-                        VertxRequestWrapper(context, this@Parser),
-                        response
-                    )
-                )!!
+                println("here")
+                context.request().bodyHandler {
+                    try {
+                        val res = this.invoke?.invoke(
+                            group,
+                            body,
+                            SnitchBodyHandler(
+                                VertxRequestWrapper(context, it.toString().parseJson(body.t)),
+                                response
+                            )
+                        )!!
 
-                res.addBodyHandler(context)
+                        res.addBodyHandler(context)
+                    } catch (e: Exception) {
+                        exceptionHandler[e::class.java]?.invoke(e)?.addBodyHandler(context) ?: throw e
+                    }
+                }
             }
 
     private fun HttpResponse<*>.addBodyHandler(context: RoutingContext) {
@@ -85,6 +92,7 @@ class VertxService(override val config: Config = Config()) : SnitchService<Vertx
     override fun registerMethod(it: Endpoint<VertxRequestWrapper, Group, Any?, *>, path: String) {
         addBodyHandler(it, path)
         when (it.meta.httpMethod) {
+
             HTTPMethod.GET -> service.router.get(path).handler(it.func)
             HTTPMethod.POST -> service.router.post(path).handler(it.func)
 
@@ -94,27 +102,31 @@ class VertxService(override val config: Config = Config()) : SnitchService<Vertx
             HTTPMethod.DELETE -> service.router.delete(path).handler(it.func)
             HTTPMethod.OPTIONS -> service.router.options(path).handler(it.func)
         }.failureHandler {
+            println("hey")
             if (it.failed()) {
                 exceptionHandler[it.failure()::class.java]?.invoke(it.failure() as Exception)?.addBodyHandler(it)
             }
         }
     }
 
-    private fun addBodyHandler(it: Endpoint<VertxRequestWrapper, Group,*, *>, path: String) {
+    private fun addBodyHandler(it: Endpoint<VertxRequestWrapper, Group, *, *>, path: String) {
         if (it.bodyParam.klass != Nothing::class) {
             service.router.route(path).handler(BodyHandler.create())
         }
     }
 
-    override fun withRoutes(routerConfiguration: context(ParameterMarkupDecorator,
-    GetHttpMethods,
-    SlashSyntax<VertxRequestWrapper>,
-    HttpResponses) Router<VertxRequestWrapper, ParametrizedPath0>.() -> Unit): RoutedService<VertxRequestWrapper> {
+    override fun withRoutes(
+        routerConfiguration: context(ParameterMarkupDecorator,
+        GetHttpMethods,
+        SlashSyntax<VertxRequestWrapper>,
+        HttpResponses) Router<VertxRequestWrapper, ParametrizedPath0>.() -> Unit
+    ): RoutedService<VertxRequestWrapper> {
         val tmpDir = File(System.getProperty("java.io.tmpdir") + "/swagger-ui/docs")
         if (!tmpDir.exists()) {
             tmpDir.mkdirs()
         }
-        val router: Router<VertxRequestWrapper, ParametrizedPath0> = with(GetHttpMethods) { Router(config, ParametrizedPath0()) }
+        val router: Router<VertxRequestWrapper, ParametrizedPath0> =
+            with(GetHttpMethods) { Router(config, ParametrizedPath0()) }
         routerConfiguration(VertxMarkup(), GetHttpMethods, SlashSyntax(), HttpResponses, router)
         val routedService = RoutedService(this, router)
 
