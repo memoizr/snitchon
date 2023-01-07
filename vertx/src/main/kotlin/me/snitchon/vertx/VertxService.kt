@@ -114,12 +114,14 @@ class VertxService(override val config: Config = Config()) : SnitchService<Vertx
         if (!tmpDir.exists()) {
             tmpDir.mkdirs()
         }
-        val router: Router<VertxRequestWrapper, ParametrizedPath0> = with(GetHttpMethods) { Router(config, ParametrizedPath0("")) }
+        val router: Router<VertxRequestWrapper, ParametrizedPath0> = with(GetHttpMethods) { Router(config, ParametrizedPath0()) }
         routerConfiguration(VertxMarkup(), GetHttpMethods, SlashSyntax(), HttpResponses, router)
         val routedService = RoutedService(this, router)
 
         return routedService
     }
+
+    override val markup: ParameterMarkupDecorator = VertxMarkup()
 
 
     override fun <T : Exception> handleException(exception: Class<T>, handler: (T) -> HttpResponse<*>) {

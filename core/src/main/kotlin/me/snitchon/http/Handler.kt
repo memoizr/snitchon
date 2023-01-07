@@ -1,5 +1,6 @@
 package me.snitchon.http
 
+import me.snitchon.parameter.Parameter
 import me.snitchon.router.BodyMarker
 import me.snitchon.router.Param
 

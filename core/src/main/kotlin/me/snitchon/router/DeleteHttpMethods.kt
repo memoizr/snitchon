@@ -11,7 +11,7 @@ object DeleteHttpMethods {
             G : Group,
             P : ParametrizedPath<G, *>
             > Router<W, P>.DELETE(path: String = "") =
-        deleteEndpoint<_, W>(prefix.group, path)
+        deleteEndpoint<_, W>(prefix.group, listOf(PathElement.PathConstant(path)))
 
     context(ParameterMarkupDecorator)
     @JvmName("z")
@@ -63,7 +63,7 @@ object DeleteHttpMethods {
             P : ParametrizedPath2<PP, Ph, PP2, Ph2>> Router<W, t>.DELETE(p: P) =
         deleteEndpoint<_, W>(prefix.group.with(p.group.p1).with(p.group.p2), p.path)
 
-    fun <G : Group, W : RequestWrapper> deleteEndpoint(group: G, path: String) = Endpoint<W, _, _, _>(
+    fun <G : Group, W : RequestWrapper> deleteEndpoint(group: G, path: List<PathElement>) = Endpoint<W, _, _, _>(
         EndpointMeta(
             HTTPMethod.DELETE,
             path,

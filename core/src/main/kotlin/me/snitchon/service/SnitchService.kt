@@ -11,10 +11,12 @@ import me.snitchon.http.HttpResponses
 import me.snitchon.http.RequestWrapper
 import me.snitchon.parameter.ParameterMarkupDecorator
 import me.snitchon.parameter.ParametrizedPath0
+import me.snitchon.parameter.PathElement
 import me.snitchon.router.*
 
-interface SnitchService<W: RequestWrapper> {
+interface SnitchService<W : RequestWrapper> {
     val config: Config get() = Config()
+    val markup: ParameterMarkupDecorator
     fun registerMethod(bundle: Endpoint<W, Group, Any?, *>, path: String)
 
     fun withRoutes(
@@ -29,13 +31,28 @@ interface SnitchService<W: RequestWrapper> {
 
     fun <T : Exception> handleException(exception: Class<T>, handler: (T) -> HttpResponse<*>)
 
-    fun onStart() {}
+    fun onStart() {
+    }
 }
 
-data class RoutedService<W: RequestWrapper>(val service: SnitchService<W>, val router: Router<W, ParametrizedPath0>) {
+context(ParameterMarkupDecorator)
+private val List<PathElement>.stringRep
+    get() =
+        let { if ((it.lastOrNull() as? PathElement.PathConstant)?.constant?.isEmpty() == true) it.dropLast(1) else it }
+            .map {
+                when (it) {
+                    is PathElement.PathConstant -> it.constant.ensureLeadingSlash()
+                    is PathElement.PathVariable<*> -> it.path.markupName.ensureLeadingSlash()
+                }
+            }.joinToString("")
+
+data class RoutedService<W : RequestWrapper>(
+    val service: SnitchService<W>,
+    val router: Router<W, ParametrizedPath0>,
+) {
     fun startListening(): RoutedService<W> {
         router.endpoints.forEach {
-            service.registerMethod(it, it.meta.url.ensureLeadingSlash())
+            service.registerMethod(it, with(service.markup) { it.meta.path.stringRep.ensureLeadingSlash() })
         }
 
         service.onStart()

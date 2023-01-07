@@ -97,7 +97,7 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
         }
 //        http.externalStaticFileLocation(tmpDir.absolutePath)
 
-        val router = with(GetHttpMethods) { Router<UndertowRequestWrapper, _>(config, ParametrizedPath0("")) }
+        val router = with(GetHttpMethods) { Router<UndertowRequestWrapper, _>(config, ParametrizedPath0()) }
         routerConfiguration(
             UndertowMarkup(),
             GetHttpMethods,
@@ -119,6 +119,8 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
             .build()
             .start()
     }
+
+    override val markup: ParameterMarkupDecorator = UndertowMarkup()
 
     override fun <T : Exception> handleException(exception: Class<T>, handler: (T) -> HttpResponse<*>) {
         exceptionHandler.put(exception, handler as (Exception) -> HttpResponse<*>)

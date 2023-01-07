@@ -1,11 +1,9 @@
 package me.snitchon.router
 
 import me.snitchon.config.Config
-import me.snitchon.documentation.Visibility
 import me.snitchon.endpoint.*
 import me.snitchon.http.*
 import me.snitchon.parameter.*
-import me.snitchon.path.Path
 
 data class Router<W : RequestWrapper,
         P : ParametrizedPath<out Group, *>>(
@@ -23,7 +21,7 @@ data class Router<W : RequestWrapper,
 
     val EndpointMeta.prefixed
         get() =
-            copy(url = prefix.path + if (url.isEmpty()) "" else url.ensureLeadingSlash())
+            copy(path = prefix.path + if (path.isEmpty()) listOf(PathElement.PathConstant("")) else path)
 
     fun <G : Group, X : Endpoint<W, G, BODY, RETURN>, Y : Endpoint<W, G, BODY, RETURN>, BODY, RETURN> X.headers(block: context(X, OnlyHeader, ParameterAddition) () -> Y): Y =
         block(this@X, OnlyHeader, ParameterAddition)
@@ -41,6 +39,4 @@ data class Router<W : RequestWrapper,
         body,
         RETURN::class,
     ).also { addEndpoint(it as Endpoint<W, Group, *, *>) }
-
-
 }

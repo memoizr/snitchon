@@ -2,7 +2,7 @@ package me.snitchon.endpoint
 
 import me.snitchon.documentation.Visibility
 import me.snitchon.http.*
-import me.snitchon.router.Body
+import me.snitchon.parameter.PathElement
 import me.snitchon.router.BodyMarker
 import me.snitchon.router.Param
 import kotlin.reflect.KClass
@@ -88,7 +88,7 @@ fun <G : Group, B : Any?, R : Any, W : RequestWrapper, E : Endpoint<W, G, B, R>>
 
 data class EndpointMeta(
     val httpMethod: HTTPMethod,
-    val url: String,
+    val path: List<PathElement>,
     val summary: String?,
     val description: String?,
     val visibility: Visibility,

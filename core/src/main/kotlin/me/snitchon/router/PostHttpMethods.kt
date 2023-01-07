@@ -11,7 +11,7 @@ object PostHttpMethods {
             G : Group,
             P : ParametrizedPath<G, *>
             > Router<W, P>.POST(path: String = "") =
-        postEndpoint<_, W>(prefix.group, path)
+        postEndpoint<_, W>(prefix.group, listOf(PathElement.PathConstant(path)))
 
     context(ParameterMarkupDecorator)
     @JvmName("z")
@@ -63,7 +63,7 @@ object PostHttpMethods {
             P : ParametrizedPath2<PP, Ph, PP2, Ph2>> Router<W, t>.POST(p: P) =
         postEndpoint<_, W>(prefix.group.with(p.group.p1).with(p.group.p2), p.path)
 
-    fun <G : Group, W : RequestWrapper> postEndpoint(group: G, path: String) = Endpoint<W, _, _, _>(
+    fun <G : Group, W : RequestWrapper> postEndpoint(group: G, path: List<PathElement>) = Endpoint<W, _, _, _>(
         EndpointMeta(
             HTTPMethod.POST,
             path,

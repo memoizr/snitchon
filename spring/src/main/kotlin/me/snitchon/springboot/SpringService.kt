@@ -50,6 +50,8 @@ open class SpringService(override val config: Config = Config()) : SnitchService
         parser = this@Parser
     }
 
+    override val markup: ParameterMarkupDecorator = SpringMarkup()
+
 
     override fun <T : Exception> handleException(
         exception: Class<T>,
@@ -66,7 +68,7 @@ open class SpringService(override val config: Config = Config()) : SnitchService
         HttpResponses
         ) Router<SpringRequestWrapper, ParametrizedPath0>.() -> Unit
     ): RoutedService<SpringRequestWrapper> {
-        val router = Router<SpringRequestWrapper,_>(config, ParametrizedPath0(""))
+        val router = Router<SpringRequestWrapper,_>(config, ParametrizedPath0())
 
         routerConfiguration(SpringMarkup(), GetHttpMethods, SlashSyntax<SpringRequestWrapper>(), HttpResponses, router)
 

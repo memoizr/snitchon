@@ -31,6 +31,7 @@ class SparkService(override val config: Config = Config()) : SnitchService<Spark
 
         Service.ignite().port(config.port)
     }
+    override val markup: ParameterMarkupDecorator = SparkMarkup()
 
     override fun <T : Exception> handleException(
         exception: Class<T>,
@@ -41,7 +42,7 @@ class SparkService(override val config: Config = Config()) : SnitchService<Spark
                 response.status(it.statusCode)
                 when (it) {
                     is HttpResponse.SuccessfulHttpResponse<*> -> response.body(it.body?.jsonString)
-                    is HttpResponse.ErrorHttpResponse<*,*> -> response.body(it.jsonString)
+                    is HttpResponse.ErrorHttpResponse<*, *> -> response.body(it.jsonString)
                 }
             }
         }
@@ -56,10 +57,9 @@ class SparkService(override val config: Config = Config()) : SnitchService<Spark
         ) Router<SparkRequestWrapper, ParametrizedPath0>.() -> Unit
     ): RoutedService<SparkRequestWrapper> {
         val httpMethods = GetHttpMethods
-        val router = Router<SparkRequestWrapper,_>(config, ParametrizedPath0(""))
+        val router = Router<SparkRequestWrapper, _>(config, ParametrizedPath0())
 
         routerConfiguration(SparkMarkup(), httpMethods, SlashSyntax(), HttpResponses, router)
-        println(router.endpoints)
 
         http.notFound { req, res ->
             res.type("application/json")
@@ -68,62 +68,46 @@ class SparkService(override val config: Config = Config()) : SnitchService<Spark
         return RoutedService(this, router)
     }
 
+    override fun onStart() {
+        println(http.routes().map { it.matchUri })
+    }
+
     override fun registerMethod(bundle: Endpoint<SparkRequestWrapper, Group, Any?, *>, path: String) {
-            val function: (request: Request, response: Response) -> String? = { request, response ->
-                val call = BodyHandler(
-                    SparkRequestWrapper(request, this@Parser),
-                    bundle.response
-                )
+        val function: (request: Request, response: Response) -> String? = { request, response ->
+            val call = BodyHandler(
+                SparkRequestWrapper(request, this@Parser),
+                bundle.response
+            )
 
-                val result = bundle.invoke?.invoke(bundle.group, bundle.body, call)!!
+            val result = bundle.invoke?.invoke(bundle.group, bundle.body, call)!!
 
-                response.status(result.statusCode)
+            response.status(result.statusCode)
 
-                when (result) {
-                    is HttpResponse.SuccessfulHttpResponse<*> -> {
-                        if (result._format == Format.Json) {
-                            response.type(result._format.type)
-                            result.body?.jsonString
-                        } else {
-                            response.type(result._format.type)
-                            result.body.toString()
-                        }
-                    }
-
-                    is HttpResponse.ErrorHttpResponse<*, *> -> {
-                        result.jsonString
+            when (result) {
+                is HttpResponse.SuccessfulHttpResponse<*> -> {
+                    if (result._format == Format.Json) {
+                        response.type(result._format.type)
+                        result.body?.jsonString
+                    } else {
+                        response.type(result._format.type)
+                        result.body.toString()
                     }
                 }
-            }
 
-            when (bundle.meta.httpMethod) {
-                HTTPMethod.GET -> {
-                    http.get(path, function)
-                }
-
-                HTTPMethod.PUT -> {
-                    http.put(path, function)
-                }
-
-                HTTPMethod.POST -> {
-                    http.post(path, function)
-                }
-
-                HTTPMethod.PATCH -> {
-                    http.patch(path, function)
-                }
-
-                HTTPMethod.DELETE -> {
-                    http.delete(path, function)
-                }
-
-                HTTPMethod.OPTIONS -> {
-                    http.options(path, function)
-                }
-
-                HTTPMethod.HEAD -> {
-                    http.head(path, function)
+                is HttpResponse.ErrorHttpResponse<*, *> -> {
+                    result.jsonString
                 }
             }
+        }
+
+        when (bundle.meta.httpMethod) {
+            HTTPMethod.GET -> http.get(path, function)
+            HTTPMethod.PUT -> http.put(path, function)
+            HTTPMethod.POST -> http.post(path, function)
+            HTTPMethod.PATCH -> http.patch(path, function)
+            HTTPMethod.DELETE -> http.delete(path, function)
+            HTTPMethod.OPTIONS -> http.options(path, function)
+            HTTPMethod.HEAD -> http.head(path, function)
+        }
     }
 }

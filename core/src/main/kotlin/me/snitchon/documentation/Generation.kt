@@ -57,72 +57,74 @@ fun RoutedService<*>.generateDocs(visibility: Visibility = Visibility.PUBLIC): O
         servers = listOf(Server("${router.config.host}:${router.config.port}"))
     )
 
-    return router.endpoints
-        .groupBy { it.meta.url }
-        .map { entry ->
-            entry.key to entry.value.foldRight(Path()) { bundle: Endpoint<*, *, *, *>, path ->
-                visibility.visibleOrNull(bundle.meta.visibility) {
-                    path.withOperation(
-                        bundle.meta.httpMethod,
-                        Operation(
-                            tags = bundle.meta.url.split("/").drop(1).firstOrNull()?.let { listOf(it) },
-                            summary = bundle.meta.summary,
-                            description = bundle.meta.description,
-                            responses = emptyMap(),
-                            visibility = bundle.meta.visibility
-                        )
-                            .withResponse(ContentType.APPLICATION_JSON, bundle.response, "200")
-                            .let {
-                                if (bundle.bodyParam.klass != Nothing::class) {
-                                    it.withRequestBody(ContentType.APPLICATION_JSON, bundle.bodyParam.klass)
-                                } else it
-                            }
-                            .let {
-                                bundle.headerParams.fold(it) { acc, p ->
-                                    acc.withParameter(
-                                        Parameters.HeaderParameter(
-                                            name = p.name,
-                                            required = p.required,
-                                            description = getDescription(p),
-                                            visibility = p.visibility,
-                                            schema = toSchema(p.type.kotlin.starProjectedType)
-                                                .withPattern(p.pattern.regex)
-                                        )
-                                    )
+    return with(service.markup) {
+        router.endpoints
+            .groupBy { it.meta.path }
+            .map { entry ->
+                entry.key to entry.value.foldRight(Path()) { bundle: Endpoint<*, *, *, *>, path ->
+                    visibility.visibleOrNull(bundle.meta.visibility) {
+                        path.withOperation(
+                            bundle.meta.httpMethod,
+                            Operation(
+                                tags = bundle.meta.path.stringRep.split("/").drop(1).firstOrNull()?.let { listOf(it) },
+                                summary = bundle.meta.summary,
+                                description = bundle.meta.description,
+                                responses = emptyMap(),
+                                visibility = bundle.meta.visibility
+                            )
+                                .withResponse(ContentType.APPLICATION_JSON, bundle.response, "200")
+                                .let {
+                                    if (bundle.bodyParam.klass != Nothing::class) {
+                                        it.withRequestBody(ContentType.APPLICATION_JSON, bundle.bodyParam.klass)
+                                    } else it
                                 }
-                            }
-                            .let {
-                                bundle.pathParams.fold(it) { acc, param ->
-                                    acc.withParameter(
-                                        Parameters.PathParameter(
-                                            name = param.name,
-                                            description = getDescription(param),
-                                            schema = toSchema(param.type.kotlin.starProjectedType)
-                                                .withPattern(param.pattern.regex)
+                                .let {
+                                    bundle.headerParams.fold(it) { acc, p ->
+                                        acc.withParameter(
+                                            Parameters.HeaderParameter(
+                                                name = p.name,
+                                                required = p.required,
+                                                description = getDescription(p),
+                                                visibility = p.visibility,
+                                                schema = toSchema(p.type.kotlin.starProjectedType)
+                                                    .withPattern(p.pattern.regex)
+                                            )
                                         )
-                                    )
+                                    }
                                 }
-                            }
-                            .let {
-                                bundle.queryParams.fold(it) { acc, p ->
-                                    acc.withParameter(
-                                        Parameters.QueryParameter(
-                                            name = p.name,
-                                            description = getDescription(p),
-                                            allowEmptyValue = p.emptyAsMissing,
-                                            required = p.required,
-                                            visibility = p.visibility,
-                                            schema = toSchema(p.type.kotlin.starProjectedType)
-                                                .withPattern(p.pattern.regex)
+                                .let {
+                                    bundle.pathParams.fold(it) { acc, param ->
+                                        acc.withParameter(
+                                            Parameters.PathParameter(
+                                                name = param.name,
+                                                description = getDescription(param),
+                                                schema = toSchema(param.type.kotlin.starProjectedType)
+                                                    .withPattern(param.pattern.regex)
+                                            )
+                                        )
+                                    }
+                                }
+                                .let {
+                                    bundle.queryParams.fold(it) { acc, p ->
+                                        acc.withParameter(
+                                            Parameters.QueryParameter(
+                                                name = p.name,
+                                                description = getDescription(p),
+                                                allowEmptyValue = p.emptyAsMissing,
+                                                required = p.required,
+                                                visibility = p.visibility,
+                                                schema = toSchema(p.type.kotlin.starProjectedType)
+                                                    .withPattern(p.pattern.regex)
 
+                                            )
                                         )
-                                    )
+                                    }
                                 }
-                            }
-                    )
-                } ?: path
-            }
-        }.fold(openApi) { a, b -> a.withPath(b.first, b.second) }
+                        )
+                    } ?: path
+                }
+            }.fold(openApi) { a, b -> a.withPath(b.first.stringRep, b.second) }
+    }
 }
 
 context(Parser)
@@ -142,7 +144,7 @@ data class Spec<W : RequestWrapper>(
 
     fun servePublicDocumenation(): Spec<W> {
         with(GetHttpMethods) {
-            with(Router<W, ParametrizedPath0>(router.config, ParametrizedPath0(""))) {
+            with(Router<W, ParametrizedPath0>(router.config, ParametrizedPath0())) {
                 val path = config.publicDocumentationPath.ensureLeadingSlash()
                 val docPath = "$path/spec.json".ensureLeadingSlash()
                 routedService.service.registerMethod(
@@ -153,7 +155,7 @@ data class Spec<W : RequestWrapper>(
                 )
                 routedService.service.registerMethod(GET(docPath).isHandledBy {
                     publicApi.ok.format(Format.Json)
-                }as Endpoint<W, Group, Any?, *>, docPath)
+                } as Endpoint<W, Group, Any?, *>, docPath)
             }
         }
         return this
@@ -161,21 +163,30 @@ data class Spec<W : RequestWrapper>(
 
     fun serveInternalDocumenation(): Spec<W> {
         with(GetHttpMethods) {
-            with(Router<W, _>(router.config, ParametrizedPath0(""))) {
+            with(Router<W, _>(router.config, ParametrizedPath0())) {
 
                 val path = config.internalDocumentationPath.ensureLeadingSlash()
                 val docPath = "$path/spec.json".ensureLeadingSlash()
                 routedService.service.registerMethod(GET(path).isHandledBy {
                     index(docPath).ok.format(Format.TextHTML)
-                }as Endpoint<W, Group, Any?, *>, path)
+                } as Endpoint<W, Group, Any?, *>, path)
                 routedService.service.registerMethod(GET(docPath).isHandledBy {
                     internalApi.ok.format(Format.Json)
-                }as Endpoint<W, Group, Any?, *>, docPath)
+                } as Endpoint<W, Group, Any?, *>, docPath)
             }
         }
         return this
     }
 }
+
+context(ParameterMarkupDecorator)
+private val List<PathElement>.stringRep
+    get() = map {
+        when (it) {
+            is PathElement.PathConstant -> it.constant.ensureLeadingSlash()
+            is PathElement.PathVariable<*> -> it.path.markupName.ensureLeadingSlash()
+        }
+    }.joinToString("")
 
 private fun getDescription(param: Parameter<*, *>) =
     "${param.description} - ${param.pattern.description}${if (param.invalidAsMissing) " - Invalid as Missing" else ""}${if (param.emptyAsMissing) " - Empty as Missing" else ""}"

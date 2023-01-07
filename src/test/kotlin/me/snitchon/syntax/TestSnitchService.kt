@@ -30,15 +30,17 @@ class TestSnitchService : SnitchService<TestRequestWrapper> {
         ) Router<TestRequestWrapper, ParametrizedPath0>.() -> Unit
     ): RoutedService<TestRequestWrapper> {
         val router = with(GetHttpMethods) {
-            Router<TestRequestWrapper,ParametrizedPath0>(config, ParametrizedPath0(""))
+            Router<TestRequestWrapper,ParametrizedPath0>(config, ParametrizedPath0())
         }
         routerConfiguration(TestMarkup(), GetHttpMethods, SlashSyntax(), HttpResponses, router)
         return RoutedService(this, router)
     }
 
     override fun registerMethod(bundle: Endpoint<TestRequestWrapper, Group, Any?, *>, path: String) {
-        service.add(TestRequest(bundle.meta.httpMethod, bundle.meta.url) to bundle)
+        service.add(TestRequest(bundle.meta.httpMethod, "") to bundle)//bundle.meta.path) to bundle)
     }
+
+    override val markup: ParameterMarkupDecorator = TestMarkup()
 
     override fun <T : Exception> handleException(
         exception: Class<T>,

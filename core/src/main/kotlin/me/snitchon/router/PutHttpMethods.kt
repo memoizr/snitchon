@@ -11,7 +11,7 @@ object PutHttpMethods {
             G : Group,
             P : ParametrizedPath<G, *>
             > Router<W, P>.PUT(path: String = "") =
-        putEndpoint<_, W>(prefix.group, path)
+        putEndpoint<_, W>(prefix.group, listOf(PathElement.PathConstant(path)))
 
     context(ParameterMarkupDecorator)
     @JvmName("z")
@@ -63,7 +63,7 @@ object PutHttpMethods {
             P : ParametrizedPath2<PP, Ph, PP2, Ph2>> Router<W, t>.PUT(p: P) =
         putEndpoint<_, W>(prefix.group.with(p.group.p1).with(p.group.p2), p.path)
 
-    fun <G : Group, W : RequestWrapper> putEndpoint(group: G, path: String) = Endpoint<W, _, _, _>(
+    fun <G : Group, W : RequestWrapper> putEndpoint(group: G, path: List<PathElement>) = Endpoint<W, _, _, _>(
         EndpointMeta(
             HTTPMethod.PUT,
             path,
