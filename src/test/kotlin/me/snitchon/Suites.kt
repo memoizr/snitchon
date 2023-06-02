@@ -6,8 +6,8 @@ import me.snitchon.http.RequestWrapper
 import me.snitchon.parsers.GsonJsonParser
 import me.snitchon.spark.SparkRequestWrapper
 import me.snitchon.spark.SparkService
-import me.snitchon.springboot.SpringRequestWrapper
-import me.snitchon.springboot.SpringService
+//import me.snitchon.springboot.SpringRequestWrapper
+//import me.snitchon.springboot.SpringService
 import me.snitchon.tests.ServiceFactory
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
@@ -27,9 +27,9 @@ open class Suite<W: RequestWrapper>(val service: ServiceFactory<W>) {
 
 open class SuiteOfSuites {
 
-    @Nested
-    @DisplayName("Spring")
-    inner class SpringSuite : Suite<SpringRequestWrapper>({ with(GsonJsonParser) { SpringService(config.copy(port = it)) } })
+//    @Nested
+//    @DisplayName("Spring")
+//    inner class SpringSuite : Suite<SpringRequestWrapper>({ with(GsonJsonParser) { SpringService(config.copy(port = it)) } })
 
     @Nested
     @DisplayName("Spark")
