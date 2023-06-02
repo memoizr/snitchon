@@ -27,9 +27,9 @@ dependencies {
 //    testImplementation(project(":spring"))
     testImplementation(project(":spark"))
 //    testImplementation(project(":vertx"))
+    implementation(kotlin("test"))
     testImplementation(project(":undertow"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    testImplementation(kotlin("test"))
     testImplementation("com.dslplatform:dsl-json-java8:1.9.9")
     testImplementation("com.github.memoizr:assertk-core:-SNAPSHOT")
 
