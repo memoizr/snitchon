@@ -9,7 +9,7 @@ interface Handler<out W : RequestWrapper> {
 }
 
 context(BodyMarker<T>, Handler<W>)
-val <T : Any?, W : RequestWrapper> RequestWrapper.body
+val <T : Any, W : RequestWrapper> RequestWrapper.body
     get(): T = request.myBody(t)
 
 data class NoBodyHandler<W : RequestWrapper>(

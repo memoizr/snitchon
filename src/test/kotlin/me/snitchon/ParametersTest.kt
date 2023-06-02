@@ -17,6 +17,7 @@ import me.snitchon.types.Sealed
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -59,7 +60,7 @@ object DateValidator : Validator<String, Date> {
     override val required: Boolean = true
 }
 
-@Disabled
+@ExtendWith(CustomTypeParameterResolver::class)
 open class ParametersTest<W : RequestWrapper>(service: ServiceFactory<W>) : SnitchTest<W>(service) {
     @BeforeEach
     fun before() {

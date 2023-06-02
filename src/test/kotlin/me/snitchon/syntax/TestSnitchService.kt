@@ -19,7 +19,7 @@ class TestMarkup : ParameterMarkupDecorator {
 
 @Suppress("UNCHECKED_CAST")
 class TestSnitchService : SnitchService<TestRequestWrapper> {
-    val service = mutableSetOf<Pair<TestRequest, Endpoint<TestRequestWrapper, Group, Any?, *>>>()
+    val service = mutableSetOf<Pair<TestRequest, Endpoint<TestRequestWrapper, Group, Any, *>>>()
 
     override fun withRoutes(
         routerConfiguration: context(
@@ -36,7 +36,7 @@ class TestSnitchService : SnitchService<TestRequestWrapper> {
         return RoutedService(this, router)
     }
 
-    override fun registerMethod(bundle: Endpoint<TestRequestWrapper, Group, Any?, *>, path: String) {
+    override fun registerMethod(bundle: Endpoint<TestRequestWrapper, Group, Any, *>, path: String) {
         service.add(TestRequest(bundle.meta.httpMethod, "") to bundle)//bundle.meta.path) to bundle)
     }
 

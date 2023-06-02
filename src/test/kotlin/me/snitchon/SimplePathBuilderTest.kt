@@ -1,5 +1,7 @@
 package me.snitchon
 
+import com.snitch.undertow.UndertowRequestWrapper
+import com.snitch.undertow.UndertowService
 import me.snitchon.http.HttpResponses.badRequest
 import me.snitchon.spark.SparkService
 import me.snitchon.config.Config
@@ -33,8 +35,8 @@ open class CustomTypeParameterResolver : ParameterResolver {
     override fun resolveParameter(
         parameterContext: ParameterContext,
         extensionContext: ExtensionContext
-    ): ServiceFactory<SparkRequestWrapper> {
-        return { it -> with(GsonJsonParser) { SparkService(Config(port = it)) } }
+    ): ServiceFactory<UndertowRequestWrapper> {
+        return { it -> with(GsonJsonParser) { UndertowService(Config(port = it)) } }
     }
 }
 

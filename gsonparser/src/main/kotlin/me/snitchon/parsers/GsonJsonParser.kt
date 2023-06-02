@@ -1,21 +1,15 @@
 package me.snitchon.parsers
 
 import com.google.gson.*
-import com.google.gson.internal.bind.TypeAdapters
 import com.google.gson.reflect.TypeToken
-import com.google.gson.stream.JsonReader
-import com.google.gson.stream.JsonToken
-import com.google.gson.stream.JsonWriter
 import me.snitchon.parsers.GsonJsonParser.jsonString
-import me.snitchon.parsers.GsonJsonParser.parseJson
 import me.snitchon.parsing.Parser
 import me.snitchon.types.Sealed
 import java.lang.reflect.Type
-import java.text.SimpleDateFormat
 
 class SealedAdapter : JsonDeserializer<Sealed> {
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Sealed {
-        val type = json?.asJsonObject?.get("type")?.jsonString
+        val type = json?.asJsonObject?.get("\$type")?.jsonString
         val rawType = TypeToken.get(typeOfT).rawType
 
         return rawType.kotlin.sealedSubclasses
@@ -38,7 +32,7 @@ object GsonJsonParser : Parser {
     override val Any.jsonByteArray: ByteArray
         get() = TODO("Not yet implemented")
 
-    override fun <T : Any?> String.parseJson(klass: Class<T>): T {
+    override fun <T : Any> String.parseJson(klass: Class<T>): T {
         return gson.fromJson(this, klass)
     }
 

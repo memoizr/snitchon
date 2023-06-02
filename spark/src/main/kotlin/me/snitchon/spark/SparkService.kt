@@ -72,7 +72,7 @@ class SparkService(override val config: Config = Config()) : SnitchService<Spark
         println(http.routes().map { it.matchUri })
     }
 
-    override fun registerMethod(bundle: Endpoint<SparkRequestWrapper, Group, Any?, *>, path: String) {
+    override fun registerMethod(bundle: Endpoint<SparkRequestWrapper, Group, Any, *>, path: String) {
         val function: (request: Request, response: Response) -> String? = { request, response ->
             val call = BodyHandler(
                 SparkRequestWrapper(request, this@Parser),

@@ -9,11 +9,12 @@ class ExtensionsTest {
     @Test
     fun `parses sealed classes`() {
         with(GsonJsonParser) {
-            """{"type":"ONE","one":"hello"}""".parseJson(TheSeal::class.java) isEqualTo TheSeal.ONE("hello")
-            """{"type":"TWO","two":"hello"}""".parseJson(TheSeal::class.java) isEqualTo TheSeal.TWO("hello")
+            val type = "\$type"
+            """{"$type":"ONE","one":"hello"}""".parseJson(TheSeal::class.java) isEqualTo TheSeal.ONE("hello")
+            """{"$type":"TWO","two":"hello"}""".parseJson(TheSeal::class.java) isEqualTo TheSeal.TWO("hello")
 
-            """{"type":"ONE","one":"hello"}""".parseJson(TheSeal.ONE::class.java) isEqualTo TheSeal.ONE("hello")
-            """{"type":"TWO","two":"hello"}""".parseJson(TheSeal.TWO::class.java) isEqualTo TheSeal.TWO("hello")
+            """{"$type":"ONE","one":"hello"}""".parseJson(TheSeal.ONE::class.java) isEqualTo TheSeal.ONE("hello")
+            """{"$type":"TWO","two":"hello"}""".parseJson(TheSeal.TWO::class.java) isEqualTo TheSeal.TWO("hello")
         }
     }
 }

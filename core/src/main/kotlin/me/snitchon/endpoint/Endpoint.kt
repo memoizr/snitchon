@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
 data class Endpoint<
         W : RequestWrapper,
         G : Group,
-        B : Any?,
+        B : Any,
         R : Any>(
     val meta: EndpointMeta,
     val invoke: (context(G, BodyMarker<B>, Handler<W>) () -> HttpResponse<R>)? = null,
@@ -29,7 +29,7 @@ data class Endpoint<
 fun <W : RequestWrapper,
         G : Group,
         R : Any,
-        T : Any?
+        T : Any
         > Endpoint<W, G, Nothing, R>.withBody(body: BodyMarker<T>) =
     Endpoint<W, G, T, R>(
         meta,

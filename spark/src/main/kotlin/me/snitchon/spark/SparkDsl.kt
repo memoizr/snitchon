@@ -11,7 +11,7 @@ import spark.Response
 
 class SparkRequestWrapper(val request: Request, val parser: Parser) : RequestWrapper {
 
-    override fun <T : Any?> myBody(body: Class<T>): T {
+    override fun <T : Any> myBody(body: Class<T>): T {
         val body1 = request.body()
         return with(parser) { body1.parseJson(body) }
     }

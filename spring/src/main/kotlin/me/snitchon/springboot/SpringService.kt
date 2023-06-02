@@ -79,7 +79,7 @@ open class SpringService(override val config: Config = Config()) : SnitchService
         return RoutedService(this, router)
     }
 
-    override fun registerMethod(bundle: Endpoint<SpringRequestWrapper, Group, Any?, *>, path: String) {
+    override fun registerMethod(bundle: Endpoint<SpringRequestWrapper, Group, Any, *>, path: String) {
         val function: HandlerFunction<ServerResponse> = HandlerFunction { request: ServerRequest ->
             val call = BodyHandler(
                 SpringRequestWrapper(request),

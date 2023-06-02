@@ -27,7 +27,7 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
             .addHttpListener(config.port, "localhost")
     }
 
-    private inline fun Endpoint<UndertowRequestWrapper, Group, Any?, *>.function(
+    private inline fun Endpoint<UndertowRequestWrapper, Group, Any, *>.function(
         exchange: HttpServerExchange,
         b: Any?
     ) {
@@ -42,7 +42,7 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
         result.addBodyHandler(exchange)
     }
 
-    private val Endpoint<UndertowRequestWrapper, Group, Any?, *>.func: (exchange: HttpServerExchange) -> Unit
+    private val Endpoint<UndertowRequestWrapper, Group, Any, *>.func: (exchange: HttpServerExchange) -> Unit
         get() = { exchange: HttpServerExchange ->
             if (body.t == Nothing::class.java) {
                 println("here")
@@ -55,7 +55,7 @@ class UndertowService(override val config: Config = Config()) : SnitchService<Un
             }
         }
 
-    override fun registerMethod(it: Endpoint<UndertowRequestWrapper, Group, Any?, *>, path: String) {
+    override fun registerMethod(it: Endpoint<UndertowRequestWrapper, Group, Any, *>, path: String) {
         val handler: RoutingHandler =
             when (it.meta.httpMethod) {
                 HTTPMethod.GET -> routingHandler.get(path, it.func)

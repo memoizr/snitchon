@@ -7,7 +7,7 @@ import me.snitchon.parameter.*
 import me.snitchon.path.Path
 
 class VertxRequestWrapper(val context: RoutingContext, val body: Any? = null) : RequestWrapper {
-    override fun <T : Any?> myBody(c: Class<T>): T {
+    override fun <T : Any> myBody(c: Class<T>): T {
         return body as T
     }
 

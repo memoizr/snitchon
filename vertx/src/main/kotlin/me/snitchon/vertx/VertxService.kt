@@ -51,7 +51,7 @@ context(me.snitchon.parsing.Parser)
 class VertxService(override val config: Config = Config()) : SnitchService<VertxRequestWrapper> {
     val service by lazy { Server(config.port) }
 
-    private inline val Endpoint<VertxRequestWrapper, Group, Any?, *>.func: (context: RoutingContext) -> Unit
+    private inline val Endpoint<VertxRequestWrapper, Group, Any, *>.func: (context: RoutingContext) -> Unit
         get() =
             { context ->
                 println("here")
@@ -89,7 +89,7 @@ class VertxService(override val config: Config = Config()) : SnitchService<Vertx
         }
     }
 
-    override fun registerMethod(it: Endpoint<VertxRequestWrapper, Group, Any?, *>, path: String) {
+    override fun registerMethod(it: Endpoint<VertxRequestWrapper, Group, Any, *>, path: String) {
         addBodyHandler(it, path)
         when (it.meta.httpMethod) {
 

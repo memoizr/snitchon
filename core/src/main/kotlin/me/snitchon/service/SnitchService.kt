@@ -17,7 +17,7 @@ import me.snitchon.router.*
 interface SnitchService<W : RequestWrapper> {
     val config: Config get() = Config()
     val markup: ParameterMarkupDecorator
-    fun registerMethod(bundle: Endpoint<W, Group, Any?, *>, path: String)
+    fun registerMethod(bundle: Endpoint<W, Group, Any, *>, path: String)
 
     fun withRoutes(
         routerConfiguration: context(
@@ -72,6 +72,12 @@ data class RoutedService<W : RequestWrapper>(
         service.handleException(MissingRequiredParameterException::class.java) { e ->
             HttpResponse.ErrorHttpResponse<Any, List<String>>(
                 400,
+                listOf(e.message!!)
+            )
+        }
+        service.handleException(Exception::class.java) { e ->
+            HttpResponse.ErrorHttpResponse<Any, List<String>>(
+                500,
                 listOf(e.message!!)
             )
         }

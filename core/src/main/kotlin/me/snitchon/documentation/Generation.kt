@@ -151,11 +151,11 @@ data class Spec<W : RequestWrapper>(
                     GET(path)
                         .isHandledBy {
                             index(docPath).ok.format(Format.TextHTML)
-                        } as Endpoint<W, Group, Any?, *>, path
+                        } as Endpoint<W, Group, Any, *>, path
                 )
                 routedService.service.registerMethod(GET(docPath).isHandledBy {
                     publicApi.ok.format(Format.Json)
-                } as Endpoint<W, Group, Any?, *>, docPath)
+                } as Endpoint<W, Group, Any, *>, docPath)
             }
         }
         return this
@@ -169,10 +169,10 @@ data class Spec<W : RequestWrapper>(
                 val docPath = "$path/spec.json".ensureLeadingSlash()
                 routedService.service.registerMethod(GET(path).isHandledBy {
                     index(docPath).ok.format(Format.TextHTML)
-                } as Endpoint<W, Group, Any?, *>, path)
+                } as Endpoint<W, Group, Any, *>, path)
                 routedService.service.registerMethod(GET(docPath).isHandledBy {
                     internalApi.ok.format(Format.Json)
-                } as Endpoint<W, Group, Any?, *>, docPath)
+                } as Endpoint<W, Group, Any, *>, docPath)
             }
         }
         return this

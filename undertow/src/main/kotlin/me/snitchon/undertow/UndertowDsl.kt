@@ -14,8 +14,7 @@ import java.net.URLDecoder
 import java.util.concurrent.CountDownLatch
 
 class UndertowRequestWrapper(val exchange: HttpServerExchange, private val body: Any?) : RequestWrapper {
-    override  fun <T: Any?> myBody(c: Class<T>): T {
-
+    override  fun <T: Any> myBody(c: Class<T>): T {
         return body as T
     }
 

@@ -108,9 +108,9 @@ private fun sealedSchema(klass: KClass<*>, type: KType): Schemas.ObjectSchema {
             when (it) {
                 is Schemas.ObjectSchema -> {
                     it.copy(
-                        properties = mapOf(Sealed::type.name to Schemas.StringSchema(description = o.jvmErasure.simpleName)) + (it.properties
+                        properties = mapOf(Sealed::`$type`.name to Schemas.StringSchema(description = o.jvmErasure.simpleName)) + (it.properties
                             ?: emptyMap()),
-                        required = listOf(Sealed::type.name) + (it.required ?: emptyList())
+                        required = listOf(Sealed::`$type`.name) + (it.required ?: emptyList())
                     )
                 }
 
@@ -140,12 +140,12 @@ private fun getExample(type: KType): Any {
         klass == Date::class -> Date().toString()
         klass == List::class -> listOf(getExample(type.arguments.first().type!!))
         klass.java.isEnum -> klass.java.enumConstants.map { it.toString() }.first()
-        klass.objectInstance != null && Sealed::class.java.isAssignableFrom(klass.java) -> mapOf(Sealed::type.name to klass.simpleName)
+        klass.objectInstance != null && Sealed::class.java.isAssignableFrom(klass.java) -> mapOf(Sealed::`$type`.name to klass.simpleName)
         klass.isSealed && Sealed::class.java.isAssignableFrom(klass.java) -> {
             val subclass =
                 klass.nestedClasses.filter { it.isFinal && Sealed::class.java.isAssignableFrom(it.java) }.first()
             val ex = getExample(subclass.starProjectedType) as Map<Any, Any>
-            mapOf(Sealed::type.name to subclass.simpleName) + ex
+            mapOf(Sealed::`$type`.name to subclass.simpleName) + ex
         }
 
         else -> {

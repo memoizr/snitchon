@@ -7,9 +7,9 @@ import me.snitchon.parameter.*
 import me.snitchon.http.Handler
 import me.snitchon.http.RequestWrapper
 
-class BodyMarker<T: Any?>(val t: Class<T>)
+class BodyMarker<T: Any>(val t: Class<T>)
 
-inline fun <reified T: Any?> marker() = BodyMarker(T::class.java)
+inline fun <reified T: Any> marker() = BodyMarker(T::class.java)
 
 data class Body<T : Any>(val klass: KClass<T>) : Bodied<T, Body<T>> {
     override val type: Class<*>
