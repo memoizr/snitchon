@@ -34,7 +34,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = "me.snitchon"
-            artifactId = "snitch-core"
+            artifactId = "core"
             version = "1.0"
 
             from(components["java"])
