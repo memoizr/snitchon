@@ -2,8 +2,8 @@ rootProject.name = "snitchon"
 include("core",
     "gsonparser",
     "tests",
-    "spring",
+//    "spring",
     "spark",
-    "vertx",
+//    "vertx",
     "undertow",
 )
